@@ -11,6 +11,7 @@ tagline: Supporting tagline
        {% for post in site.posts %}
          <li>
             <p>{{ post.date | date_to_string }}</p>
+            <a href="{{ BASE_PATH }}{{ post.url}}">{{ post.title }}</a>
             {{ post.content }}
          </li>
        {% endfor %}
