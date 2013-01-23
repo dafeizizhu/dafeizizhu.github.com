@@ -5,6 +5,7 @@ tagline: 脚踏实地
 ---
 {% include JB/setup %}
 
+
 <div class="row-fluid">
   <div id="left" class="span9">
     <ul>
