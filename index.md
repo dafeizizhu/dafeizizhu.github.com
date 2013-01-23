@@ -10,7 +10,7 @@ tagline: 脚踏实地
     <ul>
        {% for post in site.posts limit:5 %}
          <li style="margin-bottom: 50px;">
-            <a href="{{ BASE_PATH }}{{ post.url}}"><h2>{{ post.title }}</h2></a>&nbsp;<span>{{ post.date | date_to_string }}</span>
+            <a href="{{ BASE_PATH }}{{ post.url}}"><h2>{{ post.title }}</h2>&nbsp;<span>{{ post.date | date_to_string }}</span></a>
             {{ post.content }}
          </li>
        {% endfor %}
