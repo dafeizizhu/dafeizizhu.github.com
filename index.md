@@ -9,7 +9,7 @@ tagline: Supporting tagline
   <div id="left">
     <ul>
        {% for post in site.posts %}
-         <li>
+         <li style="margin-bottom: 50px;">
             <a href="{{ BASE_PATH }}{{ post.url}}"><h2>{{ post.title }}</h2></a>&nbsp;<span>{{ post.date | date_to_string }}</span>
             {{ post.content }}
          </li>
