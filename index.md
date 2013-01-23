@@ -5,8 +5,8 @@ tagline: Supporting tagline
 ---
 {% include JB/setup %}
 
-<div>
-  <div id="left">
+<div class="row-fluid">
+  <div id="left" class="span9">
     <ul>
        {% for post in site.posts limit:5 %}
          <li style="margin-bottom: 50px;">
@@ -16,7 +16,7 @@ tagline: Supporting tagline
        {% endfor %}
     </ul>
   </div>
-  <div id="right">
+  <div id="right" class="span3">
     <ul class="posts">
       {% for post in site.posts %}
         <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
