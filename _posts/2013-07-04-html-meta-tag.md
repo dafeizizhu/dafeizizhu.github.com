@@ -9,7 +9,7 @@ tags: [html]
 
 今天被妹纸狠狠地鄙视了我的博客样子太丑(/＞皿<)/ ～ ┴┴。闲逛看看有没有好看的博客设计。偷看他们源代码，发现有好多`meta`标签都不认识，所以写一篇东西好好学习一下`html`中的`meta`标签究竟怎么用。
 
-####定义
+###定义
 
 又看看w3schools对`meta`标签的定义：
 
@@ -21,14 +21,14 @@ tags: [html]
 
 `meta`标签不会显示在页面中。使用`meta`可以声明这个页面的描述、作者、关键字、最后修改日期等信息，可以供浏览器、搜索引擎和一些Web服务使用。
 
-####注意
+###注意
 
 以下是几点注意事项：
 1. `meta`标签总是定义在`head`标签之类。
 2. `meta`标签总是以键值对（`name`和`content`）传递信息。
 3. 在定义`name`或者`http-equiv`属性之后才能定义`content`属性。
 
-####NAME
+###NAME
 
 `meta`标签的`name`属性就说说明当前的`meta`标签是什么类型，以便于搜索引擎抓取，索引网页。相应的`content`就是告诉搜索引擎相关的信息。对应的取值大概有（继续补充）：
 
@@ -40,7 +40,7 @@ tags: [html]
 6. `generator`，页面制作工具（吐槽一个，浏览器连这个都管o(╯□╰)o）。如`<meta name="copyright" content="Front-page" />`。
 7. `revisit-after`，告诉搜索引擎什么时候重新抓取，如`<meta name="revisit-after" content="2 days">`。
 
-####HTTP-EQUIV
+###HTTP-EQUIV
 
 `meta`的`http-equiv`属性,其作用类似于HTTP头协议,它会告诉浏览器一些关于字符设定，页面刷新，cookie，和缓存等等相关信息。对应的取值大概有（继续补充）：
 
@@ -52,7 +52,7 @@ tags: [html]
 6. `window-target`，强制页面在特定的框架中（特别是在`iframe`中）显示，如`<meta http-equiv="widow-target" content="_top">`。可选的取值为`_blank`、`_top`、`_self`、`_parent`。
 7. `X-UA-Compatible`，指定IE的文档兼容模式（这个太有用了），如`<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">`，表示IE以最高版本的标准模式运行，如果有Google Chrome Frame则使用其渲染该页面。
 
-####HTML5
+###HTML5
 
 最后讲一个只有HTML5才有的`meta`：
 
@@ -60,6 +60,6 @@ tags: [html]
 <meta charset="utf-8" />
 {% endhighlight %}
 
-####总结
+###总结
 
 `meta`标签由于SEO而被重视，但是其作用不仅仅是用作SEO，还能制造出类似HTTP协议头的效果。当需要IE浏览器处于某种特定的文档模式，也要注意使用`meta`哦亲！
