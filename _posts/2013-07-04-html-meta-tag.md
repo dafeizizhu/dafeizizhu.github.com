@@ -34,7 +34,7 @@ tags: [html]
 
 1. `keyword`，关键字，如`<meta name="keyword" content="key1,key2,key3" />`。多个关键字用`,`隔开，还可以设置`lang`属性指定语言。
 2. `description`，描述，如`<meta name="description" content="something about this page." />`。
-3. `robots`，给搜索引擎，声明该页面的访问规则，如`<meta name="robots" content="all" />`。可选的取值有`all`、`index`、`follow`、‘noindex`、`nofollow`、`none`。
+3. `robots`，给搜索引擎，声明该页面的访问规则，如`<meta name="robots" content="all" />`。可选的取值有`all`、`index`、`follow`、`noindex`、`nofollow`、`none`。
 4. `author`，作者，如`<meta name="author" content="Zhiying Mai" />`。
 5. `copyright`，版权信息，如`<meta name="copyright" content="Power by Zhiying Mai." />`。
 6. `generator`，页面制作工具（吐槽一个，浏览器连这个都管o(╯□╰)o）。如`<meta name="copyright" content="Front-page" />`。
