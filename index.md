@@ -7,7 +7,7 @@ tagline: 脚踏实地
 
 
 <div class="row-fluid">
-  <div id="left" class="span9">
+  <div class="span12">
     <ul>
        {% for post in site.posts limit:5 %}
          <li style="margin-bottom: 50px;">
@@ -17,6 +17,7 @@ tagline: 脚踏实地
        {% endfor %}
     </ul>
   </div>
+  <!--
   <div id="right" class="span3">
     <ul class="posts">
       {% for post in site.posts %}
@@ -24,6 +25,7 @@ tagline: 脚踏实地
       {% endfor %}
     </ul>
   </div>
+  -->
 </div>
 
 

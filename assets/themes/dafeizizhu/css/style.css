@@ -1,71 +1,76 @@
-/* Override some defaults */
-html, body {
-  background-color: #eee;
+.clear {
+	TEXT-INDENT: -9999px; HEIGHT: 0px; CLEAR: both
 }
-.navbar {
-  margin-bottom: 0;
+#main_container {
+	POSITION: relative; MARGIN: 0px auto; 
 }
-.container > footer {
-  margin-top: 20px;
+#left {
+	POSITION: fixed; WIDTH:300px; top: 0; background: #049ff1; padding-right: 10px; padding-top: 50px;
+}	
+#left H1 {
+	PADDING-BOTTOM: 20px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
 }
-.container > footer p {
-  text-align: center; /* center align it with the container */
+#left H1 A {
+	TEXT-INDENT: -9999px; WIDTH: 288px; DISPLAY: block; BACKGROUND: url(../images/myselfdsk_logo.png) no-repeat; FLOAT: right; HEIGHT: 82px
 }
-
-/* The white background content wrapper */
-.content {
-  background-color: #fff;
-  padding: 20px;
-  margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
-  -webkit-border-radius: 0 0 6px 6px;
-     -moz-border-radius: 0 0 6px 6px;
-          border-radius: 0 0 6px 6px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-          box-shadow: 0 1px 2px rgba(0,0,0,.15);
+.navigation {
+	TEXT-ALIGN: right; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 30px
 }
-
-/* Page header tweaks */
-.page-header {
-  background-color: #f5f5f5;
-  padding: 20px 20px 10px;
-  margin: -20px -20px 20px;
+.navigation UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.navigation UL LI {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; PADDING-TOP: 0px; height: 50px; width: 240px; float: right;
+}
+.navigation UL LI A {
+	PADDING-BOTTOM: 0px; LINE-HEIGHT: 45px; MARGIN: 0px; PADDING-LEFT: 30px; PADDING-RIGHT: 0px; COLOR: #065fb9; FONT-SIZE: 44px; FONT-WEIGHT: normal; TEXT-DECORATION: none; PADDING-TOP: 0px
 }
 
-.topbar .btn {
-  border: 0;
+.navigation ul li:hover {
+	background: url(../images/nav_hover_arrow_left.png) left top;
 }
 
+.navigation UL LI A:hover {
+	COLOR: #04477c
+}
 
-/* tag_box ======================================================== */
+.navigation ul li.current_page_item {
+	background: url(../images/nav_hover_arrow_left.png) left top;
+}
 
-.tag_box {
-	list-style:none;
-	margin:0;
-	padding:5px 0 ;
-	overflow:hidden;
+.navigation UL LI.current_page_item A {
+	COLOR: #04477c
 }
-.tag_box li {
-	line-height:28px;
+.socials {
+	MARGIN: 60px 0px 10px; WIDTH: 235px; FLOAT: right; HEIGHT: 85px; OVERFLOW: hidden
 }
-.tag_box.inline li {
-	float:left;
+.socials H2 {
+	TEXT-ALIGN: right; PADDING-BOTTOM: 10px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; COLOR: #f3d5d5; FONT-SIZE: 20px; PADDING-TOP: 0px
 }
-.tag_box a {
-	padding: 3px 6px;
-	margin: 2px;
-	background: #eee;
-	color:#005F6B;
-	border-radius: 3px;
-	text-decoration:none;
+.socials UL {
+	LIST-STYLE-TYPE: none
 }
-.tag_box a span{
-	vertical-align:super;
-	font-size:0.8em;
+.socials UL LI {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; FLOAT: right; PADDING-TOP: 0px
 }
-.tag_box a.active {
-	background:#57A957;
-	border:1px solid #4C964D;
-	color:#FFF;
+.socials UL LI A.twitter {
+	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
 }
-	
+.socials UL LI A.facebook {
+	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
+}
+.socials UL LI A.behance {
+	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
+}
+.socials UL LI A.dribbble {
+	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
+}
+#center {
+	MARGIN-LEFT: 310px; padding-top: 50px; padding-left: 10px;
+}
+
+p, li {
+	font-family: "Microsoft YaHei";
+	font-size: 16px;
+	line-height: 30px;
+}

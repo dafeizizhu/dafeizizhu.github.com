@@ -9,8 +9,8 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Jekyll Bootstrap
-tagline: Site Tagline
+title :大肥子猪的生活记录 
+tagline: 努力从小码农变成大码农
 author :
   name : Zhiying.Mai
   email : Zhiying.Mai@gmail.com
@@ -123,4 +123,6 @@ JB :
   # and include your custom code. Your custom file must be defined at:
   #   ./_includes/custom/[HELPER]
   # where [HELPER] is the name of the helper you are overriding.
-  
+ 
+  pages_list :
+    provider : "dafeizizhu" 
