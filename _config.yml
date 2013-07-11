@@ -9,14 +9,14 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : 大肥子猪的生活记录 
-tagline : 努力从小码农变成大码农
+title : "dafeizizhu"
+tagline : "workhard"
 author :
-  name : Zhiying.Mai
-  email : Zhiying.Mai@gmail.com
-  github : dafeizizhu
-  twitter : none
-  feedburner : none
+  name : "Zhiying.Mai"
+  email : "Zhiying.Mai@gmail.com"
+  github : "dafeizizhu"
+  twitter : "none"
+  feedburner : "none"
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
