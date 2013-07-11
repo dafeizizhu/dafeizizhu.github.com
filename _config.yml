@@ -9,8 +9,8 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title :大肥子猪的生活记录 
-tagline: 努力从小码农变成大码农
+title : 大肥子猪的生活记录 
+tagline : 努力从小码农变成大码农
 author :
   name : Zhiying.Mai
   email : Zhiying.Mai@gmail.com
