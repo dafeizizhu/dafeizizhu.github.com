@@ -1,12 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+  
   <head>
-	<title>{{ page.title }}</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>{{ page.title }}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
     <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
-	<meta name=author content="{{ site.author.name }}" />
-	<link rel="stylesheet" type="text/css" href="{{ ASSET_PATH }}/bootstrap/css/bootstrap.min.css" />
-	<link rel=stylesheet type=text/css href="{{ ASSET_PATH }}/css/style.css" media=screen />
+    <meta name=author content="{{ site.author.name }}" />
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_PATH }}/bootstrap/css/bootstrap.min.css" />
+    <link rel=stylesheet type=text/css href="{{ ASSET_PATH }}/css/style.css" media=screen />
     <link rel="shortcut icon" type=image/gif href="images/favicon.gif" />
   </head>
   
@@ -16,60 +17,66 @@
         <DIV id="left">
           <DIV class=left_content>
             <H1>
-				<A title="{{ site.title }}" href="{{ HOME_PATH }}">{{ site.title }}</A>
+              <A title="{{ site.title }}" href="{{ HOME_PATH }}">
+                {{ site.title }}
+              </A>
             </H1>
             <DIV class=clear>
             </DIV>
             <DIV class=navigation>
-				<UL id=slide>
-					{% assign pages_list = site.pages %}
-					{% assign group = 'navigation' %}
-					{% include dafeizizhu/pages_list %}
+              <UL id=slide>
+                {% assign pages_list = site.pages %} {% assign group = 'navigation' %}
+                {% include dafeizizhu/pages_list %}
               </UL>
             </DIV>
             <DIV class=socials>
-				<!--
-              <H2>Follow me</H2>
+              <!-- <H2>Follow me</H2>
               <UL>
-                <LI>
-                  <A class=twitter title="Dhiraj Singh Karki on Twitter" onclick="target='newwindow'"
-                  href="http://twitter.com/dhirajskarki">Twitter</A>
-                </LI>
-                <LI>
-                  <A class=facebook title="Dhiraj Singh Karki on Facebook" onclick="target='newwindow'"
-                  href="http://www.facebook.com/dhirajskarki">Facebook</A>
-                </LI>
-                <LI>
-                  <A class=behance title="Dhiraj Singh Karki on Behance" onclick="target='newwindow'"
-                  href="http://www.behance.net/dhirajsinghkarki">Behance</A>
-                </LI>
-                <LI>
-                  <A class=dribbble title="Dhiraj Singh Karki on Dribbble" onclick="target='newwindow'"
-                  href="http://dribbble.com/dhirajskarki">Behance</A>
-                </LI>
+              <LI>
+              <A class=twitter title="Dhiraj Singh Karki on Twitter" onclick="target='newwindow'"
+              href="http://twitter.com/dhirajskarki">Twitter</A>
+              </LI>
+              <LI>
+              <A class=facebook title="Dhiraj Singh Karki on Facebook" onclick="target='newwindow'"
+              href="http://www.facebook.com/dhirajskarki">Facebook</A>
+              </LI>
+              <LI>
+              <A class=behance title="Dhiraj Singh Karki on Behance" onclick="target='newwindow'"
+              href="http://www.behance.net/dhirajsinghkarki">Behance</A>
+              </LI>
+              <LI>
+              <A class=dribbble title="Dhiraj Singh Karki on Dribbble" onclick="target='newwindow'"
+              href="http://dribbble.com/dhirajskarki">Behance</A>
+              </LI>
               </UL>
               <DIV class=clear>
               </DIV>
-			  -->
+              -->
             </DIV>
           </DIV>
         </DIV>
         <DIV id="center">
           <DIV class=right_content>
-			  <!--<DIV id=post-52 class=postsingle>-->
-				  <DIV class=entry>{{ content }}</DIV>
-				  <DIV class=footer>
-					<p>&copy; {{ site.author.name }} 2012 
-          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
-          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
-        </p>
-				  </DIV>
-			<!--</DIV>-->
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              {{ content }}
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; {{ site.author.name }} 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
         </DIV>
       </DIV>
-    </DIV>
-
-    {% include JB/analytics %}
+      {% include JB/analytics %}
   </body>
-
 </html>
