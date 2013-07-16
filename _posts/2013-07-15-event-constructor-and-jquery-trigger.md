@@ -30,7 +30,7 @@ tags: [JavaScript]
 
 看了源码我震惊了，jQuery完全没有使用上述任何一个API，包括`document.createEvent`和`Event`构造函数。jQuery使用的是自定义的事件对象`jQuery.Event`，里面包括了原生事件里面的所有属性和方法（封装了浏览器的差异），以及一些jQuery的扩展属性。当使用`trigger`时，jQuery会遍历这个DOM元素的事件冒泡路径，就是这个DOM元素在DOM树里面的完整路径。然后收集在DOM树上所有这个事件的处理程序，根据冒泡的顺序触发对应的事件处理程序。整个过程都没有使用DOM原生的模拟事件。
 
-有趣的是，即使不是使用jQuery绑定的事件，都可以通过`trigger`触发，这个是由于有以下两端代码：
+有趣的是，即使不是使用jQuery绑定的事件，都可以通过`trigger`触发，这个是由于有以下两段代码：
 
     handle = ontype && cur[ ontype ];
     if ( handle && jQuery.acceptData( cur ) && handle.apply && handle.apply( cur, data ) === false ) {
