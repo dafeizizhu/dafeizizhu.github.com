@@ -48,6 +48,6 @@ tags: [JavaScript]
     elem[ type ]();
     jQuery.event.triggered = undefined;
 
-通过`elem`上面属性可以获取到通过`onXXX`（DOM2）以及`addEventListener`（DOM3）绑定的事件，并执行它们。可以[参考这里](http://jsfiddle.net/qxAz8/2/)。
+通过`elem`上面属性可以获取到通过`onXXX`（DOM2）以及`addEventListener`（DOM3）绑定的事件处理程序，并执行它们。可以[参考这里](http://jsfiddle.net/qxAz8/2/)。
 
 今天终于收到offer了，下个月就离开我司。最后享受这一个月的时光吧，fight！
