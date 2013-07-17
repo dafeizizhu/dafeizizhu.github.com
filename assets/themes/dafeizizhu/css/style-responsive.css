@@ -1,0 +1,45 @@
+#left {
+	overflow: hidden;
+	position: static;
+	padding-top: 0;
+	width: auto;
+}
+
+#left h1 {
+	float: left;
+	height: 70px;
+}
+
+#left h1 a {
+	float: none;
+}
+
+#left .left_content .clear {
+	clear: none;
+}
+
+.navigation {
+	float: left;
+}
+
+.navigation ul li {
+	width: auto;
+}
+
+.socials {
+	display: none;
+}
+
+.navigation ul li a {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#center {
+	margin-left: 0;
+	padding-top: 10px;
+}
+
+ul {
+    margin: 1em 0px;
+}
