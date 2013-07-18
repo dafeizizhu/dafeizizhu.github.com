@@ -43,3 +43,11 @@
 ul {
     margin: 1em 0px;
 }
+
+.entry .span4 {
+	display: none;
+}
+
+.entry .span8 {
+	width: 100%;
+}
