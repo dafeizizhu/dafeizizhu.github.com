@@ -23,7 +23,16 @@
 	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; PADDING-TOP: 0px; height: 50px; width: 240px; float: right;
 }
 .navigation UL LI A {
-	PADDING-BOTTOM: 0px; LINE-HEIGHT: 45px; MARGIN: 0px; PADDING-LEFT: 30px; PADDING-RIGHT: 0px; COLOR: #065fb9; FONT-SIZE: 44px; FONT-WEIGHT: normal; TEXT-DECORATION: none; PADDING-TOP: 0px
+	PADDING-BOTTOM: 0px;
+   	LINE-HEIGHT: 45px; 
+	MARGIN: 0px; 
+	PADDING-LEFT: 30px; 
+	PADDING-RIGHT: 0px; 
+	COLOR: #065fb9; 
+	FONT-SIZE: 30px; 
+	FONT-WEIGHT: bold; 
+	TEXT-DECORATION: none; 
+	PADDING-TOP: 0px
 }
 
 .navigation ul li:hover {
