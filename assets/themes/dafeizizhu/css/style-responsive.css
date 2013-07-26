@@ -56,6 +56,10 @@ ul {
 	float: left;
 }
 
+.navigation ul li:hover {
+	background: none;
+}
+
 .navigation ul li.current_page_item {
 	background: none;
 }
