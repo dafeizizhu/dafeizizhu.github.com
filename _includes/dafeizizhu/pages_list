@@ -23,6 +23,7 @@ Usage:
 {% if site.JB.pages_list.provider == "custom" %}
   {% include custom/pages_list %}
 {% else %}
+  <li class="page_item page-item-52 {% if page.url == "/index.html" %} current_page_item {% endif %}"><a href="/index.html">首页</a></li>
   {% for node in pages_list %}
     {% if node.title != null %}
       {% if group == null or group == node.group %}
