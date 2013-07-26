@@ -51,3 +51,15 @@ ul {
 .entry .span8 {
 	width: 100%;
 }
+
+.navigation ul li {
+	float: left;
+}
+
+.navigation ul li.current_page_item {
+	background: none;
+}
+
+.navigation ul li.current_page_item a {
+	color: white;
+}
