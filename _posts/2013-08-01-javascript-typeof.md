@@ -29,7 +29,7 @@ tags: [JavaScript]
 `typeof`运算符能返回以下表示操作数类型的字符串：
 
 1. `undefined`，操作数是未定义的变量或者属性，例如`undefined`，或者`var a = {}; alert(typeof a.foo);`。
-2. `object`，操作数是一个对象，例如`null`、`{}`、正则表达式等。
+2. `object`，操作数是一个对象，例如`null`、`{}`、正则表达式或者`new String("123")`等。
 3. `boolean`，操作数是一个布尔值，如`true`、`false`或者`Boolean("false")`。
 4. `number`，操作数是一个数字，如`1`、`1.123`或者`Number("123")`等。
 5. `string`，操作数是一个字符串，如`"123"`或者`String("123")`等。
