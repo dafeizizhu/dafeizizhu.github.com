@@ -84,8 +84,8 @@ p, li {
 	line-height: 30px;
 }
 
-p, h1, h2, h3, h4 {
-	margin-bottom: 15px;
+p, h1, h2, h3, h4, ul, ol, pre {
+	margin-bottom: 15px !important;
 }
 
 body {
