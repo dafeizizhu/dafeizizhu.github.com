@@ -17,9 +17,19 @@ tags: [JavaScript]
 
 当单击按钮的时候会弹出一个消息框。先来看看这个事件处理程序的特点：
 
-1. 执行上下文是DOM元素。MDN上面说的是`window`对象。
+1. 执行上下文是DOM元素。而MDN上面说的是`window`对象。
 2. 当返回值是`false`的时候阻止默认行为，但不阻止事件传播。
 3. 事件的传播只能是冒泡的。
+
+对于第一点MDN说的情况我猜是这样的，假如有以下代码：
+
+    <input type="button" value="Click me!" onclick="doSomething();" />
+
+JavaScript：
+
+    function doSomething() { alert(this === window); } // true
+
+当单击按钮的时候执行`doSomething`函数时，里面的`this`就是`window`，因为执行上下文在`window`中。
 
 例子[参考这里](http://jsfiddle.net/MB9af/5/)。当JavaScript代码偏少的时候，这种方式还能勉强接受。当代码规模变大的时候，这种方式明显地带来很多不方便的东西。例如修改行为的时候还需要去修改HTML文件，这不是我们想要看到的。我们希望HTML与JavaScript能够分开维护，当修改行为的时候不要修改负责显示的东西。所以就有了下面这个绑定事件的方式。
 
