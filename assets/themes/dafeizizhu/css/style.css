@@ -2,7 +2,7 @@
 	TEXT-INDENT: -9999px; HEIGHT: 0px; CLEAR: both
 }
 #main_container {
-	POSITION: relative; MARGIN: 0px auto; 
+	POSITION: relative; MARGIN: 0px auto; zoom: 1; 
 }
 #left {
 	POSITION: fixed; WIDTH:300px; top: 0; background: #049ff1; padding-right: 10px; padding-top: 50px;
@@ -50,30 +50,6 @@
 .navigation UL LI.current_page_item A {
 	COLOR: #04477c
 }
-.socials {
-	MARGIN: 60px 0px 10px; WIDTH: 235px; FLOAT: right; HEIGHT: 85px; OVERFLOW: hidden
-}
-.socials H2 {
-	TEXT-ALIGN: right; PADDING-BOTTOM: 10px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; COLOR: #f3d5d5; FONT-SIZE: 20px; PADDING-TOP: 0px
-}
-.socials UL {
-	LIST-STYLE-TYPE: none
-}
-.socials UL LI {
-	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; FLOAT: right; PADDING-TOP: 0px
-}
-.socials UL LI A.twitter {
-	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
-}
-.socials UL LI A.facebook {
-	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
-}
-.socials UL LI A.behance {
-	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
-}
-.socials UL LI A.dribbble {
-	LINE-HEIGHT: 9999px; DISPLAY: block; MARGIN-LEFT: 10px
-}
 #center {
 	MARGIN-LEFT: 310px; padding-top: 50px; padding-left: 10px;
 }
@@ -94,4 +70,21 @@ body {
 
 #center {
 	background-color: white;
+}
+
+.socials {
+	list-style: none;
+	text-align: right;
+}
+
+.socials li a {
+    margin-top: 10px;
+	display: inline-block;
+	zoom: 1;
+	width: 200px;
+	height: 200px;
+}
+
+.social-weixin a {
+	background-image: url(../images/weixin.jpg);
 }
