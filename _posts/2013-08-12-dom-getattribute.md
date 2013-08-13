@@ -47,7 +47,6 @@ IE对`getAttribute`有着自己一套实现（这太可怕了……）。在IE7�
 
 1. 在IE8之前的版本，特性（Attribute）的名称必须与元素对应的属性（Property）对应。
 2. 在IE8及其之后的版本，第二个参数已经没用了。
-3. 这个方法还可以用作绑定事件，如`document.body.setAttribute('onload', 'SomeFunction()');`。
 
 在IE中，还有一些跟别的浏览器（甚至IE高版本和低版本之间）的区别。例如：
 
