@@ -3,7 +3,7 @@ layout: post
 title: "jQuery事件绑定研究续"
 description: ""
 category: 
-tags: [JavaScript]
+tags: [JavaScript, jQuery]
 ---
 {% include JB/setup %}
 

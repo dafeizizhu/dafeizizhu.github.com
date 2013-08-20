@@ -3,7 +3,7 @@ layout: post
 title: "模拟触发DOM事件之jQuery trigger"
 description: ""
 category: 
-tags: [JavaScript]
+tags: [JavaScript, jQuery]
 ---
 {% include JB/setup %}
 

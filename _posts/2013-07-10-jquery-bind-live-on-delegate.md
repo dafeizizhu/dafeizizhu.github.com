@@ -3,7 +3,7 @@ layout: post
 title: "简析jQuery几个绑定事件方法的优劣异同"
 description: ""
 category: 
-tags: [JavaScript]
+tags: [JavaScript, jQuery]
 ---
 {% include JB/setup %}
 

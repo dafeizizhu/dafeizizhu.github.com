@@ -3,7 +3,7 @@ layout: post
 title: "jQuery源码解析之jQuery.each"
 description: ""
 category: 
-tags: [JavaScript]
+tags: [JavaScript, jQuery]
 ---
 {% include JB/setup %}
 

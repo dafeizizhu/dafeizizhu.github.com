@@ -3,7 +3,7 @@ layout: post
 title: "jQuery.Callbacks"
 description: ""
 category: 
-tags: [JavaScript]
+tags: [JavaScript, jQuery]
 ---
 {% include JB/setup %}
 
