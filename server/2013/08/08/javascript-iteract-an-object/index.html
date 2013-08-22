@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>在JavaScript中遍历一个对象的所有属性</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>在JavaScript中遍历一个对象的所有属性</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>在JavaScript中遍历一个对象的所有属性，相信这个一个前端开发人员几乎每天都要面对的事情。最简单的莫过于<code>for...in</code>循环：</p>
+
+<pre><code>for (variable in object) {
+  ...
+}</code></pre>
+
+<p>其中：</p>
+
+<ol>
+<li><code>variable</code>是这个对象里面的键值。</li>
+
+<li><code>object</code>是要遍历的对象。</li>
+</ol>
+
+<p>注意：这个循环是不会去遍历那些被声明为不可遍历的属性（例如<code>Object.prototype</code>或者<code>String.prototype</code>上面的属性）。执行<code>for...in</code>循环时，不仅会遍历这个对象上的所有属性，也会沿着这个对象的原型链遍历所有原型链上的属性，例如：</p>
+
+<pre><code>function A () {
+  this.b = &quot;b&quot;;
+  this.a = &quot;a&quot;;
+}
+
+A.prototype.a = &quot;prototype a&quot;;
+A.prototype.c = &quot;prototype c&quot;;
+
+var a = new A();
+
+for (var k in a) {
+  console.log(k + &quot;: &quot; + a[k]);
+}</code></pre>
+
+<p>执行结果<a href='http://jsfiddle.net/ej9Mm/1/'>参考这里</a>。值得注意的是：</p>
+
+<ol>
+<li>遍历了原型上的属性<code>c</code>。</li>
+
+<li>原型上的<code>a</code>属性被对象上的<code>a</code>属性覆盖了，导致原型上的<code>a</code>没有被遍历出来。</li>
+
+<li><code>Object</code>的原型链上的属性没有被遍历出来，其属性被声明为不可遍历。</li>
+</ol>
+
+<p>虽然在IE6+、Firfox 22、Chrome 27上验证的结果，遍历的顺序跟对象上的属性声明的顺序一致，但是<strong>原则上这种遍历是无序的，程序的逻辑不要依赖于这种遍历的顺序</strong>。由于遍历的无序性，也不要使用<code>for...in</code>去遍历一个数组。</p>
+
+<p>另外，最佳实践是，<strong>不要在遍历的过程中在遍历的对象上增加或者删除属性，也尽量不要修改不是这次遍历的属性，可能会造成不可预知的结果</strong>，例如：</p>
+
+<pre><code>for (var k in a) {
+  console.log(k + &quot;: &quot; + a[k]);
+  a.d = &quot;d&quot;;
+}</code></pre>
+
+<p>以上代码在IE9、Firefox 22、Chrome上都没有把<code>d</code>遍历出来，说明标准的实现应该是忽略遍历过程中增加的属性。但是IE7和IE8就把<code>d</code>遍历出来了。运行结果<a href='http://jsfiddle.net/gaGq4/2/show/'>参考这里</a>。</p>
+
+<p>根据遍历的需要，可以控制遍历时是否需要遍历原型链上的属性。可以通过以下几个方式，仅遍历这个对象拥有的属性：</p>
+
+<pre><code>for (var k in a) {
+  if (a.hasOwnProperty(k)) {
+    log(k + &quot;: &quot; + a[k]);
+  }
+}</code></pre>
+
+<p>或者</p>
+
+<pre><code>var names = Object.getOwnPropertyNames(a);
+
+for (var i = 0; i &lt; names.length; i++) {
+  console.log(names[i] + &quot;: &quot; + a[names[i]]);
+}</code></pre>
+
+<p>前者使用了<code>hasOwnProperty</code>方法判断对象是否拥有这个属性，如果属性是存在于原型链中，该方法会返回<code>false</code>。后者使用一个<code>Object</code>的方法<code>getOwnPropertyNames</code>取出这个对象拥有属性的键值，然后再根据返回的键值进行遍历。看代码的话感觉后者比较优雅，但是可惜至少在IE7、IE8上不支持，而前者则是所有浏览器都支持。这也是jslint要求使用<code>for...in</code>循环的时候加上<code>hasOwnProperty</code>这个方法的调用，以防遍历出一些我们不希望遍历的属性（例如原型链上的方法等）。</p>
+
+<p>明天又到了jQuery的源码分享的时间了，将会带来<code>$.each</code>的相关代码简析，敬请期待！</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/08/07/css-bfc" title="了解BFC">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/08/09/jquery-each" title="jQuery源码解析之jQuery.each">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>08 August 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>26</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>了解BFC</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>了解BFC</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>BFC，Block Formatting Context，简单的说就是一个块元素布局上下文，MDN中是这么解释的：</p>
+
+<blockquote>
+<p>A block formatting context is a part of a visual CSS rendering of a Web page. It is the region in which the layout of block boxes occurs and in which floats interact with each other.</p>
+</blockquote>
+
+<p>在触发了BFC的容器中，声明了内部浮动元素的布局规则。一个元素浮动或者清除浮动，不会影响另一个BFC的内部元素的布局。</p>
+
+<p>通过以下条件可以使一个元素生成BFC：</p>
+
+<ol>
+<li>aHTML文档的根节点。</li>
+
+<li>a浮动元素。</li>
+
+<li>a绝对定位的元素。</li>
+
+<li>a<code>display</code>是<code>inline-block</code>、<code>table-cell</code>、<code>table-caption</code>、<code>flex</code>或者<code>inline-flex</code>的元素。</li>
+
+<li>a<code>overflow</code>不是<code>visible</code>的元素。</li>
+</ol>
+
+<p>当一个元素触发了BFC，会有以下几个布局规则：</p>
+
+<ol>
+<li>a不与浮动元素重叠。</li>
+
+<li>a清除元素内部的浮动。通过触发BFC，使元素内部的浮动元素造成布局的影响限制在触发BFC元素之内。</li>
+
+<li>a不让内外<code>margin</code>合并。</li>
+</ol>
+
+<p>看上去跟昨天介绍的<code>hasLayout</code>造成的效果有点类似啊。所以才说在触发BFC的同时最好也同时触发<code>hasLayout</code>，以保证不同浏览器中的显示效果一致。</p>
+
+<p>BFC跟<code>float</code>和<code>clear</code>对布局的影响也有关系，将继续讨论<code>float</code>和<code>clear</code>的具体用法以及要注意的地方<em>（看来要搞一个CSS专场了……）</em>。</p>
+
+<p>参考资料：</p>
+
+<ol>
+<li><a href='https://developer.mozilla.org/en-US/docs/Web/CSS/block_formatting_context'>Block formatting context</a></li>
+
+<li><a href='http://www.w3ctech.com/p/1101'>更加直观地了解hasLayout和BFC</a></li>
+</ol>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/08/06/css-ie-haslayout" title="IE的hasLayout">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/08/08/javascript-iteract-an-object" title="在JavaScript中遍历一个对象的所有属性">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>07 August 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#css-ref">css <span>12</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

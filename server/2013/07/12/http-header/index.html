@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>HTTP协议之HTTP 头</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>HTTP协议之HTTP 头</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>今天启程去阿里ADC，无奈被困机场，飞机起飞遥遥无期，故趁等飞机起飞的闲暇事件写一下HTTP协议之HTTP头的简介，来慰藉我寂寞的心（顺便鄙视周围的家伙们都在玩手机）。</p>
+
+<p>看了一下RFC关于HTTP头的规范，我跟我的小伙伴们都惊呆了，有这么多，<a href='http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html'>参考这里</a>。今天我决定先从一个比较简单的角度入手，对HTTP头及几个重要的头进行解析，抛砖引玉一下。</p>
+
+<blockquote>
+<p>HTTP header fields are components of the message header of requests and responses in the Hypertext Transfer Protocol (HTTP). They define the operating parameters of an HTTP transaction.</p>
+</blockquote>
+
+<p>简单地说就是一些关于HTTP协议中请求与响应的传输中的控制参数。HTTP头由多个头域组成，至一个空的头域结束。每个头域是一个冒号分隔的键值对。HTTP头有标准头跟自定义头两种。标准头是每个实现都必须支持的头，如<code>Expires</code>、<code>Set-Cookie</code>等。非标准头可以由实现者自己定义，如IE的<code>X-UA-Compatible</code>等。</p>
+
+<p>在HTTP协议本身是没有限制HTTP头的大小。尽管如此，很多Web服务器、客户端和代理软件都对HTTP头的大小进行限制。如Apache2.3中，每个头的大小最多是8160个字节，一个请求里面最多包含100个头。</p>
+
+<p>头域大致可以分成两种，一种是请求头，客户端向服务器发请求的时候使用什么方法、请求什么URI、协议版本等都是在请求头中指定。另一种是响应头，服务器接到客户端的请求后返回响应的是否成功、返回的MIME类型是什么都在请求头中指定。</p>
+
+<h3 id='id11'>请求头</h3>
+
+<p>常用的标准请求头包括下面几个：</p>
+
+<ol>
+<li><code>Accept</code>，声明哪种相应是可接受的，如<code>text\plain</code>、<code>application\json</code>等。</li>
+
+<li><code>Cache-Control</code>，声明缓存控制机制，如<code>no-cache</code>声明不做缓存。</li>
+
+<li><code>Connection</code>，声明与服务器的连接机制，如<code>keep-alive</code>等。</li>
+
+<li><code>Cookie</code>，声明Cookie信息。</li>
+
+<li><code>Content-Type</code>，声明请求体的MIME类型。</li>
+
+<li><code>Host</code>，声明需要请求URI的主机信息。</li>
+
+<li><code>If-Match</code>，声明匹配这个请求的Key，如果服务器的ETag与这个Key一致，则认为这个请求的资源没有发生改变，客户端可以选择从还从中加载这个请求。</li>
+
+<li><code>Origin</code>，声明跨域请求的时候支持什么域名进行访问。</li>
+
+<li><code>User-Agent</code>，声明发出这个请求的客户端的描述，如果是浏览器发出的请求，可以根据这个头判断是哪个浏览器的哪个版本。</li>
+</ol>
+
+<p>非标准请求头包括下面几个：</p>
+
+<ol>
+<li><code>X-Request-With</code>，通常通过这个头告诉服务器这个请求是XMLHttpRequest发送的。</li>
+
+<li><code>DNT</code>，表示是否开启<code>DNT</code>（Do not track）功能，<code>1</code>表示开启，<code>0</code>表示关闭。</li>
+
+<li><code>Front-End-Https</code>，是微软用的一个自定义头，与负载均衡有关。</li>
+
+<li><code>Proxy-Connection</code>，与标准头<code>Connection</code>一致，是早期HTTP协议的产物。</li>
+</ol>
+
+<h3 id='id12'>相应头</h3>
+
+<p>常用的标准相应头大概有以下几个：</p>
+
+<ol>
+<li><code>Access-Control-Allow-Origin</code>，声明这个响应可以参与到哪个域的跨域访问中。<code>*</code>表示可以参与到任何域的跨域访问。</li>
+
+<li><code>Allow</code>，声明这个HTTP响应是使用哪个HTTP方法，如<code>GET</code>、<code>POST</code>等。如果是一个不支持的HTTP方法，则会返回错误码<code>405 Method not allowed</code>。</li>
+
+<li><code>Content-Type</code>，声明这个响应的MIME类型。</li>
+
+<li><code>ETag</code>，声明这个响应版本的key，可以标识一个资源是否有改变过（参考请求头<code>If-Match</code>）。</li>
+
+<li><code>Pragma</code>，声明这个响应是否支持缓存，可以设置<code>no-cache</code>禁用这个响应的缓存。</li>
+
+<li><code>Refresh</code>，声明这个响应在特定时间后刷新或者跳转到新的URL。例如<code>Refresh: 5;http://example.com</code>，就表示5秒之后跳转到指定的URL。</li>
+
+<li><code>Status</code>，声明这个响应的状态码，后面会专门写一篇关于状态码的文章。</li>
+</ol>
+
+<p>非标准的相应头包括下面几个：</p>
+
+<ol>
+<li><code>X-Frame-Options</code>，声明防止Clickjacking攻击的参数，如<code>deny</code>就是防止响应被渲染在iframe里面，而<code>sameorigin</code>就是防止响应在非本域的页面中渲染。</li>
+
+<li><code>X-Content-Type-Options</code>，帮助IE能不识别MIME类型不对的stylesheet和script，也用于Chrome下载其扩展。只有一个合法值<code>nosniff</code>。</li>
+
+<li><code>X-Powered-By</code>，声明该响应是通过哪种语言生成的，如<code>X-Powered-By: PHP/5.4.0</code>。</li>
+
+<li><code>X-UA-Compatible</code>，帮助IE使用特定的文档模式显式该响应，也可以指导IE使用Google Chrome Frame来渲染页面。</li>
+</ol>
+
+<p>在<code>meta</code>里面定义的<code>http-equiv</code>头，跟某些HTTP头是相通的。可以设置服务器返回的HTTP头，让整个站点的所有页面都在HTTP传输过程中的行为保持一直。这样可以减少纯HTML（服务器脚本，如JSP、PHP、ASP等可以通过<code>include</code>的方式实现类似效果）的页面的代码量，减轻维护成本。</p>
+
+<p>今天晚上12点才到杭州，1点半才到酒店，不过精神还行，期待明天阿里ADC！</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/11/jquery-event-2" title="jQuery事件绑定研究续">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/13/http-status-code" title="HTTP协议之HTTP状态码">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>12 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#http-ref">http <span>4</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

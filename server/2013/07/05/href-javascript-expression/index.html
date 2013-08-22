@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>Href中的JavaScript link</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>Href中的JavaScript link</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>在<code>A</code>标签的<code>href</code>属性写上JavaScript“表达式”，其中一个目的就是为了那些不是链接的<code>A</code>标签通过HTML验证，<a href='http://stackoverflow.com/questions/7755088/href-expression-a-href-javascript-a'>参考这里</a>。<em>（注：刚才试了一下在最新的W3C的HTML在线校验里面没有<code>name</code>和<code>href</code>属性的<code>A</code>标签也能通过校验）</em></p>
+
+<p>不能写“#”，因为会跳到页面的头部<em>（可以通过取消浏览器默认事件防止该行为，<a href='http://dafeizizhu.github.io/2013/07/03/a-tag/'>参考这里</a>）</em>。也不能写空字符串，在IE下会刷新页面。那只能写一个JavaScript表达式，该表达式什么也不做。最常见的就是以下这个代码：</p>
+
+<pre><code>&lt;a href=&quot;javascript:void(0)&quot;&gt;Do not refresh or go to the top of this page.&lt;/a&gt;</code></pre>
+
+<p>JavaScrit提供了一种机制，供页面与JavaScript方法进行交互，其中一种机制就是<code>href</code>中的JavaScript链接（JavaScript link）。一个最简单的JavaScript链接示例如下：</p>
+
+<pre><code>&lt;a href=&quot;javascript:MyFunction();&quot;&gt;Text to Click&lt;/a&gt;</code></pre>
+
+<p>其中<code>MyFunction</code>是全局的一个函数，当单击这个<code>A</code>标签的时候，对应JavaScript链接的语句会被执行。</p>
+
+<p>如果同时设置了<code>href</code>上的JavaScript链接，又设置了<code>onclick</code>属性<em>（当然这个应该存在于黑暗之中永远不让它出来o(╯□╰)o）</em>，会是怎样的一个场景呢？立马做一个实验，<a href='http://jsfiddle.net/b7YLJ/1/'>参考这里</a>。</p>
+
+<pre><code>&lt;a href=&quot;javascript:alert(1);&quot; onclick=&quot;alert(2);&quot;&gt;Text to Click&lt;/a&gt;</code></pre>
+
+<p>结果是先弹出了2，再弹出1。仔细思考一下，其实这个结果是跟前天写的内容是吻合的。事件处理函数先执行，再执行浏览器的默认行为，在这里浏览器的默认行为就是弹出1。</p>
+
+<p>最后简单看看JavaScript中一个被忽略的运算符：<code>void</code>。这个运算符有两种使用方式：</p>
+
+<pre><code>void (expression)
+
+void expression</code></pre>
+
+<p>这个运算符的作用是执行JavaScript语句，但是不返回任何东西。可以作为<code>href</code>的值，当单击<code>A</code>标签的时候会执行该JavaScript语句。详细情况可以<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#void'>参考这里</a>。</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/04/html-meta-tag" title="HTML META 标签入门">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/06/frontend-career" title="前端攻城师的职业规划">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>05 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#html-ref">html <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>26</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

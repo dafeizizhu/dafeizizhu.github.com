@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>换行还是不换行之white-space</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>换行还是不换行之white-space</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>今天又给一个换行还是不换行的问题困扰了。决定好好地研究一下块元素中的行内元素是如何控制换行的。主要从几个CSS样式入手，包括<code>white-space</code>、<code>word-break</code>等，最后会综合讨论块元素的其他CSS是如何影响行内元素的换行控制。</p>
+
+<p>今天先看看<code>white-space</code>这个CSS属性。</p>
+
+<blockquote>
+<p>The white-space property specifies how white-space inside an element is handled.</p>
+</blockquote>
+
+<p><code>white-space</code>这个属性是用来声明一个元素内部的空白（包括空格还有换行符等）是如何处理的。可选的取值有以下几个：</p>
+
+<ol>
+<li><code>normal</code>，默认值，合并所有空白，当内容接触容器元素边界的时候自动换行。</li>
+
+<li><code>nowrap</code>，与<code>normal</code>类似，只是不会自动换行<strong>（强制不换行必须配上这个CSS样式）</strong>。</li>
+
+<li><code>pre</code>，保留所有空白，也不会自动换行。</li>
+
+<li><code>pre-wrap</code>，保留所有空白，会自动换行。</li>
+
+<li><code>pre-line</code>，除了换行符之外的空格合并，会自动换行。</li>
+
+<li><code>inherit</code>，继承父元素的值。</li>
+</ol>
+
+<p>对于行内元素来说：</p>
+
+<ol>
+<li>当值是<code>normal</code>、<code>nowrap</code>和<code>pre-line</code>的时候，换行符前后的空白会被删除。</li>
+
+<li>当值是<code>pre</code>和<code>pre-wrap</code>的时候，多个空格组成的序列不会在遇到元素边缘的时候被中断。而<code>pre-wrap</code>则会在序列的最后自动换行。</li>
+
+<li>当值是<code>normal</code>和<code>nowrap</code>的时候，换行符会被转化成一个空格、一个长度为0的字符串或者压根不显示，具体如何转化需要看浏览器的实现算法。</li>
+
+<li>当值是<code>normal</code>、<code>nowrap</code>和<code>pre-line</code>的时候，制表符会被转化成一个空格，多个连续的空格会被归并成一个空格。</li>
+</ol>
+
+<p>在W3上讲了一个比较有意思的例子，就是涉及到文字阅读方向的问题。假如存在下面的一段HTML片段：</p>
+
+<pre><code>&lt;ltr&gt;A[1]&lt;rtl&gt;[2]B[3]&lt;/rtl&gt;[4]C&lt;/ltr&gt;</code></pre>
+
+<p>其中1、2、3、4是4个空格，<code>white-space</code>是<code>normal</code>。理论上1和2会合并，3和4会合并。但是出来的结果确是：</p>
+
+<pre><code>A[12][34]BC</code></pre>
+
+<p>原因就是文字阅读方向杂糅（虽然这个场景在实际应用之中少之又少）。空格12是左往右读的，空格34是右往左读的，这个顺序跟HTML中的顺序是保持一致的。所以，避免出现上述情况的混淆，W3建议<strong>在一个元素的开始和结尾不要写空白</strong>。</p>
+
+<p>总结一下，单就<code>white-space</code>这个CSS样式：</p>
+
+<ol>
+<li>强制换行，需要设置成<code>normal</code>。</li>
+
+<li>强制不换行，需要设置成<code>nowrap</code>。</li>
+</ol>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/21/a-http-request" title="HTTP协议之简述一个HTTP请求的经过">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/23/css-word-wrap" title="换行还是不换行之word-wrap">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>22 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#css-ref">css <span>12</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>window.location 浅析</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>window.location 浅析</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>国际惯例，先看看<code>window.location</code>在w3schools的简单描述：</p>
+
+<blockquote>
+<p>The window.location object can be used to get the current page address (URL) and to redirect the browser to a new page.</p>
+</blockquote>
+
+<p>简单地说，这个对象就是用来获取页面的URL，控制页面跳转等功能。</p>
+
+<h3 id='id5'>属性</h3>
+
+<p>可以通过以下属性获取关于当前页面路径的信息，也可以设置某些属性跳转到新的url上面。</p>
+
+<ol>
+<li><code>hash</code>，url中跟着<code>#</code>的内容，包含<code>#</code>。注意，<strong>如果<code>#</code>后面没用东西或者没有<code>#</code>，则这个属性的值是空字符串</strong>。还可以绑定<code>hashchange</code>事件监听<code>hash</code>变化。</li>
+
+<li><code>host</code>，由url的主机名称<code>hostname</code>跟端口<code>port</code>组成的字符串。</li>
+
+<li><code>hostname</code>，url的主机名称。注意，<strong>在Chrome跟Safari是包括括号的（IPv6的情况），而IE跟FireFox则不包括括号</strong>。</li>
+
+<li><code>href</code>，完整的url。</li>
+
+<li><code>pathname</code>，相对于主机名的路径。</li>
+
+<li><code>port</code>，url的端口号。如果使用的是默认端口（80），则这个属性的值是空字符串。</li>
+
+<li><code>protocol</code>，url的协议。</li>
+
+<li><code>search</code>，url中跟着<code>?</code>的内容，包含<code>?</code>。</li>
+
+<li><code>orign</code>，由url的协议、主机名跟端口组成的字符串。目前只有Chrome跟FireFox 21支持这个属性。</li>
+</ol>
+
+<h3 id='id6'>方法</h3>
+
+<ol>
+<li><code>assign(url)</code>，将当前页面跳转到指定的url。</li>
+
+<li><code>reload(forceget)</code>，重新加载当前页面。如果<code>forceget</code>跟true，则会强制从服务器刷新，否则浏览器可能会读取缓存。</li>
+
+<li><code>replace(url)</code>，与<code>assign</code>方法类似，唯一不同的是<code>replace</code>不会留下历史记录，意味着跳转后不能使用浏览器的后退功能返回前一个页面。</li>
+
+<li><code>toString</code>，返回完整的url（<code>href</code>）。</li>
+</ol>
+
+<p><a href='https://developer.mozilla.org/en-US/docs/Web/API/window.location#Properties'>参考这里</a>。</p>
+
+<p>说到<code>window.location</code>的作用，不得不提到Ajax。在Ajax泛滥的今天，影响最大之一的就是收藏夹。传统HTML页面，一个URL会对应一个页面，页面的内容是固定的。Ajax应用中，一个页面，可能会根据用户的行为而产生不同的内容（无论是形式上还是传统的内容上）。如何去收藏经过用户操作之后的Ajax应用页面呢？其中一个比较好的办法就是使用<code>window.location.hash</code>这个属性，记录用户的简单操作。当用户操作时，记录一个简单的hash。当页面初始化时，根据hash判断Ajax应用的状态，可以基本实现收藏夹的功能，下面举个例子（完整代码<a href='http://jsfiddle.net/GeYw8/1/show/'>参考这里</a>）：</p>
+
+<pre><code>&lt;a id=&quot;a1&quot; href=&quot;#&quot;&gt;Click A1&lt;/a&gt;
+&lt;a id=&quot;a2&quot; href=&quot;#&quot;&gt;Click A2&lt;/a&gt;
+&lt;div id=&quot;content&quot;&gt;&lt;/div&gt;
+
+
+
+var hash = window.location.hash || &quot;#status1&quot;;
+var text = &quot;&quot;;
+    
+switch (hash) {
+    case &quot;#status1&quot;:
+        text = &quot;This is Status1&quot;;
+        break;
+    case &quot;#status2&quot;:
+        text = &quot;This is Status2&quot;;
+        break;
+}
+
+$(&quot;#content&quot;).html(text);
+
+$(&quot;#a1&quot;).click(function (evt) {
+    window.location.hash = &quot;#status1&quot;;
+    $(&quot;#content&quot;).html(&quot;This is Status1&quot;);
+    evt.preventDefault();
+});
+
+$(&quot;#a2&quot;).click(function (evt) {
+    window.location.hash = &quot;#status2&quot;;
+    $(&quot;#content&quot;).html(&quot;This is Status2&quot;);
+    evt.preventDefault();
+});</code></pre>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/06/frontend-career" title="前端攻城师的职业规划">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/08/three-column-layout-middle-first" title="经典三列布局之如何让中间的列先显示出来">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>07 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>26</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

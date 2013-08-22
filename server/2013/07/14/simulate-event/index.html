@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>模拟触发DOM事件之原生模拟事件</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>模拟触发DOM事件之原生模拟事件</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>昨天讲到一个如何在测试的时候模拟一个DOM事件，例如单击鼠标、输入文字等。当时我第一反应就是使用jQuery的<code>trigger</code>方法触发事件，那哥们竟然说了一个原生的API：<code>document.createEvent</code>。当时我就震惊了，为啥不用jQuery哦亲。今天先简单了解一下这个API的作用，科普科普。</p>
+
+<p>先看看MDN上面对<code>document.createEvent</code>的说明是啥：</p>
+
+<blockquote>
+<p>Creates an event of the type specified. The returned object should be first initialized and can then be passed to element.dispatchEvent.</p>
+</blockquote>
+
+<p>这个API是创建一个Event对象，接受一个参数，就是表示事件类型的字符串。该字符串的可能取值为：</p>
+
+<ol>
+<li><code>UIEvent</code>，通用的UI事件，键盘鼠标事件都是继承于这个事件。</li>
+
+<li><code>MouseEvent</code>，鼠标事件。</li>
+
+<li><code>MutationEvent</code>，通用的突变事件。</li>
+
+<li><code>HTMLEvent</code>，通用的HTML事件。</li>
+</ol>
+
+<p>使用该API创建出事件对象之后，需要在触发模拟事件的DOM上调用<code>dispatchEvent</code>方法，触发该模拟事件。MDN的实例代码如下，<a href='http://developer.mozilla.org/samples/domref/dispatchEvent.html'>参考这里</a>：</p>
+
+<pre><code>function simulateClick() {
+    var evt = document.createEvent(&quot;MouseEvents&quot;);
+    evt.initMouseEvent(&quot;click&quot;, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    var cb = document.getElementById(&quot;checkbox&quot;); 
+    var canceled = !cb.dispatchEvent(evt);
+    if(canceled) {
+        // A handler called preventDefault
+        alert(&quot;canceled&quot;);
+    } else {
+        // None of the handlers called preventDefault
+        alert(&quot;not canceled&quot;);
+    }
+}</code></pre>
+
+<p><code>dispatchEvent</code>会返回该事件是否取消浏览器默认行为的布尔值。</p>
+
+<p>注意哦，不同类型的Event对象使用的初始化方法也不同，上述的四个事件类型对应的初始化事件的方法分别是：</p>
+
+<ol>
+<li><code>initUIEvent</code>，初始化基本UI事件，该方法接受事件类型、是否冒泡、是否能取消默认行为、关联的视图（window）、详细信息（如鼠标单击事件鼠标被单击多少次）等参数。</li>
+
+<li><code>initMouseEvent</code>，初始化鼠标事件，前五个参数与<code>initUIEvent</code>类似，后面有鼠标位置相对于屏幕的坐标、相对于client的坐标、修饰键、哪个鼠标按键被按下以及鼠标移入或者移出的DOM对象。</li>
+
+<li><code>initMutationEvent</code>，初始化通用突变事件。</li>
+
+<li><code>initEvent</code>，初始化HTML通用事件，与<code>initUIEvent</code>的前三个参数类似。</li>
+
+<li><code>initKeyboardEvent</code>，这个是键盘事件对应事件类型，可以在<code>createEvent</code>方法中传入<code>KeyboardEvent</code>来创建键盘事件，该事件继承于<code>UIEvent</code>。</li>
+</ol>
+
+<p>更详细的信息请猛击<a href='https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent'>这里</a>。</p>
+
+<p>一个值得注意的地方是，MDN上有这么一个警告：</p>
+
+<blockquote>
+<p>The createEvent method is deprecated. Use event constructors instead.</p>
+</blockquote>
+
+<p>原来这个方法已经被废弃了，MDN建议使用Event的构造方法来创建Event对象。明天将继续研究Event的构造方法以及jQuery的<code>trigger</code>方法是如何实现的。</p>
+
+<p>两天的阿里D2结束了，接收到不少干货，也走了西湖，匆忙的旅行也算是比较满足了。两天的演讲里面，让我真的非常佩服于阿里人的演讲水平。一些本来是非常好的干货，讲得太干了原来也让人难以下咽。借用一个前同事的话来总结：程序员发展到一定的水平后，瓶颈并不在技术水平上，而是在表达能力上。再见啦杭州，下次一定会再来！</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/13/http-status-code" title="HTTP协议之HTTP状态码">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/15/event-constructor-and-jquery-trigger" title="模拟触发DOM事件之jQuery trigger">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>14 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>26</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

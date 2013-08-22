@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>换行还是不换行之word-break</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>换行还是不换行之word-break</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>再继续前两天的问题，今天介绍另一个影响单词断行的CSS样式<code>word-break</code>。</p>
+
+<blockquote>
+<p>The word-break property specifies line breaking rules for non-CJK scripts.</p>
+</blockquote>
+
+<p><code>word-break</code>声明了非CJK单词的断行规则，其中也有属性值是跟CJK单词有关系。这个样式的可选取值有以下几个：</p>
+
+<ol>
+<li><code>normal</code>，默认值，单词根据其默认的规则进行断行。</li>
+
+<li><code>break-all</code>，非CJK单词会在一个单词之间断行以防止单词内容溢出。</li>
+
+<li><code>keep-all</code>，保持CJK单词，不让其断行。</li>
+</ol>
+
+<p>看样子跟昨天介绍的<code>word-wrap</code>看上去作用都是差不多的，都是控制单词的断行规则。与<code>word-wrap</code>类似，<strong>当<code>white-space</code>声明为不允许自动换行的情况下是没有任何效果的</strong>。</p>
+
+<p>而<code>word-break</code>跟<code>word-wrap</code>主要有以下这几个不同点：</p>
+
+<ol>
+<li>Opera和低版本的FireFox（低于15）不支持<code>word-break</code>，而所有主流的浏览器都支持<code>word-wrap</code>。</li>
+
+<li>虽然<code>word-break: break-all</code>和<code>word-wrap: break-word</code>都是允许断开非CJK单词，但是前者明显暴力于后者。前者会忽略所有排版规则强制断开单词，而后者则会尽最大限度保持现有的排版规则。例子<a href='http://jsfiddle.net/RsUqv/'>参考这里</a>。</li>
+
+<li><code>word-break: keep-all</code>还特别声明了针对CJK单词的规则，这个是<code>word-wrap</code>所没有的。<em>（但是<code>keep-all</code>Chrome和Safari都不支持……）。</em></li>
+</ol>
+
+<p>针对<code>word-break</code>：</p>
+
+<ol>
+<li>当需要强制换行时，设置成<code>break-all</code>。</li>
+
+<li>当需要强制不换行时，设置成<code>normal</code>。</li>
+</ol>
+
+<p>关于换行和不换行的话题暂时先讨论到这里吧。现在总结一下三天的内容：</p>
+
+<p>如果要强制换行：</p>
+
+<pre><code>white-space: normal;
+word-wrap: break-word;
+word-break: break-all; /** 超级暴力换行！ **/</code></pre>
+
+<p>如果要强制不换行：</p>
+
+<pre><code>white-space: nowrap;
+word-wrap: normal;
+word-break: keep-all;</code></pre>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/23/css-word-wrap" title="换行还是不换行之word-wrap">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/25/http-method" title="HTTP协议之HTTP方法">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>24 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#css-ref">css <span>12</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

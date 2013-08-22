@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>JavaScript typeof操作符</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>JavaScript typeof操作符</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>昨天讨论<code>instanceof</code>运算符，其中有一个比较坑的限制是，当使用iframe的时候可能会有意想不到的场景：</p>
+
+<pre><code>var a = [];
+alert(a instanceof top.Array); // 当这段代码出现在iframe里面的时候是false</code></pre>
+
+<p>原因很简单，就是<code>window.Array</code>跟<code>top.Array</code>是两个不同的对象。虽然我们写代码的时候不会像上面那样显式地引用<code>top.Array</code>，但是在iframe集成的场景下我们可能会这么调用：</p>
+
+<pre><code>if (isArray(a)) { ... }</code></pre>
+
+<p>而<code>isArray</code>可能会这么写：</p>
+
+<pre><code>function isArray(a) { return top.isArray(a); }</code></pre>
+
+<p>这样就会出现上述的坑爹问题。今天来讨论另外一个检测JavaScript变量的运算符<code>typeof</code>，看它是否能解决以上这个坑爹的问题。</p>
+
+<blockquote>
+<p>typeof操作符返回一个字符串，代表一个未估值的操作数(unevaluated operand)的类型。</p>
+</blockquote>
+
+<p><code>typeof</code>接受一个操作数和一对可选的括号，返回表示该操作数的类型的字符串，操作数可以是字符串、对象、数字甚至是未定义的变量等。</p>
+
+<p><code>typeof</code>运算符能返回以下表示操作数类型的字符串：</p>
+
+<ol>
+<li><code>undefined</code>，操作数是未定义的变量或者属性，例如<code>undefined</code>，或者<code>var a = {}; alert(typeof a.foo);</code>。</li>
+
+<li><code>object</code>，操作数是一个对象，例如<code>null</code>、<code>{}</code>、正则表达式或者<code>new String(&quot;123&quot;)</code>等。</li>
+
+<li><code>boolean</code>，操作数是一个布尔值，如<code>true</code>、<code>false</code>或者<code>Boolean(&quot;false&quot;)</code>。</li>
+
+<li><code>number</code>，操作数是一个数字，如<code>1</code>、<code>1.123</code>或者<code>Number(&quot;123&quot;)</code>等。</li>
+
+<li><code>string</code>，操作数是一个字符串，如<code>&quot;123&quot;</code>或者<code>String(&quot;123&quot;)</code>等。</li>
+
+<li><code>function</code>，操作数是一个方法，如<code>function () {}</code>或者<code>new Function()</code>等。</li>
+</ol>
+
+<p>其中一个比较奇怪的是<code>typeof null === &quot;object&quot;</code>，这个貌似从JavaScript诞生以来就是这样，下面是MDN的解释：</p>
+
+<blockquote>
+<p>在JavaScript最初的实现中,JavaScript中的值是由一个类型标签和一个数值组成的,对象的类型标签是0,由于null代表的是空指针(大多数平台下值为0x00),因此,null的类型标签也成为了0,typeof null就错误的返回了&#8221;object&#8221;.(该段文字没有具体的出处,正确性有待考证)</p>
+</blockquote>
+
+<p>使用<code>typeof</code>可以跨iframe判断一个变量是否对象、布尔值、数字、字符串或者方法，这里引用玉伯的代码：</p>
+
+<pre><code>function isType(type) {
+  return function(obj) {
+    return Object.prototype.toString.call(obj) === &quot;[object &quot; + type + &quot;]&quot;
+  }
+}
+var isObject = isType(&quot;Object&quot;)
+var isString = isType(&quot;String&quot;)
+var isArray = Array.isArray || isType(&quot;Array&quot;)
+var isFunction = isType(&quot;Function&quot;)</code></pre>
+
+<p>另外，由于当<code>type</code>是<code>undefined</code>或者<code>null</code>的时候，<code>typeof</code>操作都不会报错，所以也免去了对输入参数的非空判断的代码，引入闭包还能减少代码数量，快哉！</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/31/javascript-instanceof" title="JavaScript instanceof操作符">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/08/02/javascript-bind-event-handler" title="三种原生JavaScript绑定事件方式对比">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>01 August 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>26</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

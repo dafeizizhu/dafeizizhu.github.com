@@ -1,0 +1,90 @@
+.clear {
+	TEXT-INDENT: -9999px; HEIGHT: 0px; CLEAR: both
+}
+#main_container {
+	POSITION: relative; MARGIN: 0px auto; zoom: 1; 
+}
+#left {
+	POSITION: fixed; WIDTH:300px; top: 0; background: #049ff1; padding-right: 10px; padding-top: 50px;
+}	
+#left H1 {
+	PADDING-BOTTOM: 20px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+#left H1 A {
+	TEXT-INDENT: -9999px; WIDTH: 288px; DISPLAY: block; BACKGROUND: url(../images/myselfdsk_logo.png) no-repeat; FLOAT: right; HEIGHT: 82px
+}
+.navigation {
+	TEXT-ALIGN: right; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 30px
+}
+.navigation UL {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.navigation UL LI {
+	PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; PADDING-TOP: 0px; height: 50px; width: 240px; float: right;
+}
+.navigation UL LI A {
+	PADDING-BOTTOM: 0px;
+   	LINE-HEIGHT: 45px; 
+	MARGIN: 0px; 
+	PADDING-LEFT: 30px; 
+	PADDING-RIGHT: 0px; 
+	COLOR: #065fb9; 
+	FONT-SIZE: 30px; 
+	FONT-WEIGHT: bold; 
+	TEXT-DECORATION: none; 
+	PADDING-TOP: 0px
+}
+
+.navigation ul li:hover {
+	background: url(../images/nav_hover_arrow_left.png) left top;
+}
+
+.navigation UL LI A:hover {
+	COLOR: #04477c
+}
+
+.navigation ul li.current_page_item {
+	background: url(../images/nav_hover_arrow_left.png) left top;
+}
+
+.navigation UL LI.current_page_item A {
+	COLOR: #04477c
+}
+#center {
+	MARGIN-LEFT: 310px; padding-top: 50px; padding-left: 10px;
+}
+
+p, li {
+	font-family: "Microsoft YaHei";
+	font-size: 16px;
+	line-height: 30px;
+}
+
+p, h1, h2, h3, h4, ul, ol, pre {
+	margin-bottom: 15px !important;
+}
+
+body {
+	background-color: #049ff1;
+}
+
+#center {
+	background-color: white;
+}
+
+.socials {
+	list-style: none;
+	text-align: right;
+}
+
+.socials li a {
+    margin-top: 10px;
+	display: inline-block;
+	zoom: 1;
+	width: 200px;
+	height: 200px;
+}
+
+.social-weixin a {
+	background-image: url(../images/weixin.jpg);
+}

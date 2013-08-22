@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>HTTP协议之HTTP状态码</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>HTTP协议之HTTP状态码</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>继续HTTP协议科普贴。讲一下HTTP状态码，这个已经被人问过N次了。记得上次只能答出200、304、404、503等，然后被深深的鄙视。HTTP状态码表示该HTTP响应状态的三位数字代码，所有状态的第一个数字表示的是同一类的状态。</p>
+
+<h3 id='1xx'>1XX</h3>
+
+<p>这类的响应指的是服务器已经接受到客户端的请求，在继续处理。<strong>由于HTTP协议没有定义1XX的状态码，除非在某些试验的情况下，不应该向客户端发送该类响应的状态码。</strong></p>
+
+<ol>
+<li>100 Continue，表示客户端应该继续发送剩余的请求部分。服务器必须在请求完成后返回一个最终的请求结果。</li>
+
+<li>101 Switch Protocol，表示客户端应该使用不同的协议继续完成这个请求。只能转移到比现在这个协议更加好的协议上去。</li>
+
+<li>103 Processing，WebDAV定义的状态码，表示处理将继续进行。</li>
+</ol>
+
+<h3 id='2xx'>2XX</h3>
+
+<p>这类的响应指的是请求已经被正确接收并理解，是正确的状态。</p>
+
+<ol>
+<li>200 OK，请求成功，并根据不同的HTTP Method返回不同的信息。</li>
+
+<li>201 Created，请求已经被实现，而且有一个新的资源已经依据请求的需要而创建，且其URI已经随Location头信息返回。假如需要的资源无法及时创建的话，应当返回&#8217;202 Accepted&#8217;。</li>
+
+<li>202 Accepted，表示请求已经被接受，但是还没有处理。这个状态码特别适合某种异步操作的场景，当服务器操作可能比较慢的场景下，可以通过发送202状态码通知客户端，不需要客户端继续保持与服务器的这个HTTP连接。</li>
+
+<li>203 Non-Authoritative Information，表示这个请求已经成功处理了，但是entity-header的信息在当前服务器上没有有效的确定集合，可能存在本地或者第三方的某个拷贝。</li>
+
+<li>204 No Content，表示返回的响应没有内容。</li>
+
+<li>205 Reset Content，表示返回的响应没有内容。与204不一样，205会重置文档视图，即会重置表单的输入域的值。</li>
+
+<li>206 Partial Content，表示只返回了部分响应的内容，这个状态码在分块下载的时候非常有用，以后会单独进行分析。</li>
+
+<li>207 Multi-Status，WebDAV定义的状态码，代表之后的消息体将是一个XML消息，并且可能依照之前子请求数量的不同，包含一系列独立的响应代码。</li>
+</ol>
+
+<h3 id='3xx'>3XX</h3>
+
+<p>这类响应指的是需要客户端进行进一步的操作才能处理。</p>
+
+<ol>
+<li>300 Multiple Choices，被请求的资源有一系列可供选择的回馈信息，可供客户端自行选择该如何操作。</li>
+
+<li>301 Moved Permanently，请求的资源已经被永久移动到新位置，新位置应该在Location头里面指定。</li>
+
+<li>302 Found，请求的资源临时定位到另一个位置，由于是临时的，客户端下次发出这个请求时应该还是从原来的URL中获取该资源。</li>
+
+<li>303 See Other，这个请求在另一个位置上找到，指示客户端应该使用GET在那个位置上获取该资源。</li>
+
+<li>304 Not Modified，这个请求的资源没有发生过变化，指示客户端可以使用本地缓存。</li>
+
+<li>305 Use Proxy，这个请求必须通过代理服务器访问。</li>
+
+<li>306 Switch Proxy，这个状态码已废弃。</li>
+
+<li>307 Temporary Redirect，于302类似。</li>
+</ol>
+
+<h3 id='4xx'>4XX</h3>
+
+<p>这类响应指的是请求错误，表示客户端发生了错误导致请求失败。</p>
+
+<ol>
+<li>400 Bad Request，表示由于客户端的错误（例如语法错误）导致请求失败。</li>
+
+<li>401 Unauthorized，表示该请求需要认证才能处理。</li>
+
+<li>402 Payment Required，这个状态码为将来的需求预留。</li>
+
+<li>403 Forbidden，表示服务器已经接收到请求，但是拒绝处理。可以在响应的实体里面反馈究竟是为啥不响应这个请求。</li>
+
+<li>404 Not Found，表示请求的资源在服务器上没有找到。</li>
+
+<li>405 Method Not Allowed，表示该请求所使用的方法是不允许的。例如在一些不支持<code>PUT</code>的Web服务器使用<code>PUT</code>方法。</li>
+
+<li>406 Not Acceptable，请求的资源的内容特性无法满足请求头中的条件。</li>
+
+<li>407 Proxy Authentication Required，表示必须通过代理服务器的认证。</li>
+
+<li>408 Request Timeout，请求超时。</li>
+
+<li>409 Conflict，由于和被请求的资源的当前状态之间存在冲突，请求无法完成。</li>
+
+<li>410 Gone，与404类似，区别是410是永远找不到这个位置的资源，而404则无法确认是临时的还是永远的。</li>
+
+<li>411 Length Required，必须在头里面声明Content-Length。</li>
+
+<li>412 Precondition Failed，先决条件失败。</li>
+
+<li>413 Request Entity Too Large，请求的实体大小太大。可以通过Retry-After的响应头指示客户端应该何时进行重试。</li>
+
+<li>414 Request-URI Too Long，请求的URI太长，超出服务器的处理范围。</li>
+
+<li>415 Unsupported Media Type，不支持这个请求的媒体类型。</li>
+
+<li>416 Requested Range Not Satisfiable，如果请求中包含了Range请求头，并且Range中指定的任何数据范围都与当前资源的可用范围不重合，同时请求中又没有定义If-Range请求头。</li>
+
+<li>417 Expectation Failed，在请求头Expect中指定的预期内容无法被服务器满足。</li>
+</ol>
+
+<h3 id='5xx'>5XX</h3>
+
+<p>这类响应指的是服务器错误。</p>
+
+<ol>
+<li>500 Internal Server Error，服务器内部错误，通常是程序出错的时候后会返回这个错误码。</li>
+
+<li>501 Not Implemented，服务器无法处理这个HTTP方法。</li>
+
+<li>502 Bad Gateway，网关或者代理服务器错误。</li>
+
+<li>503 Service Unavailable，服务器临时不能处理这个请求，可以通过Retry-After的相应头指示客户端应该何时进行重试。</li>
+
+<li>504 Gateway Timeout，网关或者代理服务器超时。</li>
+
+<li>505 HTTP Version Not Supported，服务器不支持该HTTP版本。</li>
+</ol>
+
+<p>今天只是简单罗列一下HTTP状态码，对于某些重要的状态码需要以后进一步分析。</p>
+
+<p>今天参加了阿里D2论坛，接收到不少干货。感受到阿里的一些企业文化，确实比较吸引重视技术的人材。还是希望有一天，我司也能搞出这么一个技术论坛，可以吸引到这么多人来共同参与分享大家的知识，共同进步，祝福我司。</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/12/http-header" title="HTTP协议之HTTP 头">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/14/simulate-event" title="模拟触发DOM事件之原生模拟事件">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>13 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#http-ref">http <span>4</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

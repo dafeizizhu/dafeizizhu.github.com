@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>IE的hasLayout</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>IE的hasLayout</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>只有在IE8之前版本的IE上才会有hasLayout这个纠结的东西。在这些版本的IE中，有两种类型的元素：</p>
+
+<ol>
+<li>a拥有布局的元素，可以控制自己的大小及其子元素的布局。</li>
+
+<li>a没有布局的元素，只能根据最近的拥有布局的祖先元素来确定自己的大小和布局。</li>
+</ol>
+
+<p>拥有布局的元素可以控制自己的大小，也可以控制其自身及其子元素的布局。一些没有特定声明宽度和高度的元素，但是有一些大小限制的元素，例如表单控件、图片等，通常也是拥有布局的元素。只有拥有布局的元素才能控制是否出现滚动条。</p>
+
+<p>拥有布局的元素意味着：</p>
+
+<ol>
+<li>a限制这个元素成为一个矩形（强制行内元素的布局行为变得像块元素一样）。</li>
+
+<li>a一些关于这个元素的大小位置等属性会被缓存起来，也会参与到大小位置改变的算法中，造成额外的内存于时间消耗。</li>
+
+<li>a不能根据子元素的内容进行自适应。</li>
+</ol>
+
+<p>当一个元素拥有布局的时候，我们说这个元素触发了<code>hasLayout</code>，也就是说这个元素有个内部属性为<code>hasLayout: true</code>。注意，这个不是一个CSS的样式，某种特定的情况下一个元素就会拥有布局。</p>
+
+<p>首先是默认就拥有布局的元素：</p>
+
+<ol>
+<li>a图片</li>
+
+<li>a表格、表格行、单元格</li>
+
+<li>a表单控件</li>
+
+<li>a<code>frameset</code>等框架元素</li>
+
+<li>a<code>object</code>等嵌入元素</li>
+
+<li>a绝对定位元素</li>
+
+<li>a浮动元素</li>
+
+<li>a<code>inline-block</code>元素</li>
+
+<li>a<code>filter</code></li>
+
+<li>a<code>body</code></li>
+</ol>
+
+<p>当元素满足以下条件的时候也可以变成拥有布局的元素：</p>
+
+<ol>
+<li>a在严格模式下，声明了宽度和高度的块元素</li>
+
+<li>a在兼容模式下，任何声明了宽度和高度的元素</li>
+
+<li>a拥有<code>zoom</code>的元素</li>
+
+<li>a处于编辑模式下的元素</li>
+
+<li>a阅读顺序与父元素不一样的元素</li>
+
+<li>a一个拥有<code>viewlink</code>特性的元素</li>
+</ol>
+
+<p>最好是使用<code>zoom: 1</code>来触发元素的<code>hasLayout</code>，因为该CSS样式不会对元素造成任何可视的影响。</p>
+
+<p>个人感觉这个<code>hasLayout</code>的最大用处就是在不支持<code>display: inline-block</code>的浏览器（例如IE6）中模拟出对应的效果。由于触发了<code>hasLayout</code>的元素可以拥有类似BFC（明天会讨论这个）的视觉效果，即可以让一个行内元素的布局行为变成类似于块元素的布局行为。所以，在IE8-的浏览器中，如果需要触发<code>hasLayout</code>，最好也同时触发BFC，保证显示效果一致。例子<a href='http://jsfiddle.net/rweLu/2/'>参考这里</a>。</p>
+
+<p>参考资料：</p>
+<ol>
+  <li><a href='http://msdn.microsoft.com/en-us/library/bb250481(v=vs.85).aspx'>"HasLayout" Overview</a></li>
+  <li><a href='http://kayosite.com/internet-explorer-haslayout-in-detail.html'>详说 IE hasLayout</a></li>
+</ol>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/08/05/javascript-flash-comunication" title="JavaScript与Flash通信">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/08/07/css-bfc" title="了解BFC">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>06 August 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#css-ref">css <span>12</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+

@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>HTML A 标签简析</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="text/html; charset=UTF-8" http-equiv=Content-Type />
+    <meta name=author content="Zhiying.Mai" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/bootstrap/css/bootstrap.min.css" />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style.css" media=screen />
+	<link rel=stylesheet type=text/css href="/assets/themes/dafeizizhu/css/style-responsive.css" media="screen and (max-width: 900px)"/>
+
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="/assets/themes/dafeizizhu/css/style-iefixed.css" />
+    <![endif]-->
+  </head>
+  
+  <body>
+    <DIV id=home class=pages>
+      <DIV id=main_container>
+        <DIV id="left">
+          <DIV class=left_content>
+            <H1>
+              <A title="dafeizizhu" href="/">
+                dafeizizhu
+              </A>
+            </H1>
+            <DIV class=clear>
+            </DIV>
+            <DIV class=navigation>
+              <UL id=slide>
+                 
+                
+
+
+  <li class="page_item page-item-52 "><a href="/index.html">首页</a></li>
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/archive.html">博文</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li class="page_item page-item-52"><a href="/tags.html">标签</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+              </UL>
+            </DIV>
+			<DIV>
+			  <ul class="socials">
+                <li class="social-weixin"><a href="http://weixin.qq.com" title="扫一扫每天获取更新内容哦亲！"></a></li>
+			  </ul>
+            </DIV>
+          </DIV>
+        </DIV>
+        <DIV id="center">
+          <DIV class=right_content>
+            <!--<DIV id=post-52 class=postsingle>-->
+            <DIV class=entry>
+              
+<div class="page-header">
+  <h1>HTML A 标签简析</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p>HTML中的<code>A</code>标签，使用频率应该非常高。可以作为一个链接、一个锚点，甚至一些按钮（Extjs和dojo等框架）。先看看w3schools对<code>A</code>标签的定义是：</p>
+
+<blockquote>
+<p>The a tag defines a hyperlink, which is used to link from one page to another.</p>
+</blockquote>
+
+<p>简单的说，<code>A</code>标签就是一个超链接。有趣的是，对于HTML4跟HTML5对<code>A</code>标签的定义又有所不同。</p>
+
+<blockquote>
+<p>In HTML 4.01, the a tag could be either a hyperlink or an anchor. In HTML5, the a tag is always a hyperlink, but if it has no href attribute, it is only a placeholder for a hyperlink.</p>
+</blockquote>
+
+<p>在HTML4中，如果<code>A</code>标签没有<code>href</code>这个属性，则说明该<code>A</code>标签仅仅是个锚，可以供链接跳转到该位置，就像一个“书签”的作用。但是在HTML5中<code>A</code>标签<strong>只是个链接</strong>。</p>
+
+<p>最近在项目中发现有个奇怪的问题：在一个<code>A</code>标签的事件处理程序中，改变浏览器的hash，发现不生效，只是在浏览器的地址栏的末尾加上了“#&#8221;。打断点调试后发现该行代码执行之后，浏览器的地址栏确实是改变了，可以看到代码设置的hash。但是在代码走完之后，浏览器的hash自动变成“#”，代码设置上去的hash被重置了。观察该事件在jQuery中的处理函数，只有一个事件处理函数，没有其他的事件处理函数被执行，也没有异步方法执行。究竟这个hash是怎么被重置回去了？</p>
+
+<p>观察该<code>A</code>标签的属性，发现有一行这样的代码：<code>href=&quot;#&quot;</code>。使用Chrome的调试工具，把其改成<code>href=&quot;#123&quot;</code>，神奇的事情发生了。单击按钮后地址栏上的hash被改成了“#123”。难道是<code>A</code>标签的默认行为重置了浏览器的hash？</p>
+
+<p>为了验证该问题，为一个<code>DIV</code>元素绑定了同样一个鼠标单击的事件处理函数，发现单击该<code>DIV</code>元素，地址栏上的hash被正确修改，没有被重置。</p>
+
+<p>重现该场景写了一个<a href='http://jsfiddle.net/Vy3W7/'>测试代码</a>：</p>
+
+<p>运行代码后发现地址栏上的hash变成了“#123”，而不是代码设置的“#456”。说明<code>A</code>标签的默认行为是发生在事件处理函数之后的。</p>
+
+<p>要防止以上的场景发生，可以采取以下几个手段：</p>
+
+<ol>
+<li>把<code>href</code>的值改成是<code>javascript:void(0);</code>。JavaScript中void是一个操作符，该操作符指定要计算一个表达式但是不返回值，单击这个标签的默认行为就是什么都不做。</li>
+
+<li>在事件处理函数中使用<code>evt.preventDefault()</code>阻止浏览器的默认行为，或者<code>return false</code>也行。</li>
+</ol>
+
+<p>尽量不要写<code>href=&quot;#&quot;</code>了，如果没有阻止浏览器的默认行为，这句代码不仅会重置地址栏的hash，还会让页面滚动到最上方，慎用慎用。</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/07/02/position-fixed" title="Position: fixed 浏览器兼容性分析">&larr; 上一篇</a></li>
+      
+        <li><a href="/archive.html">返回列表</a></li>
+      
+        <li class="next"><a href="/2013/07/04/html-meta-tag" title="HTML META 标签入门">下一篇 &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+  </div>
+  
+  <div class="span4">
+    <h4>发布</h4>
+    <div class="date"><span>03 July 2013</span></div>
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#html-ref">html <span>6</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+            </DIV>
+            <DIV class=footer>
+              <p>
+                &copy; Zhiying.Mai 2012 with help from
+                <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">
+                  Jekyll Bootstrap
+                </a>
+                and
+                <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                  Twitter Bootstrap
+                </a>
+              </p>
+            </DIV>
+            <!--</DIV>-->
+          </DIV>
+        </DIV>
+      </DIV>
+      
+  </body>
+</html>
+
