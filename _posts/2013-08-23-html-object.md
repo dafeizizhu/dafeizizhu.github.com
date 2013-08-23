@@ -49,7 +49,7 @@ tags: [html]
 
 ###HTML5
 
-在HTML5中`object`还有一个`from`属性，该属性的值表示与该`object`有关联的`form`的id。
+在HTML5中`object`还有一个`from`属性，该属性的值表示与该`object`有关联的表单的id。
 
 ###param
 
