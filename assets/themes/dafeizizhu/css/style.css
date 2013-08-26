@@ -88,3 +88,7 @@ body {
 .social-weixin a {
 	background-image: url(../images/weixin.jpg);
 }
+
+hr {
+	border-top-color: #CCC;
+}
