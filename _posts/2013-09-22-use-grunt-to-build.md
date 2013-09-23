@@ -21,6 +21,10 @@ grunt是使用node作为运行环境的，所以先要安装一个node。
 
 这两个node的模块都要安装到全局里面，方便在任何一个地方调用。
 
+由于使用了SPM去安装外部依赖，需要安装SPM：
+
+    npm install -g spm
+
 先从仓库里面把必须的文件checkout出来。暂时存了一份在github上，可以通过`git clone`来checkout，地址是[https://github.com/amkit2/amkit2.git](https://github.com/amkit2/amkit2.git)。
 
 checkout之后，在该目录上面执行命令：
@@ -94,4 +98,4 @@ ____
 ###总结
 ____
 
-基本上整个打包部署的流程就是这样了，还有很多可以完善的东西，例如测试、持续集成等。边用边改进的节奏！
+基本上整个打包部署的流程就是这样了，还有很多可以完善的东西，例如测试、持续集成、开发期间的代码调试等。边用边改进的节奏！
