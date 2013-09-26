@@ -44,4 +44,4 @@ ____
 3. `response`，返回的数据，是一个对象，其中的键是数据类型，例如`xml`、`text`等，值就是对应类型的数据。
 4. `headers`，经过处理后的HTML头信息。
 
-通过这个方法，我们可以改变发送数据的方式，不仅仅是使用XMLHttpRequest，甚至可以使用`img`标签、`script`标签、`link`标签和`iframe`来发送数据到服务端。jQuery文档上有个例子就是使用`img`标签去发送数据的，有兴趣的小伙伴可以去参考一下。
+通过这个方法，我们可以改变发送数据的方式，不仅仅是使用XMLHttpRequest，甚至可以使用`img`标签、`script`标签、`link`标签和`iframe`来发送数据到服务端。jQuery文档上有个例子就是使用`img`标签去发送数据的，有兴趣的小伙伴可以去参考一下，我自己写了一个简单的DEMO，使用`setTimeout`模拟发送请求的过程，例子[参考这里](http://jsfiddle.net/vx528/1/)。
