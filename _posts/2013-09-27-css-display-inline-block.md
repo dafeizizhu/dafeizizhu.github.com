@@ -15,7 +15,7 @@ tags: [css]
 
 简单地说就是一个行级的块元素，即像行内元素一样排版，但又可以像块元素一样设置元素的大小。我们可以尝试用`inline-block`去模拟一个浮动的效果：
 
-<iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/embedded/" frameborder="0"> </iframe>
+<iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/embedded/result,html,css/" frameborder="0"> </iframe>
 
 惊讶地发现，元素之间竟然出现了缝隙！查看代码并没有任何`margin`被设置了，跟bootstrap中的情况一样。其实非常简单，就是元素被当成行内元素排版的时候，元素之间的空白符（空格、回车换行等）都会被浏览器处理，根据`white-space`的处理方式（默认是`normal`，合并多余空白），原来HTML代码中的回车换行被转成一个空白符，所以元素之间就出现了空隙。
 
@@ -23,7 +23,7 @@ tags: [css]
 
 上网查了一下，最有效的办法就是在父元素中设置`font-size: 0`，然后在子元素上重置正确的`font-size`：
 
-<iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/1/embedded/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+<iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/1/embedded/result,html,css/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
 
 又到了我们可爱的IE出场的时间了。很遗憾，虽然IE从5.5就开始支持`display: inline-block`，但是它的实现跟标准实现的表现是不一致的。我们需要以下的代码让IE的表现跟标准趋于一致：
 
@@ -33,7 +33,7 @@ tags: [css]
 
 其中`zoom`就是为了触发IE的`hasLayout`。以下这个例子能在IE6上实现类似的效果：
 
-<iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/2/embedded/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+<iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/2/embedded/result,html,css/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
 
 
 其实要消除这个空隙还有一个非常简单的方法，就是**把所有回车换行都删掉**！这样意味着这些代码都要写成一行！哎呀，这样牺牲可读性貌似有点大，所以可以这样：
