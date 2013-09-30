@@ -1,5 +1,15 @@
----
-layout: default
----
-{% include JB/setup %}
-{% include themes/dafeizizhu/page.html %}
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include header.html %}
+	</head>
+	<body>
+		<div id="navigator">
+			{% include nav.html %}
+		</div>
+		<div id="page">
+			{{ content }}
+			{% include footer.html %}
+		</div>
+	</body>
+</html>
