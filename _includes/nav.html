@@ -1,0 +1,12 @@
+<div class="dfzz-navbar">
+	<div class="dfzz-navbar-header">
+		<a class="dfzz-navbar-brand" href="/index.html">Dafeizizhu</a>
+	</div>
+	<div class="dfzz-navbar-menu">
+		<ul>
+			{% for page in site.pages %}
+			<li><a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
