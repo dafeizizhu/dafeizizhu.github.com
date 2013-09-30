@@ -1,0 +1,26 @@
+p, li {
+	font-family: "Microsoft YaHei";
+	line-height: 30px;
+}
+
+.dfzz-navbar {
+	position: fixed;
+	width: 300px;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+}
+
+.dfzz-content {
+	margin-left: 300px;
+	padding: 20px 10px 10px 10px;
+}
+
+.dfzz-navbar {
+	padding: 10px;
+}
+
+.dfzz-navbar-brand {
+	font-family: "Bigelow Rules";
+	font-size: 100px;
+}
