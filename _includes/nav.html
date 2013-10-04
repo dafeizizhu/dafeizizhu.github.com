@@ -3,10 +3,29 @@
 		<a class="dfzz-navbar-brand" href="/index.html">Dafeizizhu</a>
 	</div>
 	<div class="dfzz-navbar-menu">
-		<ul>
+		<ul class="dfzz-navbar-menu-container">
 			{% for page in site.pages %}
-			<li><a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a></li>
+				{% if page.url != "/index.html" %}
+				<li class="dfzz-navbar-menu-item"><a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a></li>
+				{% endif %}
 			{% endfor %}
 		</ul>
 	</div>
 </div>
+
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32" style="float: right; padding-right: 20px;">
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_cqq"></a>
+	<a class="jiathis_button_weixin"></a>
+</div>
+<script type="text/javascript" >
+	var jiathis_config={
+		url: window.location.href,
+		title: document.title,
+		shortUrl:false,
+		hideMore:false
+	};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->

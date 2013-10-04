@@ -7,7 +7,7 @@ title: 标签
 	{% if site.tags.first[0] == null %}
       {% for tag in site.tags %} 
 	  <li>
-        <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag }}-ref">
+        <a href="{{ BASE_PATH }}/tags/#{{ tag }}">
 		  {{ tag }}
 		  <span>{{ site.tags[tag].size }}</span>
 	    </a>
@@ -16,7 +16,7 @@ title: 标签
     {% else %}
       {% for tag in site.tags %} 
       <li>
-        <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref">
+        <a href="{{ BASE_PATH }}/tags/#{{ tag[0] }}">
           {{ tag[0] }}
           <span>{{ tag[1].size }}</span>
         </a>
@@ -27,10 +27,54 @@ title: 标签
 
 <div class="dfzz-tags-archives">
 	{% for tag in site.tags %}
-	<ul id="#{{ tag[0] }}">
+	<ul id="{{ tag[0] }}">
 		{% for post in tag[1] %}
 		<li><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a></li>
 		{% endfor %}
 	</ul>
 	{% endfor %}
 </div>
+
+<script type="text/javascript">
+	$(function () {
+		function selectTag (tag) {
+			var jqTag;
+			if (!tag) {
+				jqTag = jqTags.find("a").eq(0);
+				tag = jqTag.attr("href").replace(/.*\//, "");
+			} else {
+				jqTag = jqTags.find("a[href$=" + tag + "]").eq(0);
+			}
+			jqTag.addClass("dfzz-tags-selected").parent().siblings().find("a").removeClass("dfzz-tags-selected");
+			$(tag).show().siblings().hide();
+		}
+
+		var jqTags = $(".dfzz-tags-item");
+
+		if ($(window).width() > 900) {
+			jqTags.insertAfter($(".dfzz-navbar-menu ul li a").eq(0));
+		}
+
+		selectTag(window.location.hash);
+
+		jqTags.on("click", "a", function (evt) {
+			evt.preventDefault();
+			var tag = $(this).attr("href").replace(/.*\//, "");
+			selectTag(tag);
+			window.location.hash = tag;
+		});
+
+
+		var tId;
+		$(window).resize(function (evt) {
+			clearTimeout(tId);
+			tId = setTimeout(function () {
+				if ($(window).width() > 900) {
+					jqTags.insertAfter($(".dfzz-navbar-menu ul li a").eq(0));
+				} else {
+					jqTags.prependTo($(".dfzz-content"));
+				}
+			}, 200);
+		});
+	});
+</script>

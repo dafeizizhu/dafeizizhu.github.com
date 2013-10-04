@@ -4,12 +4,34 @@
 		{% include header.html %}
 	</head>
 	<body>
-		{% include nav.html %}
-		<div class="dfzz-content">
-			<h1>{{ page.title }}</h1>
-			<p datetime="{{ page.date }}">{{ page.date | date: "%y.%m.%d" }}</p>
-			{{ content }}
-			{% include footer.html %}
+		<div class="dfzz-layout">
+			<div class="dfzz-layout-middle">
+				<div class="dfzz-content">
+					<h1>{{ page.title }}</h1>
+					<p datetime="{{ page.date }}">{{ page.date | date: "%y.%m.%d" }}</p>
+					{{ content }}
+					{% include footer.html %}
+				</div>
+			</div>
+			<div class="dfzz-layout-left">
+				{% include nav.html %}
+			</div>
+			<div class="dfzz-layout-right">
+				<h4>发布</h4>
+				<div class="date">
+					<span>{{ page.date | date_to_long_string }}</span>
+				</div>
+				{% unless page.tags == empty %}
+				<h4>标签</h4>
+				<ul class="dfzz-tag-box">
+					{% for tag in page.tags %}
+					<li>
+						<a href="/tags/#{{ tag }}">{{ tag }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endunless %}
+			</div>
 		</div>
 	</body>
 </html>

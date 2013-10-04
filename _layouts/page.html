@@ -2,12 +2,23 @@
 <html>
 	<head>
 		{% include header.html %}
+		<style>
+			.dfzz-layout {
+				padding-right: 10px;
+			}
+		</style>
 	</head>
 	<body>
-		{% include nav.html %}
-		<div class="dfzz-content">
-			{{ content }}
-			{% include footer.html %}
+		<div class="dfzz-layout">
+			<div class="dfzz-layout-middle">
+				<div class="dfzz-content">
+					{{ content }}
+					{% include footer.html %}
+				</div>
+			</div>
+			<div class="dfzz-layout-left">
+				{% include nav.html %}
+			</div>
 		</div>
 	</body>
 </html>
