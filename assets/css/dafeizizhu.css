@@ -138,6 +138,14 @@ hr {
 	padding: 5px;
 }
 
+.dfzz-content-summary {
+	border: 1px solid #CCC;
+	float: right;
+	padding: 5px;
+	width: 200px;
+	margin: 5px;
+}
+
 @media screen and (max-width: 900px) {
 	body {
 		min-width: 480px;
