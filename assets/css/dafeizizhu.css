@@ -146,6 +146,10 @@ hr {
 	margin: 5px;
 }
 
+.dfzz-content .article {
+	margin-bottom: 50px;
+}
+
 @media screen and (max-width: 900px) {
 	body {
 		min-width: 480px;
