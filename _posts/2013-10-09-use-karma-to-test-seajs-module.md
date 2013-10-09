@@ -40,3 +40,31 @@ tags: [JavaScript, node, 前端]
 其实可以这样：
 
 1. 先加载一个SeaJs，为runner.html提供动态加载SeaJs模块的功能。
+2. 再加载一个测试的入口，设置SeaJs的配置以及测试套件的入口。
+
+第一步需要修改`karma.conf.js`里面的`files`，载入SeaJs和入口文件：
+
+    files: ["path/to/sea.js", "path/to/entry.js"],
+
+第二步需要在入口文件中调用`seajs.config`设置对应的别名等配置，以及调用入口的测试套件：
+
+    seajs.config({ ... });
+    seajs.use("path/to/testsuit.js");
+
+在`testsuit`中编写单元测试用例：
+
+    define(function (require) {
+      describe("A test suit", function () {
+        it("A test case", function () {
+          expect(true).to.be(true);
+        });
+      });
+    });
+
+注意的是：
+
+1. 测试用例也要是一个CMD模块。
+2. 使用的测试框架是Mocha。
+3. 使用的是`expect.js`的断言，也可以使用其他断言形式，例如`should.js`、`chai`等。
+
+编写完用例之后执行`karma run`，去控制台上看看效果吧！
