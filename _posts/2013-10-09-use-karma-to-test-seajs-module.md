@@ -46,10 +46,14 @@ tags: [JavaScript, node, 前端]
 
     files: ["path/to/sea.js", "path/to/entry.js"],
 
-第二步需要在入口文件中调用`seajs.config`设置对应的别名等配置，以及调用入口的测试套件：
+第二步需要在入口文件中调用`seajs.config`设置对应的别名等配置，以及调用入口的测试套件（感谢Github上面的[这篇文章](https://github.com/aralejs/aralejs.org/issues/291)）：
 
     seajs.config({ ... });
-    seajs.use("path/to/testsuit.js");
+    window.__karma__.start = function() {
+      seajs.use(["./base/tests/base-spec.js"], function() {
+        mocha.run()
+      })
+    }
 
 在`testsuit`中编写单元测试用例：
 
