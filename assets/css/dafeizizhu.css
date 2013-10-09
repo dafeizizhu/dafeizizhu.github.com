@@ -21,6 +21,10 @@ hr {
 	color: #ccc;
 }
 
+pre {
+	clear: right;
+}
+
 .dfzz-layout { 
 	position: relative;
 	overflow: hidden;
@@ -127,7 +131,7 @@ hr {
 }
 
 .dfzz-tags-archives li a {
-	font-size: 1.5em;
+	font-size: 1.2em;
 	line-height: 2em;
 	color: black;
 }
