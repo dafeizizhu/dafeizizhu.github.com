@@ -40,3 +40,14 @@ ____
 3. `attributeName`和`function(index, attr)`，第二个参数是一个回调函数，接收当前元素在jQuery对象中的索引和当前的特性值，该函数的返回值将作为特性的新值。如果没有返回值（或者返回`undefined`），特性值将不会发生任何改变。
 
 与getter不同，它会设置jQuery对象中所有元素的特性值。如果指定的特性名称不存在，jQuery会在这个元素上增加这个特性。
+
+###removeAttr
+____
+
+> Remove an attribute from each element in the set of matched elements.
+
+这个方法可以删除指定的特性。这个方法只接受一个参数`attributeName`，就是要删除的特性的名字。其内部实现是使用JavaScript内建的`removeAttribute`。
+
+其中有一个坑，就是在IE6、7、8中使用`removeAttr`去删除指定在DOM中的事件处理程序（例如`onclick`等）是没有效果的，要使用`prop`：
+
+    $element.prop( "onclick", null );
