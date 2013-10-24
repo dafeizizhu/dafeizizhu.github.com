@@ -1,3 +1,10 @@
+@font-face {
+	font-family: 'Bigelow Rules';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Bigelow Rules'), local('BigelowRules-Regular'), url(dafeizizhu.woff) format('woff');
+}
+
 p, li {
 	font-family: "Microsoft YaHei";
 	line-height: 2em;
