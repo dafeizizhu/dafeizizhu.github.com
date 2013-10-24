@@ -43,6 +43,8 @@ tags: [JavaScript]
 
 <iframe width="100%" height="300" src="http://jsfiddle.net/bJwUu/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
 
-可能我们直接写的代码不会带`eval`，但是现在有很多扰码的工具会把代码变成一个字符串（通常经过特殊的编码）然后用`eval`执行，这样是不是就有可能发生以上这种注入呢？
+可能我们直接这么写`eval`的场景比较少，但是考虑一下这种场景：用户输入一个地址作为URL，服务端接收这个地址，把这个地址当作JavaScript函数的参数来生成一段JavaScript脚本：
 
-关于这种注入，还需要分析前后台是如何处理这些用户输入的，最简单的方式就是做过滤，譬如把`\u`去掉、把多余的特性（特别是`onXXX`）去掉等。
+    echo '<script>somefunc(' . $_POST['flash'] . ');</script>'
+
+这样就导致了以上的注入行为。最简单的方式是不使用这种生成JavaScript脚本的方式，把用户输入直接作为脚本的参数是非常危险的。如果一定要使用，则需要吧反斜杠转义成`\\`。
