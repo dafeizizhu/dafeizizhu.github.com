@@ -179,6 +179,14 @@ pre {
 	float: right;
 }
 
+.dfzz-comment {
+	padding: 10px;
+}
+
+.dfzz-footer {
+	clear: both;
+}
+
 @media screen and (max-width: 900px) {
 	body {
 		min-width: 480px;
