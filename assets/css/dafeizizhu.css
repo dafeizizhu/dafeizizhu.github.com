@@ -166,6 +166,19 @@ pre {
 	margin-bottom: 50px;
 }
 
+.dfzz-page {
+	margin-bottom: 50px;
+}
+
+.dfzz-page a {
+	font-size: 1.5em;
+	font-weight: bolder;
+}
+
+.dfzz-page .dfzz-page-next {
+	float: right;
+}
+
 @media screen and (max-width: 900px) {
 	body {
 		min-width: 480px;

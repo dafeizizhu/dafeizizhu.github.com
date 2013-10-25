@@ -5,7 +5,7 @@
 	<div class="dfzz-navbar-menu">
 		<ul class="dfzz-navbar-menu-container">
 			{% for page in site.pages %}
-				{% if page.url != "/index.html" %}
+				{% if page.url != "/index.html" and page.title != "首页" %}
 				<li class="dfzz-navbar-menu-item"><a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a></li>
 				{% endif %}
 			{% endfor %}
