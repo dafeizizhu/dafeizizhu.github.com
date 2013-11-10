@@ -13,7 +13,7 @@ jQuery的`jQuery`方法（通常是`$`）相信是最最最最常用的方法了
 
 第一类是在文档中选择元素，有以下几种调用形式：
 
-**jQuery(selector[, context])**
+**jQuery(selector, context)**
 
 其中`selector`就是CSS选择器，`context`是可选的上下文元素，默认是在整个文档中查找。传入`context`即等于`jQuery(context).find(selector)`。
 
@@ -47,7 +47,7 @@ jQuery的`jQuery`方法（通常是`$`）相信是最最最最常用的方法了
 
 `jQuery`方法也可以由HTML字符串创建DOM对象：
 
-**jQuery(html[, ownerDocument])**
+**jQuery(html, ownerDocument)**
 
 其中`html`就是HTML字符串，可选的`ownerDocument`就是这个DOM属于哪个文档对象，默认是当前的文档。
 
