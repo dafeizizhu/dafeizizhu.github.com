@@ -32,9 +32,9 @@ tags: [Flash]
     1. `domain`，声明能访问这个域的域，例如上例的`*.example.com`。这个特性支持使用`*`作为通配符，例如`*`就代表所有域都可以访问这个域的资源。
     2. `to-ports`，只适用于Socket，表示允许从哪些端口访问，例如`10001,10002`。
     3. `secure`，只适用于HTTP，当这个特性的值为`true`的时候表示只允许使用HTTPS来访问这个域的资源。
-3. `allow-http-request-headers-from`，声明这个域能发送请求到哪些域，跟`allow-access-from`是相反的。这个元素有以下几个特性：
-    1. `domain`，声明能发送请求的目标域，与`allow-access-from`的`domain`特性类似。
-    2. `headers`，声明能发送请求的头，如上例的`SOAPAction`。
+3. `allow-http-request-headers-from`，声明其它域能发送什么HTTP头。这个元素有以下几个特性：
+    1. `domain`，声明发送请求的域，与`allow-access-from`的`domain`特性类似。
+    2. `headers`，声明能发送的HTTP头，如上例的`SOAPAction`。
     3. `secure`，与`allow-access-from`的`secure`特性类似。
 
 最常用的用法就是在容器的根目录下面放置一个`crossdomain.xml`，根据我们的需要配置允许访问和允许发送请求的域。下面是两个极端的例子，第一个是最松散的策略：
