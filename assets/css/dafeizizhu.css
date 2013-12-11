@@ -5,7 +5,7 @@
 	src: local('Bigelow Rules'), local('BigelowRules-Regular'), url(dafeizizhu.woff) format('woff');
 }
 
-p, li {
+h1, h2, h3, p, li {
 	font-family: "Microsoft YaHei";
 	line-height: 2em;
 }
