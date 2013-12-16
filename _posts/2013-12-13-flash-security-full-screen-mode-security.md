@@ -9,7 +9,7 @@ tags: [Flash]
 
 要进入全屏模式，要将`stage`的`displayState`属性设置为`StageDisplayState.FULL_STAGE`常量。
 
-对于在远程沙箱中运行的`swf`文件，有一些安全注意事项。第一个就是要在`object``或者`embed`标签中添加`allowFullScreen`参数，设置成`true`：
+对于在远程沙箱中运行的`swf`文件，有一些安全注意事项。第一个就是要在`object`或者`embed`标签中添加`allowFullScreen`参数，设置成`true`：
 
     <object>
       <param name="allowFullScreen" value="true" />
