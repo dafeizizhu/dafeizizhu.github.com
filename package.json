@@ -1,0 +1,32 @@
+{
+  "name": "dafeizizhu.github.com",
+  "version": "1.0.0",
+  "description": "blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "http-server site"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dafeizizhu/dafeizizhu.github.com.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "zhiying.mai@gmail.com",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/dafeizizhu/dafeizizhu.github.com/issues"
+  },
+  "dependencies": {
+    "gulp": "~3.9.0",
+    "gulp-data": "~1.2.0",
+    "gulp-jade": "~1.1.0",
+    "run-sequence": "~1.1.2",
+    "rimraf": "~2.4.2",
+    "through2": "~2.0.0",
+    "marked": "~0.3.5",
+    "jade": "~1.11.0",
+    "gulp-prettify": "~0.3.0"
+  }
+}
