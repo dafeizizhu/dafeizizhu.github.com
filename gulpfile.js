@@ -85,6 +85,12 @@ gulp.task('build-posts', ['build-data'],  function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-common-css', function (cb) {
+  gulp.src('common/**/*.min.css')
+    .pipe(gulp.dest('site/common'))
+    .on('end', cb)
+})
+
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-home', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-posts', 'build-home', cb)
 })
