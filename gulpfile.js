@@ -9,6 +9,7 @@ var path = require('path')
 
 var markdown2data = require('./plugins/markdown2data')
 var data2post = require('./plugins/data2post')
+var data2home = require('./plugins/data2home')
 
 gulp.task('default', function () {
   console.log('test')
@@ -25,12 +26,10 @@ gulp.task('build-favicon', function (cb) {
 })
 
 gulp.task('build-home', function (cb) {
-  gulp.src('*.jade')
-    .pipe(data(function (file) {
-      return {}
-    }))
-    .pipe(jade({
-      pretty: true
+  gulp.src('home.jade')
+    .pipe(data2home())
+    .pipe(prettify({
+      indent_size: 2
     }))
     .pipe(gulp.dest('site'))
     .on('end', cb)
@@ -43,6 +42,7 @@ gulp.task('build-data', function (cb) {
     .on('end', function () {
       fs.readdir('site/data', function (err, files) {
         var dateMap = {}
+        var postList = []
         files.forEach(function (file) {
           var data = require('./' + path.join('site', 'data', file))
           if (!dateMap[data.year]) {
@@ -51,10 +51,13 @@ gulp.task('build-data', function (cb) {
           if (!dateMap[data.year][data.month]) {
             dateMap[data.year][data.month] = []
           }
-          dateMap[data.year][data.month].push({
-            link: path.relative(path.join(__dirname, 'site'), data.filePath),
-            title: data.title
-          })
+          var post = {
+            link: '/' + path.relative(path.join(__dirname, 'site'), data.filePath),
+            title: data.title,
+            summary: data.summaryHtmlText
+          }
+          dateMap[data.year][data.month].push(post)
+          postList.unshift(post)
         })
         if (!fs.existsSync('./site')) {
           fs.mkdirSync('./site')
@@ -66,6 +69,7 @@ gulp.task('build-data', function (cb) {
           fs.mkdirSync('./site/data/indexes')
         }
         fs.writeFileSync('./site/data/indexes/date.json', JSON.stringify(dateMap))
+        fs.writeFileSync('./site/data/indexes/posts.json', JSON.stringify(postList))
         cb()
       })
     })

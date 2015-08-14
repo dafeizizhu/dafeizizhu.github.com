@@ -20,31 +20,37 @@ module.exports = function (options) {
 
       var fileName = /[\d]{4}\-[\d]{2}\-[\d]{2}\-([^\.]*).md/.exec(file.path)[1]
 
-      var fileContents = String(file.contents)
+      var fileContents = String(file.contents).replace(/###/g, '### ').replace('{% include JB/setup %}', '')
       var layout = /layout: (.*)/.exec(fileContents)[1]
       var title = /title: \"([^\"]*)"/.exec(fileContents)[1]
       var description = /description: \"([^\"]*)"/.exec(fileContents)[1]
       var tags = /tags: \[([^\]]*)\]/.exec(fileContents)[1].split(', ')
       var filePath = path.join(path.dirname(file.path), '../site/posts', year, month, day, fileName + '.html')
-      var markdownText = fileContents.substring(fileContents.indexOf('%}') + 2)
+      var markdownText = fileContents.substring(fileContents.lastIndexOf('---') + 3)
+      var summaryMarkdownText = markdownText.split('\n').slice(0, 25).join('\n')
 
-      marked(markdownText, function (err, result) {
-        file.path = path.join(path.dirname(file.path), path.basename(file.path, '.md')) + '.json'
-        file.contents = new Buffer(JSON.stringify({
-          year: year,
-          month: month,
-          day: day,
-          filePath: filePath,
-          fileName: fileName,
-          layout: layout,
-          title: title,
-          description: description,
-          tags: tags,
-          markdownText: markdownText,
-          htmlText: result.toString()
-        }))
-
-        cb(null, file)
+      marked(markdownText, function (err, markdownResult) {
+        var htmlText = markdownResult.toString()
+        marked(summaryMarkdownText, function (err, summaryMarkdownResult) {
+          var summaryHtmlText = summaryMarkdownResult.toString()
+          file.path = path.join(path.dirname(file.path), path.basename(file.path, '.md')) + '.json'
+          file.contents = new Buffer(JSON.stringify({
+            year: year,
+            month: month,
+            day: day,
+            filePath: filePath,
+            fileName: fileName,
+            layout: layout,
+            title: title,
+            description: description,
+            tags: tags,
+            markdownText: markdownText,
+            htmlText: htmlText,
+            summaryMarkdownText: summaryMarkdownText,
+            summaryHtmlText: summaryHtmlText
+          }))
+          cb(null, file)
+        })
       })
     }
   })

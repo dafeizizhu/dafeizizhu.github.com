@@ -4,4 +4,26 @@ block title
   title 首页
 
 block content
-  h1 这个是我的首页
+  p
+    label page
+    span #{page}
+  p
+    label pages
+    span #{pages}
+  ul
+    each post in posts 
+      li 
+        a(href='#{post.link}') #{post.title}
+        div
+          !{post.summary}
+  p
+    if (page == 1)
+      span
+        a(href='/index.html') prev
+    else
+      if (page - 1 > 0)
+        span
+          a(href='/index/#{page - 1}.html') prev
+    if (page + 1 < pages)
+      span
+        a(href='/index/#{page + 1}.html') next
