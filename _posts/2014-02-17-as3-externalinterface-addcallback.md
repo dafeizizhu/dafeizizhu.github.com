@@ -23,6 +23,6 @@ tags: [Flash]
 
 同样，也要通过代码给对应的`swf`文件和容器赋予权限：在容器中设置`allowScriptAccess`参数的值为`always`；在`swf`内部调用`allowDomain`赋予对应域中的容器权限。
 
-通过`allCallback`和`call`，我们可以在ActionScript和外部容器（例如HTML中的JavaScript`）进行交互，例如读取页面的URL、读取cookie、调用容器对应功能，如调用`alert`等方法，非常方便。
+通过`allCallback`和`call`，我们可以在ActionScript和外部容器（例如HTML中的JavaScript）进行交互，例如读取页面的URL、读取cookie、调用容器对应功能，如调用`alert`等方法，非常方便。
 
 其中要注意的是，在IE6上有部分关键字，例如`stop`，不能用在`functionName`，考虑这种情况的话`functionName`最好是一些比较特别一点的名字，如`stopMe`（囧）。
