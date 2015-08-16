@@ -3,14 +3,14 @@ var jade = require('jade')
 var path = require('path')
 var File = require('vinyl')
 
-var fn = jade.compileFile(path.join(__dirname, '../home.jade'))
-
 module.exports = function (options) {
   return through.obj(function (file, enc, cb) {
     if (!file.isBuffer()) {
       return cb(null, file)
     }
     
+    var fn = jade.compileFile(file.path)
+
     var posts = require('../site/data/indexes/posts.json')
 
     var pageSize = 10

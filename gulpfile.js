@@ -26,7 +26,7 @@ gulp.task('build-favicon', function (cb) {
 })
 
 gulp.task('build-home', function (cb) {
-  gulp.src('home.jade')
+  gulp.src('layouts/home.jade')
     .pipe(data2home())
     .pipe(prettify({
       indent_size: 2
