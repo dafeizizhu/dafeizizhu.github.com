@@ -6,7 +6,20 @@ html
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     link(rel='stylesheet', href='/common/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/blog.css')
     block style
   body
-    block content
-      h1 o(╯□╰)o没有内容
+    div.blog-masthead
+      div.container
+        nav.blog-nav
+          a.blog-nav-item.active(href='/') 主页
+          a.blog-nav-item(href='/posts') 文章
+          a.blog-nav-item(href='/tags') 标签
+          a.blog-nav-item(href='/projects') 项目
+          a.blog-nav-item(href='/about') 关于
+    div.container
+     div.blog-header
+       h1.blog-title 小麦的二三事
+       p.lead.blog-description 他大舅他二舅，都是他舅
+     block content
+        h1 o(╯□╰)o没有内容

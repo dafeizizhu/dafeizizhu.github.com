@@ -54,7 +54,8 @@ gulp.task('build-data', function (cb) {
           var post = {
             link: '/' + path.relative(path.join(__dirname, 'site'), data.filePath),
             title: data.title,
-            summary: data.summaryHtmlText
+            summary: data.summaryHtmlText,
+            path: file
           }
           dateMap[data.year][data.month].push(post)
           postList.unshift(post)
@@ -91,6 +92,12 @@ gulp.task('build-common-css', function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-css', function (cb) {
+  gulp.src('css/**/*.css')
+    .pipe(gulp.dest('site/css'))
+    .on('end', cb)
+})
+
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-posts', 'build-home', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', cb)
 })
