@@ -10,6 +10,7 @@ var path = require('path')
 var markdown2data = require('./plugins/markdown2data')
 var data2post = require('./plugins/data2post')
 var data2home = require('./plugins/data2home')
+var data2dates = require('./plugins/data2dates')
 
 gulp.task('default', function () {
   console.log('test')
@@ -43,13 +44,20 @@ gulp.task('build-data', function (cb) {
       fs.readdir('site/data', function (err, files) {
         var dateMap = {}
         var postList = []
+        var years = []
+        var months = {}
         files.forEach(function (file) {
           var data = require('./' + path.join('site', 'data', file))
           if (!dateMap[data.year]) {
             dateMap[data.year] = {}
+            years.push(data.year)
           }
           if (!dateMap[data.year][data.month]) {
             dateMap[data.year][data.month] = []
+            if (!months[data.year]) {
+              months[data.year] = []
+            }
+            months[data.year].push(data.month)
           }
           var post = {
             link: '/' + path.relative(path.join(__dirname, 'site'), data.filePath),
@@ -61,7 +69,7 @@ gulp.task('build-data', function (cb) {
             day: data.day,
             tags: data.tags
           }
-          dateMap[data.year][data.month].push(post)
+          dateMap[data.year][data.month].unshift(post)
           postList.unshift(post)
         })
         if (!fs.existsSync('./site')) {
@@ -73,7 +81,16 @@ gulp.task('build-data', function (cb) {
         if (!fs.existsSync('./site/data/indexes')) {
           fs.mkdirSync('./site/data/indexes')
         }
-        fs.writeFileSync('./site/data/indexes/date.json', JSON.stringify(dateMap))
+
+        for (var k in months) {
+          months[k].sort().reverse()
+        }
+
+        fs.writeFileSync('./site/data/indexes/date.json', JSON.stringify({
+          map: dateMap,
+          years: years.sort().reverse(),
+          months: months
+        }))
         fs.writeFileSync('./site/data/indexes/posts.json', JSON.stringify(postList))
         cb()
       })
@@ -83,6 +100,16 @@ gulp.task('build-data', function (cb) {
 gulp.task('build-posts', ['build-data'],  function (cb) {
   gulp.src('site/data/*.json')
     .pipe(data2post())
+    .pipe(prettify({
+      indent_size: 2
+    }))
+    .pipe(gulp.dest('site/posts'))
+    .on('end', cb)
+})
+
+gulp.task('build-indexes-dates', function (cb) {
+  gulp.src('layouts/dates.jade')
+    .pipe(data2dates())
     .pipe(prettify({
       indent_size: 2
     }))
@@ -103,5 +130,5 @@ gulp.task('build-css', function (cb) {
 })
 
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', cb)
 })

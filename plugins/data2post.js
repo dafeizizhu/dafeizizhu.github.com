@@ -25,13 +25,13 @@ module.exports = function (options) {
 
     if (!isNaN(index)) {
       if (index > 0) {
-        data.prevPage = {
+        data.nextPage = {
           link: posts[index - 1].link,
           title: posts[index - 1].title
         }
       }
       if (index < posts.length - 1) {
-        data.nextPage = {
+        data.prevPage = {
           link: posts[index + 1].link,
           title: posts[index + 1].title
         }
