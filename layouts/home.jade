@@ -1,29 +1,31 @@
 extends ./base.jade
 
 block title
-  title 首页
+  title 小麦的二三事 
 
 block content
-  p
-    label page
-    span #{page}
-  p
-    label pages
-    span #{pages}
-  ul
-    each post in posts 
-      li 
-        a(href='#{post.link}') #{post.title}
-        div
-          !{post.summary}
-  p
+  each post in posts
+    div.blog-post
+      h2.blog-post-title #{post.title}
+      p.blog-post-meta 写于#{post.year}年#{post.month}月#{post.day}日 关于#{post.tags}
+      !{post.summary}
+      p: a(href='#{post.link}') 阅读全文 &gt;
+
+block footer
+  nav.pagination
     if (page == 1)
-      span
-        a(href='/index.html') prev
+      li: a(href='/index.html', aria-label='Previous'): span(aria-hidden='true') &laquo;
     else
       if (page - 1 > 0)
-        span
-          a(href='/index/#{page - 1}.html') prev
+        li: a(href='/index/#{page - 1}.html', aria-label='Previous'): span(aria-hidden='true') &laquo;
+      else
+        li.disabled: a(href='/index/#{page - 1}.html', aria-label='Previous'): span(aria-hidden='true') &laquo;
+    - var n = 0
+    while n < pages
+      - var href = (n == 0) ? '/index.html' : '/index/' + n + '.html'
+      - var active = (n == page) ? 'active' : ''
+      li(class='#{active}'): a(href='#{href}') #{(n++) + 1}
     if (page + 1 < pages)
-      span
-        a(href='/index/#{page + 1}.html') next
+      li: a(href='/index/#{page + 1}.html', aria-label='Next'): span(aria-hidden='true') &raquo;
+    else
+      li.disabled :a(href='/index/#{page + 1}.html', aria-label='Next'): span(aria-hidden='true') &raquo;

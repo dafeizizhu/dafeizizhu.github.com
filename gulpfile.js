@@ -55,7 +55,11 @@ gulp.task('build-data', function (cb) {
             link: '/' + path.relative(path.join(__dirname, 'site'), data.filePath),
             title: data.title,
             summary: data.summaryHtmlText,
-            path: file
+            path: file,
+            year: data.year,
+            month: data.month,
+            day: data.day,
+            tags: data.tags
           }
           dateMap[data.year][data.month].push(post)
           postList.unshift(post)

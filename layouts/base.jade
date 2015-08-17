@@ -18,8 +18,23 @@ html
           a.blog-nav-item(href='/projects') 项目
           a.blog-nav-item(href='/about') 关于
     div.container
-     div.blog-header
-       h1.blog-title 小麦的二三事
-       p.lead.blog-description 他大舅他二舅，都是他舅
-     block content
-        h1 o(╯□╰)o没有内容
+      div.blog-header
+        h1.blog-title 小麦的二三事
+        p.lead.blog-description 他大舅他二舅，都是他舅
+      div.col-sm-8.blog-main
+        div.row
+          block content
+            h1 o(╯□╰)o没有内容
+      div.col-sm-3.col-sm-offset-1.blog-sidebar
+        div.sidebar-module
+          h4 文章
+          ol.list-unstyled
+            li: a(href='') TODO
+        div.sidebar-module
+          h4 标签
+          ol.list-unstyled
+            li: a(href='') TODO
+    div.container
+      block footer
+    footer.blog-footer
+      p Powerby MaiZhiying

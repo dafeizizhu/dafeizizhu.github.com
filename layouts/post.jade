@@ -4,23 +4,12 @@ block title
   title #{title}
 
 block content
-  div.row
-    div.col-sm-8.blog-main
-      div.blog-post
-        h2.blog-post-title #{title}
-        p.blog-post-meta 写于#{year}年#{month}月#{day}日 关于#{tags}
-        !{htmlText}
-        nav.pager
-          if prevPage
-            li: a(href='#{prevPage.link}', title='#{prevPage.title}') 上一篇
-          if nextPage
-            li: a(href='#{nextPage.link}', title='#{nextPage.title}') 下一篇
-    div.col-sm-3.col-sm-offset-1.blog-sidebar
-      div.sidebar-module
-        h4 文章
-        ol.list-unstyled
-          li: a(href='') TODO
-      div.sidebar-module
-        h4 标签
-        ol.list-unstyled
-          li: a(href='') TODO
+  div.blog-post
+    h2.blog-post-title #{title}
+    p.blog-post-meta 写于#{year}年#{month}月#{day}日 关于#{tags}
+    !{htmlText}
+    nav.pager
+      if prevPage
+        li: a(href='#{prevPage.link}', title='#{prevPage.title}') 上一篇
+      if nextPage
+        li: a(href='#{nextPage.link}', title='#{nextPage.title}') 下一篇
