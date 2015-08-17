@@ -1,0 +1,10 @@
+extends base.jade
+
+block content
+  ul
+    each tag in tags
+      li
+        ul
+          a(href='/tags/#{tag}') #{tag}
+          each post in tagsMap[tag]
+            li: a(href='#{post.link}') #{post.title}

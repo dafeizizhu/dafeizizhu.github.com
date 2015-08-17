@@ -11,6 +11,7 @@ var markdown2data = require('./plugins/markdown2data')
 var data2post = require('./plugins/data2post')
 var data2home = require('./plugins/data2home')
 var data2dates = require('./plugins/data2dates')
+var data2tags = require('./plugins/data2tags')
 
 gulp.task('default', function () {
   console.log('test')
@@ -46,6 +47,8 @@ gulp.task('build-data', function (cb) {
         var postList = []
         var years = []
         var months = {}
+        var tags = []
+        var tagsMap = {}
         files.forEach(function (file) {
           var data = require('./' + path.join('site', 'data', file))
           if (!dateMap[data.year]) {
@@ -68,6 +71,17 @@ gulp.task('build-data', function (cb) {
             month: data.month,
             day: data.day,
             tags: data.tags
+          }
+          if (data.tags.length) {
+            data.tags.forEach(function (tag) {
+              if (tag) {
+                if (tags.indexOf(tag) < 0) {
+                  tags.push(tag)
+                  tagsMap[tag] = []
+                }
+                tagsMap[tag].unshift(post)
+              }
+            })
           }
           dateMap[data.year][data.month].unshift(post)
           postList.unshift(post)
@@ -92,6 +106,10 @@ gulp.task('build-data', function (cb) {
           months: months
         }))
         fs.writeFileSync('./site/data/indexes/posts.json', JSON.stringify(postList))
+        fs.writeFileSync('./site/data/indexes/tags.json', JSON.stringify({
+          tags: tags,
+          tagsMap: tagsMap
+        }))
         cb()
       })
     })
@@ -117,6 +135,16 @@ gulp.task('build-indexes-dates', function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-indexes-tags', function (cb) {
+  gulp.src('layouts/tags.jade')
+    .pipe(data2tags())
+    .pipe(prettify({
+      indent_size: 2
+    }))
+    .pipe(gulp.dest('site/tags'))
+    .on('end', cb)
+})
+
 gulp.task('build-common-css', function (cb) {
   gulp.src('common/**/*.min.css')
     .pipe(gulp.dest('site/common'))
@@ -130,5 +158,5 @@ gulp.task('build-css', function (cb) {
 })
 
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', cb)
 })
