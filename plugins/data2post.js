@@ -37,6 +37,8 @@ module.exports = function (options) {
         }
       }
     }
+
+    data.tagsData = require('../site/data/indexes/tags.json')
     
     file.path = data.filePath
     file.contents = new Buffer(fn(data))

@@ -27,7 +27,8 @@ module.exports = function (options) {
         pageSize: pageSize,
         page: i,
         pages: pages,
-        posts: postSlice
+        posts: postSlice,
+        tagsData: require('../site/data/indexes/tags.json')
       }))
       this.push(data)
     }

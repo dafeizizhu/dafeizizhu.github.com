@@ -6,8 +6,12 @@ block title
 block content
   div.blog-post
     h2.blog-post-title #{title}
-    p.blog-post-meta 写于#{year}年#{month}月#{day}日 关于#{tags}
-    !{htmlText}
+    p.blog-post-meta 写于#{year}年#{month}月#{day}日 关于
+      each tag, index in tags
+        a(href='/tags/#{tag}') #{tag}
+        if index < tags.length - 1
+          | ,
+    | !{htmlText}
     nav.pager
       if prevPage
         li: a(href='#{prevPage.link}', title='#{prevPage.title}') 上一篇

@@ -21,7 +21,8 @@ module.exports = function (optons) {
     tagsPage.path = path.join(path.dirname(file.path), 'index.html')
     tagsPage.contents = new Buffer(fn({
       tags: tags,
-      tagsMap: tagsMap
+      tagsMap: tagsMap,
+      tagsData: require('../site/data/indexes/tags.json')
     }))
 
     this.push(tagsPage)
@@ -36,7 +37,8 @@ module.exports = function (optons) {
       tagPage.path = path.join(path.dirname(file.path), tag, 'index.html')
       tagPage.contents = new Buffer(fn({
         tags: [tag],
-        tagsMap: tagsMap
+        tagsMap: tagsMap,
+        tagsData: require('../site/data/indexes/tags.json')
       }))
 
       this.push(tagPage)

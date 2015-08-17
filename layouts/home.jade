@@ -7,8 +7,12 @@ block content
   each post in posts
     div.blog-post
       h2.blog-post-title #{post.title}
-      p.blog-post-meta 写于#{post.year}年#{post.month}月#{post.day}日 关于#{post.tags}
-      !{post.summary}
+      p.blog-post-meta 写于#{post.year}年#{post.month}月#{post.day}日 关于
+        each tag, index in post.tags
+          a(href='/tags/#{tag}') #{tag}
+          if index < post.tags.length - 1
+            | ,
+      | !{post.summary}
       p: a(href='#{post.link}') 阅读全文 &gt;
 
 block footer
