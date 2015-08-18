@@ -27,8 +27,8 @@ block footer
     - var n = 0
     while n < pages
       - var href = (n == 0) ? '/index.html' : '/index/' + n + '.html'
-      - var active = (n == page) ? 'active' : ''
-      li(class='#{active}'): a(href='#{href}') #{(n++) + 1}
+      - var activePage = (n == page) ? 'active' : ''
+      li(class='#{activePage}'): a(href='#{href}') #{(n++) + 1}
     if (page + 1 < pages)
       li: a(href='/index/#{page + 1}.html', aria-label='Next'): span(aria-hidden='true') &raquo;
     else

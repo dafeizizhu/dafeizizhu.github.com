@@ -27,7 +27,8 @@ module.exports = function (options) {
       file.contents = new Buffer(fn({
         projectsMap: map,
         tagsData: require('../site/data/indexes/tags.json'),
-        dateData: require('../site/data/indexes/date.json')
+        dateData: require('../site/data/indexes/date.json'),
+        active: 'projects'
       }))
 
       cb(null, file)

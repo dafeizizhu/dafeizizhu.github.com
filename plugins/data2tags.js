@@ -23,7 +23,8 @@ module.exports = function (optons) {
       tags: tags,
       tagsMap: tagsMap,
       tagsData: require('../site/data/indexes/tags.json'),
-      dateData: require('../site/data/indexes/date.json')
+      dateData: require('../site/data/indexes/date.json'),
+      active: 'tags'
     }))
 
     this.push(tagsPage)
@@ -40,7 +41,8 @@ module.exports = function (optons) {
         tags: [tag],
         tagsMap: tagsMap,
         tagsData: require('../site/data/indexes/tags.json'),
-        dateData: require('../site/data/indexes/date.json')
+        dateData: require('../site/data/indexes/date.json'),
+        active: 'tags'
       }))
 
       this.push(tagPage)

@@ -24,6 +24,7 @@ module.exports = function (options) {
       })
       data.path = path.join(path.dirname(file.path), i == 0 ? './index.html' : './index/' + i + '.html')
       data.contents = new Buffer(fn({
+        active: 'home',
         pageSize: pageSize,
         page: i,
         pages: pages,

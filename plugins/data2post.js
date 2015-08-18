@@ -40,6 +40,7 @@ module.exports = function (options) {
 
     data.tagsData = require('../site/data/indexes/tags.json')
     data.dateData = require('../site/data/indexes/date.json')
+    data.active = 'posts'
     
     file.path = data.filePath
     file.contents = new Buffer(fn(data))

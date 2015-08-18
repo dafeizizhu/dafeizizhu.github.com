@@ -12,11 +12,16 @@ html
     div.blog-masthead
       div.container
         nav.blog-nav
-          a.blog-nav-item.active(href='/') 主页
-          a.blog-nav-item(href='/posts') 文章
-          a.blog-nav-item(href='/tags') 标签
-          a.blog-nav-item(href='/projects') 项目
-          a.blog-nav-item(href='/about') 关于
+          - var activeHome = (active == 'home' ? 'active' : '')
+          - var activePosts = (active == 'posts' ? 'active' : '')
+          - var activeTags = (active == 'tags' ? 'active' : '')
+          - var activeProjects = (active == 'projects' ? 'active' : '')
+          - var activeAbout = (active == 'about' ? 'active' : '')
+          a(class='blog-nav-item #{activeHome}', href='/') 主页
+          a(class='blog-nav-item #{activePosts}', href='/posts') 文章 
+          a(class='blog-nav-item #{activeTags}', href='/tags') 标签
+          a(class='blog-nav-item #{activeProjects}', href='/projects') 项目
+          a(class='blog-nav-item #{activeAbout}', href='/about') 关于
     div.container
       div.blog-header
         h1.blog-title 小麦的二三事
