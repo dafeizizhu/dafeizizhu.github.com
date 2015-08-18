@@ -20,7 +20,8 @@ module.exports = function (options) {
     yearsPage.path = path.join(path.dirname(file.path), 'index.html')
     yearsPage.contents = new Buffer(fn({
       date: date,
-      tagsData: require('../site/data/indexes/tags.json')
+      tagsData: require('../site/data/indexes/tags.json'),
+      dateData: require('../site/data/indexes/date.json')
     }))
 
     this.push(yearsPage)
@@ -39,7 +40,8 @@ module.exports = function (options) {
           months: date.months,
           map: date.map
         },
-        tagsData: require('../site/data/indexes/tags.json')
+        tagsData: require('../site/data/indexes/tags.json'),
+        dateData: require('../site/data/indexes/date.json')
       }))
 
       this.push(yearPage)
@@ -61,7 +63,8 @@ module.exports = function (options) {
             months: months,
             map: date.map
           },
-          tagsData: require('../site/data/indexes/tags.json')
+          tagsData: require('../site/data/indexes/tags.json'),
+          dateData: require('../site/data/indexes/date.json')
         }))
 
         this.push(monthPage)

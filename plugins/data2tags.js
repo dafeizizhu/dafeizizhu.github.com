@@ -22,7 +22,8 @@ module.exports = function (optons) {
     tagsPage.contents = new Buffer(fn({
       tags: tags,
       tagsMap: tagsMap,
-      tagsData: require('../site/data/indexes/tags.json')
+      tagsData: require('../site/data/indexes/tags.json'),
+      dateData: require('../site/data/indexes/date.json')
     }))
 
     this.push(tagsPage)
@@ -38,7 +39,8 @@ module.exports = function (optons) {
       tagPage.contents = new Buffer(fn({
         tags: [tag],
         tagsMap: tagsMap,
-        tagsData: require('../site/data/indexes/tags.json')
+        tagsData: require('../site/data/indexes/tags.json'),
+        dateData: require('../site/data/indexes/date.json')
       }))
 
       this.push(tagPage)

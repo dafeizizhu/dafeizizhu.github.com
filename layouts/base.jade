@@ -29,7 +29,9 @@ html
         div.sidebar-module
           h4 文章
           ol.list-unstyled
-            li: a(href='') TODO
+            each year in dateData.years
+              each month in dateData.months[year]
+                li: a(href='/posts/#{year}/#{month}') #{year}年#{month}月
         div.sidebar-module
           h4 标签
           ol.list-unstyled
