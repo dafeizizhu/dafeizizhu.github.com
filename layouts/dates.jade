@@ -4,11 +4,11 @@ block content
   ul
     each year in date.years
       li
+        a(href='/posts/#{year}') #{year}年
         ul
-          a(href='/posts/#{year}') #{year}年
           each month in date.months[year]
             li
+              a(href='/posts/#{year}/#{month}') #{month}月
               ul
-                a(href='/posts/#{year}/#{month}') #{month}月
                 each post in date.map[year][month]
                   li: a(href='#{post.link}') #{post.title}

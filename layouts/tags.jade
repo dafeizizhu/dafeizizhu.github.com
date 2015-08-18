@@ -4,7 +4,7 @@ block content
   ul
     each tag in tags
       li
+        a(href='/tags/#{tag}') #{tag}
         ul
-          a(href='/tags/#{tag}') #{tag}
           each post in tagsMap[tag]
             li: a(href='#{post.link}') #{post.title}
