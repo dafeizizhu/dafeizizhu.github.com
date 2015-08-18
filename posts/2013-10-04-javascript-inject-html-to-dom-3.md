@@ -14,9 +14,9 @@ ____
 
 无论是直接内联的脚本，还是外部引入的脚本，都是用`script`标签的形式引入到HTML中。所以，假设现在已经从HTML字符串中生成了一个DOM的集合`ret`，从该集合收集内联脚本可以分成以下几个步骤：
 
-1. a遍历这个集合。
-2. a如果是`script`，而且`type="text/javascript"`，则认为这个是内联脚本，放入到结果集中。
-3. a如果是普通的DOM，则调用该DOM对象的`getElementsByTagName`就可以获取到这个对象中的`script`标签。
+1. 遍历这个集合。
+2. 如果是`script`，而且`type="text/javascript"`，则认为这个是内联脚本，放入到结果集中。
+3. 如果是普通的DOM，则调用该DOM对象的`getElementsByTagName`就可以获取到这个对象中的`script`标签。
 
 当收集完所有内联的脚本之后，并且DOM已经被插入到文档中，就可以执行这些内联的脚本了。
 

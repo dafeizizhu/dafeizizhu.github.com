@@ -23,8 +23,8 @@ tags: [JavaScript]
 
 跨域的访问通常可以分成三种：
 
-1. a跨域“写”，即链接、跳转和表单提交，这种行为是允许的。
-2. a跨域“嵌入”，即`script`、`link`、`img`、`video`、`object`、`embed`、`iframe`等，这些也是被允许的。
-3. a跨域“读”，例如`XMLHttpRequest`，一般是不允许的，需要设置CORS才能允许这些跨域访问。
+1. 跨域“写”，即链接、跳转和表单提交，这种行为是允许的。
+2. 跨域“嵌入”，即`script`、`link`、`img`、`video`、`object`、`embed`、`iframe`等，这些也是被允许的。
+3. 跨域“读”，例如`XMLHttpRequest`，一般是不允许的，需要设置CORS才能允许这些跨域访问。
 
 在JavaScript中，我们可以通过`iframe.contentWindow`、`window.parent`等API去访问页面中的其他文档。如果这些文档不在同一个域，访问这些文档的`winodw`和`location`会被禁止。如果需要跨域的`iframe`通讯，请使用HTML5提供的`postMessage`API或者使用一些框架去实现，例如[MessengerJS](https://github.com/biqing/MessengerJS)。
