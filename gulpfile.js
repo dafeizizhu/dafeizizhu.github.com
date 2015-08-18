@@ -1,5 +1,4 @@
 var gulp = require('gulp')
-var jade = require('gulp-jade')
 var data = require('gulp-data')
 var runSequence = require('run-sequence')
 var rimraf = require('rimraf')
@@ -12,6 +11,8 @@ var data2post = require('./plugins/data2post')
 var data2home = require('./plugins/data2home')
 var data2dates = require('./plugins/data2dates')
 var data2tags = require('./plugins/data2tags')
+var project2data = require('./plugins/project2data')
+var data2projectsPage = require('./plugins/data2projects-page')
 
 gulp.task('default', function () {
   console.log('test')
@@ -38,7 +39,7 @@ gulp.task('build-home', function (cb) {
 })
 
 gulp.task('build-data', function (cb) {
-  gulp.src('_posts/*.md')
+  gulp.src('posts/*.md')
     .pipe(markdown2data())
     .pipe(gulp.dest('site/data'))
     .on('end', function () {
@@ -157,6 +158,26 @@ gulp.task('build-css', function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-projects-data', function (cb) {
+  gulp.src('projects/**/index.html')
+    .pipe(project2data())
+    .pipe(gulp.dest('site/projects/data'))
+    .on('end', cb)
+})
+
+gulp.task('build-projects-page', ['build-projects-data'], function (cb) {
+  gulp.src('layouts/projects.jade')
+    .pipe(data2projectsPage())
+    .pipe(gulp.dest('site/projects'))
+    .on('end', cb)
+})
+
+gulp.task('build-projects', ['build-projects-page'], function (cb) {
+  gulp.src('projects/**/*')
+    .pipe(gulp.dest('site/projects'))
+    .on('end', cb)
+})
+
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', cb)
 })

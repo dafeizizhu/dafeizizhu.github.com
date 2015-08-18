@@ -1,0 +1,10 @@
+extends base.jade
+
+block content
+  ul
+    each projects, tag in projectsMap
+      li
+        | #{tag}
+        ul
+          each project in projects
+            li: a(href='#{project.link}') #{project.title}
