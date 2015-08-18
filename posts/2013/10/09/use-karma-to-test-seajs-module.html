@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用Karma测试Seajs模块</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用Karma测试Seajs模块</h2>
+            <p class="blog-post-meta">写于2013年10月09日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/node">node</a>,<a href="/tags/前端">前端</a></p>
+            <p><a href="http://karma-runner.github.io/0.10/index.html">Karma</a>是一个使用Node作为平台的单元测试驱动。通过Karma，可以实现基于命令行的自动化测试，十分方便。而且Karma只是一个底层的测试驱动，帮助我们去启动浏览器、编写测试页面、加载源码以及测试套件等功能。在Karma之上，可以使用现在各种各样流行的单元测试框架，例如Jasmine、Mocha、QUnit等，在编写测试用例的时候可以根据自己的习惯灵活地选择需要的单元测试框架，赞！</p>
+            <p>首先需要安装Node。然后就可以通过npm安装Karma了：</p> <pre><code>npm install -g karma
+</code></pre>
+            <p>关键的是Karma的配置文件，可以通过以下命令，用交互式的方法生成一个Karma的配置文件：</p> <pre><code>karma init karma.conf.js
+</code></pre>
+            <p>只需要回答问题就可以生成配置了，主要是关于使用的测试框架、是否需要RequireJs的支持、需要启动哪些浏览器、引入或者排除的文件、是否需要监视文件变化进行自动测试等。</p>
+            <p>生成的配置文件有以下几个比较重要的配置：</p>
+            <ol>
+              <li><code>basePath</code>，所有文件路径都以这个路径为根路径。</li>
+              <li><code>frameworks</code>，使用的测试框架，可以是多个，例如<code>[&quot;mocha&quot;, &quot;jasmine&quot;]</code>。</li>
+              <li><code>files</code>，需要引入的文件数组，数组的元素可以是字符串，声明直接引入到runner.html里面；也可以是一个对象，其中<code>pattern</code>是文件路径，<code>included</code>声明是否需要引入到runner.html里面。</li>
+              <li><code>exclude</code>，需要排除的文件数组，内容格式跟<code>file</code>一致。</li>
+              <li><code>port</code>，测试服务器的端口号。</li>
+              <li><code>autoWatch</code>，是否自动监听文件变化进行测试。</li>
+              <li><code>browser</code>，需要启动的浏览器。</li>
+            </ol>
+            <p>详细的配置可以<a href="http://karma-runner.github.io/0.10/intro/configuration.html">参考这里</a>。</p>
+            <p>修改好配置之后我们可以通过以下的命令手动启动测试：</p> <pre><code>karma run
+</code></pre>
+            <p>到这里简单的安装部署流程已经结束了，可以试着使用自己喜欢的测试框架去编写测试用例啦！但是，要测试SeaJs的模块，要怎么办呢？要知道，SeaJs是使用其自己的机制去加载脚本的，如果要在Karma中配置要加载的文件，只能全部都加进去！</p>
+            <p>其实可以这样：</p>
+            <ol>
+              <li>先加载一个SeaJs，为runner.html提供动态加载SeaJs模块的功能。</li>
+              <li>再加载一个测试的入口，设置SeaJs的配置以及测试套件的入口。</li>
+            </ol>
+            <p>第一步需要修改<code>karma.conf.js</code>里面的<code>files</code>，载入SeaJs和入口文件：</p> <pre><code>files: [&quot;path/to/sea.js&quot;, &quot;path/to/entry.js&quot;],
+</code></pre>
+            <p>第二步需要在入口文件中调用<code>seajs.config</code>设置对应的别名等配置，以及调用入口的测试套件（感谢Github上面的<a href="https://github.com/aralejs/aralejs.org/issues/291">这篇文章</a>）：</p> <pre><code>seajs.config({ ... });
+window.__karma__.start = function() {
+  seajs.use([&quot;./base/tests/base-spec.js&quot;], function() {
+    mocha.run()
+  })
+}
+</code></pre>
+            <p>在<code>testsuit</code>中编写单元测试用例：</p> <pre><code>define(function (require) {
+  describe(&quot;A test suit&quot;, function () {
+    it(&quot;A test case&quot;, function () {
+      expect(true).to.be(true);
+    });
+  });
+});
+</code></pre>
+            <p>注意的是：</p>
+            <ol>
+              <li>测试用例也要是一个CMD模块。</li>
+              <li>使用的测试框架是Mocha。</li>
+              <li>使用的是<code>expect.js</code>的断言，也可以使用其他断言形式，例如<code>should.js</code>、<code>chai</code>等。</li>
+            </ol>
+            <p>编写完用例之后执行<code>karma run</code>，去控制台上看看效果吧！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/08/css-font-face.html" title="使用fontface">上一篇</a></li>
+              <li><a href="/posts/2013/10/10/use-mocha-to-test-seajs-modules.html" title="使用Mocha测试SeaJs模块">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之.html</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之.html</h2>
+            <p class="blog-post-meta">写于2013年08月29日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天工作中遇到了一个小问题：使用<code>.html</code>和<code>.append</code>往一个元素内部添加内容的时候，在IE7、IE8下有两种不同的表现：用<code>.append</code>往元素内部添加特定的HTML字符串，在IE7、8下面是空白的；用<code>.html</code>刷新元素内部的HTML，虽然显示的样式和结构有点异常，但是大部分元素还是正常显示出来了。原因是那段HTML字符串里面有反引号，而且是当反引号成对而且是特定结构的时候才会导致页面空白。到现在还没有查出为什么会有这个问题，今天先来看看<code>.html</code>的使用方法，往后会继续深入<code>.html</code>的源码、<code>append</code>的用法与源码以及两者的区别。</p>
+            <blockquote>
+              <p>Get the HTML contents of the first element in the set of matched elements or set the HTML contents of every matched element.</p>
+            </blockquote>
+            <p><code>.html</code>有两种使用方法，分别对应<code>getter</code>和<code>setter</code>，它们按是否传入参数区分。</p>
+            <h3 id="-html-">.html()</h3>
+            <hr>
+            <p>当没有传入任何参数的时候，<code>.html</code>以<code>getter</code>方式调用，返回匹配元素的内部HTML字符串。注意，<strong>如果该jQuery对象包含的元素个数大于1，调用<code>.html</code>方法只会返回第一个元素的内部HTML字符串</strong>。</p>
+            <p>返回的字符串未必跟HTML中的代码完全一致，包括HTML标签的大小写或者属性上面的引号等等。</p>
+            <h3 id="-html-htmlstring-html-function-index-oldhtml-">.html(HTMLString)或者.html(function(index, oldhtml))</h3>
+            <hr>
+            <p>当传入HTML字符串或者传入一个回调函数的时候，<code>.html</code>以<code>setter</code>方式调用，设置jQuery对象中所有元素内部的HTML。传入字符串的时候，会直接替换元素内部的HTML字符串；传入回调函数时，会使用回调函数返回的字符串替换元素内部的HTML字符串。</p>
+            <p>回调函数接受两个参数，一个是元素的在jQuery对象中的索引，第二个是元素原来的内部HTML字符串。注意，<strong>在调用回调函数之前元素的内部字符串会先被置空</strong>。</p>
+            <p>再替换完元素内部的HTML字符串之后，原来内部元素的一些<code>data</code>还有绑定的事件处理程序都会被删除哦。</p>
+            <p>这里还有些小细节，在jQuery的文档里面特别指出的：</p>
+            <ol>
+              <li>在IE8之前的版本，IE会自动把<code>href</code>属性转成绝对路径。</li>
+              <li>在IE9之前的版本，有可能不能正确处理HTML5的相关元素，请使用<a href="http://code.google.com/p/html5shiv/">html5shiv</a>。</li>
+            </ol>
+            <p>最后，jQuery建议为了防止某些浏览器（特指IE9以及之前的版本），最好先调用<code>.empty</code>再调用<code>.html</code>，防止产生一些孤立的文本节点，如：</p> <pre><code>$(&quot;#id&quot;).empty().html(htmlString);
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/28/css-background-about-blank.html" title="background:url(about:blank)的作用">上一篇</a></li>
+              <li><a href="/posts/2013/08/30/jquery-html-source.html" title="jQuery源码解析之jQuery.fn.html">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

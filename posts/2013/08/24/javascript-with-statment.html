@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 with语句</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 with语句</h2>
+            <p class="blog-post-meta">写于2013年08月24日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>刚接触JavaScript，其中N本入门的书都说不要使用<code>with</code>。可是大家有没有了解过为什么不能使用<code>with</code>，会造成变量的混淆，还是因为别的什么原因？为了了解其中的缘由，我们需要了解<code>with</code>究竟是什么，会对代码造成怎么样的影响。今天先简单介绍一些<code>with</code>的用法以及一些需要注意的地方。</p>
+            <blockquote>
+              <p>A with statement creates a scope within which the properties of a specified object can be referenced without a prefix. </p>
+            </blockquote>
+            <p>使用<code>with</code>可以创建出一个执行作用域。在这个作用域中，作为<code>with</code>的参数传入的对象的属性可以直接引用，而不需要通过这个对象引用，例如：</p> <pre><code>var o = { &quot;a&quot;: &quot;a&quot; };
+with(o) {
+  alert(a); // &quot;a&quot;
+}
+</code></pre>
+            <h3 id="-with-">在<code>with</code>中引用属性</h3>
+            <p>上面说过，<code>with</code>是创建了一个临时的作用域，使得可以直接访问<code>with</code>参数中变量的属性。所以，在<code>with</code>的作用域中，当属性跟外面的变量冲突的时候，<strong><code>with</code>中的属性优先级比较高</strong>，例如：</p> <pre><code>var use = &quot;other&quot;;
+var katana = {
+  isSharp: true,
+  use: function () {
+    this.isSharp = !this.isSharp;
+  }
+};
+with(katana) {
+  alert(use);
+}
+</code></pre>
+            <p>结果表明在<code>with</code>作用域中<code>use</code>是<code>katana</code>中的属性，例子<a href="http://jsfiddle.net/D2ZT8/">参考这里</a>。这个结果可能会混淆在<code>with</code>作用域中变量<code>use</code>的内容，这是其中一个不愿意使用<code>with</code>的原因。</p>
+            <h3 id="-with-">在<code>with</code>中对变量进行赋值操作</h3>
+            <p>那如果在<code>with</code>中对参数中的属性进行赋值又如何，看以下这个例子：</p> <pre><code>var katana = {
+  isSharp: true,
+  use: function () {
+    this.isSharp = !this.isSharp;
+  }
+};
+with(katana) {
+  isSharp = false;
+  assert(katana.isSharp === false,
+    &quot;properties can be assigned&quot;);
+  cut = function () {
+      isSharp = false;
+  };
+  assert(typeof katana.cut == &quot;function&quot;,
+    &quot;new properties can be created on the scoped object&quot;);
+  assert(typeof window.cut == &quot;function&quot;,
+    &quot;new properties are created in the global scope&quot;);
+}
+</code></pre>
+            <p>例子运行结果<a href="http://jsfiddle.net/FLe5m/">参考这里</a>。可以看到第二个断言失败了。从这三个断言可以得出以下结论：</p>
+            <ol>
+              <li>如果给参数中已存在的属性（如上例的<code>isSharp</code>）赋值，则会成功改变参数中对应属性的值。</li>
+              <li>如果给参数中不存在的属性（如上例的<code>cun</code>）赋值，则会在全局作用域中增加这个属性。</li>
+            </ol>
+            <p>如果想为参数增加一个属性，则需要这么写：</p> <pre><code>katana.cut = function(){
+  isSharp = false;
+};
+</code></pre>
+            <p>这个是第二个不使用<code>with</code>的原因，很可能因为一个拼写错误而为全局作用域增加一个属性。</p>
+            <h3 id="-">性能</h3>
+            <p>由于<code>with</code>会创建一个临时的作用域，当<code>with</code>内部的代码引用了一个变量，由于作用域链的增加会导致遍历层数的增加，造成性能损耗。更有甚者，即使<code>with</code>内部不访问也不修改<code>with</code>参数中的属性，也会导致遍历层数的增加！所以使用<code>with</code>之后会有一个微小的性能损耗，当使用<code>with</code>的函数调用次数非常巨大的时候，会造成性能瓶颈。<strong>当性能要求非常高的场景，也不要使用<code>with</code>。</strong></p>
+            <p>尽管<code>with</code>这么多缺点，但是在一些特殊的应用场景下还是有它特殊的作用，会有一些意想不到的效果，明天再继续周末读书时间，讨论<code>with</code>在真实场景下的应用。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/23/html-object.html" title="HTML Object标签">上一篇</a></li>
+              <li><a href="/posts/2013/08/25/javascript-with-statement-usage.html" title="Secrets of the JavaScript Ninja 读书笔记之 with语句的应用场景">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

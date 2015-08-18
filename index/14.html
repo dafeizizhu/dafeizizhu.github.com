@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">DOM的getAttribute方法</h2>
+            <p class="blog-post-meta">写于2013年08月12日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>获取一个DOM元素的特性（Attribute），相信也是一个前端攻城师天天都要涉及的问题。虽然日常我们都被jQuery宠坏了，还是要了解一下原生的应该如何获取一个DOM元素的特性值的方法。</p>
+            <blockquote>
+              <p>getAttribute() returns the value of the named attribute on the specified element.</p>
+            </blockquote>
+            <p><code>getAttribute</code>返回特定DOM元素上的特性的值。该方法接受一个参数，就是表示特性的名称的字符串。当该特性存在时返回该特性的字符串的值，否则返回<code>null</code>或者空字符串。</p>
+            <h3 id="-">标准</h3>
+            <p>调用<code>getAttribute</code>，传入的代表特性名称的字符串是大小写不敏感的，内部实现先会把参数转换成小写再进行操作。</p>
+            <p>大部分浏览器在没有找到该特性值的时候会返回<code>null</code>，例子<a href="http://jsfiddle.net/GVT4E/">参考这里</a>。但是，在DOM 3 Core的标准下应该返回的是<strong>空字符串</strong>，而某些浏览器是按照标准去实现的。所以，当<code>getAttribute</code>返回一个空字符串的时候，可能是该特性没有找到，也可能是该特性的值就是一个空字符串。此时，应该使用<code>hasAttribute</code>去判断一个元素上的某个特性是否存在，如：</p>
+            <pre><code>function getAttr(test) {
+  if (test.hasAttribute(&quot;a&quot;)) {
+    alert(&quot;has attribute a, value is &quot; + test.getAttribute(&quot;a&quot;));
+  } else {
+    alert(&quot;has not attribute a&quot;);
+  }
+}
+</code></pre>
+            <p>例子<a href="http://jsfiddle.net/crctX/">参考这里</a>。P.S. IE 7不支持<code>hasAttribute</code>……</p>
+            <p><a href="/posts/2013/08/12/dom-getattribute.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 执行字符串形式的表达式</h2>
+            <p class="blog-post-meta">写于2013年08月11日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>周末还是继续读书笔记。今天讨论的是JavaScript中执行字符串形式的表达式的几种方式。</p>
+            <h3 id="eval">eval</h3>
+            <p>这个应该是最简单的执行字符串表达式的方法了。<code>eval</code>接受一个参数，就是字符串形式的表达式，并返回最后一条语句的返回结果。比较常见的用法就是把JSON格式的字符串转换成JavaScript的对象：</p> <pre><code>var o = eval(&#39;({ninja: 1})&#39;);
+</code></pre>
+            <p>如果把圆括号省略，<code>o</code>的值是<code>undefined</code>，因为参数语句执行时没有返回任何东西。加上圆括号之后，执行该语句会返回这个对象的值，<code>o</code>才能正确赋值。</p>
+            <p>还有一点需要注意的是<code>eval</code>中的语句执行的作用域与上下文与调用<code>eval</code>所在的作用域和上下文一致。</p>
+            <h3 id="function-">Function构造器</h3>
+            <p>Function构造器的参数列表是可变的。其中最后一个参数是字符串形式的函数逻辑，前面所有参数声明了构造的函数接受哪些参数，如：</p> <pre><code>var add = new Function(&quot;a&quot;, &quot;b&quot;, &quot;return a + b;&quot;);
+</code></pre>
+            <p>与<code>eval</code>不一样的是，使用Function构造器创建的函数<strong>不会产生闭包</strong>，即不能访问外部函数的变量，如：</p> <pre><code>(function () {
+  var a = &quot;outter&quot;;
+</code></pre>
+            <p><a href="/posts/2013/08/11/javascript-code-evaluate.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 面向对象陷阱</h2>
+            <p class="blog-post-meta">写于2013年08月10日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>又到了周末读书的时间了。今天跟大家分享一下书中关于原型、实例化和继承的一些陷阱。</p>
+            <h3 id="-object-">扩展<code>Object</code></h3>
+            <p>先来看看扩展<code>Object.prototype</code>可能会发生什么潜在的问题。假如我们为<code>Object</code>的原型增加一个获取对象上键值的个数，可能会这么写：</p> <pre><code>Object.prototype.keys = function() {      
+  var keys = [];
+  for (var p in this) keys.push(p);
+  return keys;
+};
+var obj = { a: 1, b: 2, c: 3 };              
+alert(obj.keys());
+</code></pre>
+            <p>结果返回了<code>[a, b, c, keys]</code>。这种遍历方式甚至把我们刚才扩展<code>Object.prototype</code>的那个<code>keys</code>方法都遍历出来了！一般情况下，我们对一个对象进行遍历，是不需要把对象上的方法遍历出来的。解决上面的问题，一种方案是判断遍历的值是否是方法，另一种方案就是使用<code>hasOwnProperty</code>来判断对象是否拥有这个属性，过滤掉原型链中的其他属性。</p>
+            <h3
+            id="-number-">扩展<code>Number</code></h3>
+              <p>为<code>Number.prototype</code>做扩展要注意的是，在其文档中要说明如何使用这个扩展。假设我们为<code>Number.prototype</code>增加了一个<code>add</code>方法，那只能按以下的方式调用：</p> <pre><code>var n = 5;
+n.add(2);
+</code></pre>
+              <p><a href="/posts/2013/08/10/javascript-oo-gotchas.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery源码解析之jQuery.each</h2>
+            <p class="blog-post-meta">写于2013年08月09日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>昨天讨论了<code>for...in</code>的用法，今天来看一个可能我们日常使用频率更高另外一个遍历的方法：<code>jQuery.each</code>。先来看看jQuery对<code>each</code>的描述：</p>
+            <blockquote>
+              <p>A generic iterator function, which can be used to seamlessly iterate over both objects and arrays. Arrays and array-like objects with a length property (such as a function&#39;s arguments object) are iterated by numeric index, from 0 to
+                length-1. Other objects are iterated via their named properties.</p>
+            </blockquote>
+            <p>从描述中可以看出来，<code>jQuery.each</code>即可以遍历数组（包括<code>arguments</code>对象），也可以遍历一个对象上的属性。该方法接受两个参数：</p>
+            <ol>
+              <li><code>collection</code>，需要遍历的数组或者对象。</li>
+              <li><code>callback</code>，遍历时的回调函数，该函数接受两个参数，一个是这次遍历的下标（数组）或者键值（对象），另一个是这次遍历的迭代子的值。</li>
+            </ol>
+            <p>执行这个方法返回的是被遍历的对象，便于写出链式写法的代码。</p>
+            <p>在每次遍历的回调中，我们可以通过<code>return false</code>来实现<code>for</code>循环中的<code>break</code>功能，通过返回非<code>false</code>的值来实现<code>continue</code>的功能。如以下代码：</p> <pre><code>$.each([1, 2, 3, 4], function(i, v) {
+  if (v === 1) {
+    return true;
+  }
+  if (v === 3) {
+    return false;
+  }
+  console.log(v);
+});
+</code></pre>
+            <p><a href="/posts/2013/08/09/jquery-each.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在JavaScript中遍历一个对象的所有属性</h2>
+            <p class="blog-post-meta">写于2013年08月08日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>在JavaScript中遍历一个对象的所有属性，相信这个一个前端开发人员几乎每天都要面对的事情。最简单的莫过于<code>for...in</code>循环：</p> <pre><code>for (variable in object) {
+  ...
+}
+</code></pre>
+            <p>其中：</p>
+            <ol>
+              <li><code>variable</code>是这个对象里面的键值。</li>
+              <li><code>object</code>是要遍历的对象。</li>
+            </ol>
+            <p>注意：这个循环是不会去遍历那些被声明为不可遍历的属性（例如<code>Object.prototype</code>或者<code>String.prototype</code>上面的属性）。执行<code>for...in</code>循环时，不仅会遍历这个对象上的所有属性，也会沿着这个对象的原型链遍历所有原型链上的属性，例如：</p> <pre><code>function A () {
+  this.b = &quot;b&quot;;
+  this.a = &quot;a&quot;;
+}
+
+A.prototype.a = &quot;prototype a&quot;;
+A.prototype.c = &quot;prototype c&quot;;
+
+var a = new A();
+</code></pre>
+            <p><a href="/posts/2013/08/08/javascript-iteract-an-object.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">了解BFC</h2>
+            <p class="blog-post-meta">写于2013年08月07日 关于<a href="/tags/css">css</a></p>
+            <p>BFC，Block Formatting Context，简单的说就是一个块元素布局上下文，MDN中是这么解释的：</p>
+            <blockquote>
+              <p>A block formatting context is a part of a visual CSS rendering of a Web page. It is the region in which the layout of block boxes occurs and in which floats interact with each other.</p>
+            </blockquote>
+            <p>在触发了BFC的容器中，声明了内部浮动元素的布局规则。一个元素浮动或者清除浮动，不会影响另一个BFC的内部元素的布局。</p>
+            <p>通过以下条件可以使一个元素生成BFC：</p>
+            <ol>
+              <li>aHTML文档的根节点。</li>
+              <li>a浮动元素。</li>
+              <li>a绝对定位的元素。</li>
+              <li>a<code>display</code>是<code>inline-block</code>、<code>table-cell</code>、<code>table-caption</code>、<code>flex</code>或者<code>inline-flex</code>的元素。</li>
+              <li>a<code>overflow</code>不是<code>visible</code>的元素。</li>
+            </ol>
+            <p>当一个元素触发了BFC，会有以下几个布局规则：</p>
+            <ol>
+              <li>a不与浮动元素重叠。</li>
+              <li>a清除元素内部的浮动。通过触发BFC，使元素内部的浮动元素造成布局的影响限制在触发BFC元素之内。</li>
+              <li>a不让内外<code>margin</code>合并。</li>
+            </ol>
+            <p>看上去跟昨天介绍的<code>hasLayout</code>造成的效果有点类似啊。所以才说在触发BFC的同时最好也同时触发<code>hasLayout</code>，以保证不同浏览器中的显示效果一致。</p>
+            <p><a href="/posts/2013/08/07/css-bfc.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">IE的hasLayout</h2>
+            <p class="blog-post-meta">写于2013年08月06日 关于<a href="/tags/css">css</a></p>
+            <p>只有在IE8之前版本的IE上才会有hasLayout这个纠结的东西。在这些版本的IE中，有两种类型的元素：</p>
+            <ol>
+              <li>a拥有布局的元素，可以控制自己的大小及其子元素的布局。</li>
+              <li>a没有布局的元素，只能根据最近的拥有布局的祖先元素来确定自己的大小和布局。</li>
+            </ol>
+            <p>拥有布局的元素可以控制自己的大小，也可以控制其自身及其子元素的布局。一些没有特定声明宽度和高度的元素，但是有一些大小限制的元素，例如表单控件、图片等，通常也是拥有布局的元素。只有拥有布局的元素才能控制是否出现滚动条。</p>
+            <p>拥有布局的元素意味着：</p>
+            <ol>
+              <li>a限制这个元素成为一个矩形（强制行内元素的布局行为变得像块元素一样）。</li>
+              <li>a一些关于这个元素的大小位置等属性会被缓存起来，也会参与到大小位置改变的算法中，造成额外的内存于时间消耗。</li>
+              <li>a不能根据子元素的内容进行自适应。</li>
+            </ol>
+            <p>当一个元素拥有布局的时候，我们说这个元素触发了<code>hasLayout</code>，也就是说这个元素有个内部属性为<code>hasLayout: true</code>。注意，这个不是一个CSS的样式，某种特定的情况下一个元素就会拥有布局。</p>
+            <p>首先是默认就拥有布局的元素：</p>
+            <ol>
+              <li>a图片</li>
+              <li>a表格、表格行、单元格</li>
+              <li>a表单控件</li>
+              <li>a<code>frameset</code>等框架元素</li>
+              <li>a<code>object</code>等嵌入元素</li>
+            </ol>
+            <p><a href="/posts/2013/08/06/css-ie-haslayout.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">JavaScript与Flash通信</h2>
+            <p class="blog-post-meta">写于2013年08月05日 关于<a href="/tags/前端">前端</a></p>
+            <p>虽然说iOS不支持Flash，但是Flash在桌面端的使用量还是很大的。作为一个专业的前端开发人员，至少也要懂得如何使用JavaScript与Flash进行通信。</p>
+            <h3 id="javascript-flash">JavaScript =&gt; Flash</h3>
+            <p>使用JavaScript调用Flash内部的方法。假设有以下Flash片段：</p> <pre><code>&lt;object type=&quot;application/x-shockwave-flash&quot; id=&quot;myFlashID&quot; width=&quot;85&quot; height=&quot;85&quot; data=&quot;framejump.swf&quot;&gt;
+  &lt;param name=&quot;allowScriptAccess&quot; value=&quot;sameDomain&quot;&gt;
+  &lt;param name=&quot;movie&quot; value=&quot;framejump.swf&quot;&gt;
+  &lt;param name=&quot;quality&quot; value=&quot;high&quot;&gt;
+  &lt;param name=&quot;scale&quot; value=&quot;noscale&quot;&gt;
+  &lt;param name=&quot;wmode&quot; value=&quot;transparent&quot;&gt;
+&lt;/object&gt;
+</code></pre>
+            <p>我们可以通过JavaScript先获取该Flash影片的引用：</p> <pre><code>function getFlashMovieObject(movieName){
+  if (window.document[movieName]){
+    return window.document[movieName];
+  }else if (navigator.appName.indexOf(&quot;Microsoft&quot;)==-1){
+    if (document.embeds &amp;&amp; document.embeds[movieName])
+      return document.embeds[movieName];
+</code></pre>
+            <p><a href="/posts/2013/08/05/javascript-flash-comunication.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 数据存取</h2>
+            <p class="blog-post-meta">写于2013年08月04日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天再来一篇有关提高性能的读书笔记。标题中的数据存储，说白了就是JavaScript中获取与设置数据的方式，例如局部变量、全局变量、对象属性、数组等。大家有没有想过函数或者方法中使用以上的不同方式存取数据对性能造成的影响也是不一样的呢？</p>
+            <h3 id="-">变量</h3>
+            <p>当数据存储在局部变量中，读取与写入的方式都是最快的。这是由于局部变量存放在作用域链的最顶层。当变量出现在特定的作用域链中，对作用域链的遍历就可以停止了，减少遍历作用域链的性能开销。与之相反的就是全局变量。全局变量放置在全局作用域中，这个作用域处于作用域链的最底层。当反复引用全局变量的时候，每次引用都要完整遍历整个作用域链（当然，某些现代浏览器会对代码进行解析型的编译优化如此问题，但是我们还是要兼容那些古老的浏览器，难道不是吗？），这样会造成额外的开销。</p>
+            <p>还有一些语句会对作用域链做动态的修改。例如<code>with</code>，会在作用域链的顶端加入一个临时的作用域，包含<code>with</code>参数中的对象的所有属性。又如<code>try-catch</code>中<code>catch</code>字句，会在作用域链的顶端加入一个临时作用域，加入错误对象。这些语句都会造成作用域链的长度增加，也增加了遍历作用域链的性能开销。</p>
+            <p>闭包也会对变量的读取和写入造成性能影响。当闭包的内部函数被执行的时候，它的作用域链是由内部函数的活动对象加上外部函数的作用域链合并而成。当闭包的嵌套层数很深，查找一个变量也会去遍历这个很深的作用域链，造成性能消耗。</p>
+            <p>对于<code>with</code>，尽量不使用。对于<code>try-catch</code>，不要把它作为JavaScript的异常处理机制。更合理的做法是在代码中尽量避免抛出异常，手工处理异常分支，只把<code>try-catch</code>当作最后的安全手段。</p>
+            <p>对于访问和修改全局变量或者是闭包变量，所做的优化就是使用一个局部变量把相关的全局变量和闭包变量引入到函数的内部，当需要使用这些变量的时候使用局部变量的引用，减少遍历作用域链的次数。</p>
+            <p>虽然以上的优化效果有限，但是当函数被频繁执行的时候效果就会很明显了。当然，这些优化可以交给以后的编译器或者部署工具（JavaScript压缩工具等），但是在没有这些工具、没有浏览器JavaScript引擎优化的情况下，在性能需求非常高的场景，我们也要注意这些细节。</p>
+            <h3 id="-">属性</h3>
+            <p>数据也可以作为一个对象的属性进行访问或者写入。我们知道，JavaScript中的对象是通过原型的方式来模拟OO中的继承关系。在一个对象中访问某个属性，需要遍历原型链去查找某个属性是否存在。这样意味着一个没有<code>toString</code>方法的对象调用像<code>Object</code>的<code>toString</code>方法，需要遍历整个原型链才能找到这个方法，然后才能执行。当原型链很深的时候，调用原型上的方法需要更多次数的遍历，也会造成额外的性能开销。</p>
+            <p>对于属性上的优化，思想跟变量是一致的：使用一个局部变量“缓存”这些方法的属性。这样能把相关属性提高到作用域链的最顶端，当访问的时候直接访问局部变量，就不需要再去原型链中查找了。<strong>注意，对象上的方法最好不要使用这中方式缓存，可能会造成执行上下文的改变，需要使用<code>call</code>或者<code>apply</code>去手工控制方法的执行上下文才能保证逻辑的正确性。</strong></p>
+            <p><a href="/posts/2013/08/04/high-performance-javascript-read-note.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Yahoo!性能优化规则</h2>
+            <p class="blog-post-meta">写于2013年08月03日 关于<a href="/tags/前端">前端</a></p>
+            <p>最近接二连三地被问到有做过什么性能优化的东西，感觉之前做了很多都没有仔细总结积累下来，到用的时候还得拼命去想这些规则。现在就先看看Yslow里面的性能优化规则吧，以作参考。</p>
+            <h3 id="-http-">减少HTTP请求</h3>
+            <p>由于请求一个外部的JavaScript或者样式表需要发送一个HTTP请求，而建立HTTP请求、接收响应这个过程会带来一些性能的开销。应该尽量避免发送太多HTTP请求，减少建立请求时造成的不必要的开销。以下是几个减少HTTP请求的方法：</p>
+            <ol>
+              <li>合并JavaScript脚本和样式表。当页面应用的脚本跟样式表的个数比较多的时候会发送等量的HTTP请求或者这些文件的内容。可以在部署的时候静态打包出合并后的release文件，或者运行时状态下动态合并相关的脚本与样式表。</li>
+              <li>CSS Sprites，结合<code>background-image</code>和<code>background-position</code>这两个CSS样式可以把一系列的小背景图（例如图标）全部合并到一个文件上面，减少不同样式获取背景图片的时候发送的HTTP请求。</li>
+              <li>Image Map，把多个图片合并到一个图片中，使用<code>coords</code>属性限制图片的显示区域，与CSS Sprites类似。</li>
+              <li><code>data:URL</code>，把一些小图片的内容直接通过这个属性内联到<code>img</code>标签中，这样这个图片就不需要额外发送一个HTTP请求了。</li>
+            </ol>
+            <h3 id="-cdn-">使用CDN内容分发网络</h3>
+            <p>超过80%的响应时间消耗在等待内容下载的阶段，例如外部JavaScript脚本、CSS样式表等。所以静态资源存放在哪也影响到网站响应的效率。CDN可以帮助用户从最效率的服务器（例如地理位置最近、网络延迟最少等）返回对应的静态资源，保证静态资源的下载效率最高。这个工作在网站上线之后是最容易操作的，但是也比较容易被忽略。</p>
+            <p>这里吐槽一句，由于在我司做的项目都是基于内网用户的，所以这个没法使用CDN，相信使用了CDN之后还可能造成性能下降（囧）。</p>
+            <h3 id="-">激活缓存机制</h3>
+            <p>通过配置HTTP头<code>Expires</code>或者<code>Cache-Controll</code>可以激活缓存机制。由于静态资源已经被存放到缓存中，下次请求同样的资源的时候可以直接读取缓存的内容，减少多次重复请求的资源的下载量。</p>
+            <p>这个工作可以在页面上增加对应的<code>meta</code>或者在Web容器中配置对应的HTTP头去控制缓存的机制，包括过期时间等。</p>
+            <p><a href="/posts/2013/08/03/yahoo-performance-rules.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/13.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li class="active"><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/15.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

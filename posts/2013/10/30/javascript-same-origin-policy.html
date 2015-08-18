@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>JavaScript同源策略</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">JavaScript同源策略</h2>
+            <p class="blog-post-meta">写于2013年10月30日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>当一个不是当前页面的域下的脚本要跟当前页面进行交互，要受到这个同源策略的限制。这里的同源指的是页面和脚本路径的协议、端口和主机都一样。其中一项不一样都视作不同源，也就是我们常说的跨域：</p> <pre><code>http://store.company.com/dir/other.html
+http://store.company.com/dir2/other.html // same
+http://store.company.com:81/dir/other.html // not same
+</code></pre>
+            <p>一个页面还可以更改其所在的域，不过有很多限制。可以通过设置<code>document.domain</code>改变当前页面的域，但是只能够设置到当前域的后缀部分，例如：</p> <pre><code>// current domain: www.duowan.com
+document.domain = &quot;duowan.com&quot;; // success
+document.domain = &quot;u.duowan.com&quot;; // error
+</code></pre>
+            <p>设置了域之后的跨域检查都会使用设置后的值去计算。有一点需要注意的是，设置<code>document.domain</code>之后端口会被重置为<code>null</code>，所以<code>company.com:8080</code>和<code>company.com</code>要通讯，两个页面都需要设置<code>document.domain</code>，这样端口才能一致。</p>
+            <p>跨域的访问通常可以分成三种：</p>
+            <ol>
+              <li>a跨域“写”，即链接、跳转和表单提交，这种行为是允许的。</li>
+              <li>a跨域“嵌入”，即<code>script</code>、<code>link</code>、<code>img</code>、<code>video</code>、<code>object</code>、<code>embed</code>、<code>iframe</code>等，这些也是被允许的。</li>
+              <li>a跨域“读”，例如<code>XMLHttpRequest</code>，一般是不允许的，需要设置CORS才能允许这些跨域访问。</li>
+            </ol>
+            <p>在JavaScript中，我们可以通过<code>iframe.contentWindow</code>、<code>window.parent</code>等API去访问页面中的其他文档。如果这些文档不在同一个域，访问这些文档的<code>winodw</code>和<code>location</code>会被禁止。如果需要跨域的<code>iframe</code>通讯，请使用HTML5提供的<code>postMessage</code>API或者使用一些框架去实现，例如
+              <a
+              href="https://github.com/biqing/MessengerJS">MessengerJS</a>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/29/document-cookie.html" title="document.cookie">上一篇</a></li>
+              <li><a href="/posts/2013/10/31/window-postmessage.html" title="window.postMessage">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

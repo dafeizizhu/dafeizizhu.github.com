@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>换行还是不换行之white-space</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">换行还是不换行之white-space</h2>
+            <p class="blog-post-meta">写于2013年07月22日 关于<a href="/tags/css">css</a></p>
+            <p>今天又给一个换行还是不换行的问题困扰了。决定好好地研究一下块元素中的行内元素是如何控制换行的。主要从几个CSS样式入手，包括<code>white-space</code>、<code>word-break</code>等，最后会综合讨论块元素的其他CSS是如何影响行内元素的换行控制。</p>
+            <p>今天先看看<code>white-space</code>这个CSS属性。</p>
+            <blockquote>
+              <p>The white-space property specifies how white-space inside an element is handled.</p>
+            </blockquote>
+            <p><code>white-space</code>这个属性是用来声明一个元素内部的空白（包括空格还有换行符等）是如何处理的。可选的取值有以下几个：</p>
+            <ol>
+              <li><code>normal</code>，默认值，合并所有空白，当内容接触容器元素边界的时候自动换行。</li>
+              <li><code>nowrap</code>，与<code>normal</code>类似，只是不会自动换行<strong>（强制不换行必须配上这个CSS样式）</strong>。</li>
+              <li><code>pre</code>，保留所有空白，也不会自动换行。</li>
+              <li><code>pre-wrap</code>，保留所有空白，会自动换行。</li>
+              <li><code>pre-line</code>，除了换行符之外的空格合并，会自动换行。</li>
+              <li><code>inherit</code>，继承父元素的值。</li>
+            </ol>
+            <p>对于行内元素来说：</p>
+            <ol>
+              <li>当值是<code>normal</code>、<code>nowrap</code>和<code>pre-line</code>的时候，换行符前后的空白会被删除。</li>
+              <li>当值是<code>pre</code>和<code>pre-wrap</code>的时候，多个空格组成的序列不会在遇到元素边缘的时候被中断。而<code>pre-wrap</code>则会在序列的最后自动换行。</li>
+              <li>当值是<code>normal</code>和<code>nowrap</code>的时候，换行符会被转化成一个空格、一个长度为0的字符串或者压根不显示，具体如何转化需要看浏览器的实现算法。</li>
+              <li>当值是<code>normal</code>、<code>nowrap</code>和<code>pre-line</code>的时候，制表符会被转化成一个空格，多个连续的空格会被归并成一个空格。</li>
+            </ol>
+            <p>在W3上讲了一个比较有意思的例子，就是涉及到文字阅读方向的问题。假如存在下面的一段HTML片段：</p> <pre><code>&lt;ltr&gt;A[1]&lt;rtl&gt;[2]B[3]&lt;/rtl&gt;[4]C&lt;/ltr&gt;
+</code></pre>
+            <p>其中1、2、3、4是4个空格，<code>white-space</code>是<code>normal</code>。理论上1和2会合并，3和4会合并。但是出来的结果确是：</p> <pre><code>A[12][34]BC
+</code></pre>
+            <p>原因就是文字阅读方向杂糅（虽然这个场景在实际应用之中少之又少）。空格12是左往右读的，空格34是右往左读的，这个顺序跟HTML中的顺序是保持一致的。所以，避免出现上述情况的混淆，W3建议<strong>在一个元素的开始和结尾不要写空白</strong>。</p>
+            <p>总结一下，单就<code>white-space</code>这个CSS样式：</p>
+            <ol>
+              <li>强制换行，需要设置成<code>normal</code>。</li>
+              <li>强制不换行，需要设置成<code>nowrap</code>。</li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/21/a-http-request.html" title="HTTP协议之简述一个HTTP请求的经过">上一篇</a></li>
+              <li><a href="/posts/2013/07/23/css-word-wrap.html" title="换行还是不换行之word-wrap">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

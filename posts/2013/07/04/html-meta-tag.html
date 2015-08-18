@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML META 标签入门</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML META 标签入门</h2>
+            <p class="blog-post-meta">写于2013年07月04日 关于<a href="/tags/html">html</a></p>
+            <p>今天被妹纸狠狠地鄙视了我的博客样子太丑(/＞皿&lt;)/ ～ ┴┴。闲逛看看有没有好看的博客设计。偷看他们源代码，发现有好多<code>meta</code>标签都不认识，所以写一篇东西好好学习一下<code>html</code>中的<code>meta</code>标签究竟怎么用。</p>
+            <h3 id="-">定义</h3>
+            <p>又看看w3schools对<code>meta</code>标签的定义：</p>
+            <blockquote>
+              <p>The meta tag provides metadata about the HTML document. Metadata will not be displayed on the page, but will be machine parsable.</p>
+            </blockquote>
+            <p>再看看wikipedia的解释：</p>
+            <blockquote>
+              <p>Meta elements can specify HTTP headers which should be sent <strong>before</strong> the actual content when the HTML page is served from Web server to client.</p>
+            </blockquote>
+            <p><code>meta</code>标签不会显示在页面中。使用<code>meta</code>可以声明这个页面的描述、作者、关键字、最后修改日期等信息，可以供浏览器、搜索引擎和一些Web服务使用。</p>
+            <h3 id="-">注意</h3>
+            <p>以下是几点注意事项：</p>
+            <ol>
+              <li><code>meta</code>标签总是定义在<code>head</code>标签之类。</li>
+              <li><code>meta</code>标签总是以键值对（<code>name</code>和<code>content</code>）传递信息。</li>
+              <li>在定义<code>name</code>或者<code>http-equiv</code>属性之后才能定义<code>content</code>属性。</li>
+            </ol>
+            <h3 id="name">NAME</h3>
+            <p><code>meta</code>标签的<code>name</code>属性就说说明当前的<code>meta</code>标签是什么类型，以便于搜索引擎抓取，索引网页。相应的<code>content</code>就是告诉搜索引擎相关的信息。对应的取值大概有（继续补充）：</p>
+            <p><code>keyword</code>，关键字，如：</p> <pre><code>&lt;meta name=&quot;keyword&quot; content=&quot;key1,key2,key3&quot; /&gt;
+</code></pre>
+            <p>多个关键字用<code>,</code>隔开，还可以设置<code>lang</code>属性指定语言。</p>
+            <p><code>description</code>，描述，如：</p> <pre><code>&lt;meta name=&quot;description&quot; content=&quot;something about this page.&quot; /&gt;
+</code></pre>
+            <p><code>robots</code>，给搜索引擎，声明该页面的访问规则，如</p> <pre><code>&lt;meta name=&quot;robots&quot; content=&quot;all&quot; /&gt;
+</code></pre>
+            <p>可选的取值有<code>all</code>、<code>index</code>、<code>follow</code>、<code>noindex</code>、<code>nofollow</code>、<code>none</code>。</p>
+            <p><code>author</code>，作者，如：</p> <pre><code>&lt;meta name=&quot;author&quot; content=&quot;Zhiying Mai&quot; /&gt;
+</code></pre>
+            <p><code>copyright</code>，版权信息，如：</p> <pre><code>&lt;meta name=&quot;copyright&quot; content=&quot;Power by Zhiying Mai.&quot; /&gt;
+</code></pre>
+            <p><code>generator</code>，页面制作工具（吐槽一个，浏览器连这个都管o(╯□╰)o）。如：</p> <pre><code>&lt;meta name=&quot;copyright&quot; content=&quot;Front-page&quot; /&gt;
+</code></pre>
+            <p><code>revisit-after</code>，告诉搜索引擎什么时候重新抓取，如：</p> <pre><code>&lt;meta name=&quot;revisit-after&quot; content=&quot;2 days&quot;&gt;
+</code></pre>
+            <h3 id="http-equiv">HTTP-EQUIV</h3>
+            <p><code>meta</code>的<code>http-equiv</code>属性,其作用类似于HTTP头协议,它会告诉浏览器一些关于字符设定，页面刷新，cookie，和缓存等等相关信息。对应的取值大概有（继续补充）：</p>
+            <p><code>content-type</code>，页面属性类型，如：</p> <pre><code>&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+</code></pre>
+            <p>在HTML5中已经使用独立的<code>meta</code>标签来声明字符集。</p>
+            <p><code>refresh</code>，刷新时间，如：</p> <pre><code>&lt;meta http-equiv=&quot;refresh&quot; content=&quot;60&quot;&gt;
+</code></pre>
+            <p>表示页面60秒后会自动刷新。还可以配置<code>url</code>属性让页面在设置的刷新时间跳转到特定的url。</p>
+            <p><code>expires</code>，页面的过期时间，当页面过期后，必须重新从服务器请求该页面，如：</p> <pre><code>&lt;meta http-equiv=&quot;expires&quot; content=&quot;Fri, 5 Jul 2013 01:13:13 GMT&quot;&gt;
+</code></pre>
+            <p>当<code>content</code>是0时表示页面<strong>永不过期</strong>。</p>
+            <p><code>pragma</code>，禁止浏览器缓存页面，如：</p> <pre><code>&lt;meta http-equiv=&quot;pragma&quot; content=&quot;no-cach&quot;&gt;
+</code></pre>
+            <p><code>set-cookie</code>，设置cookie的过期时间，如：</p> <pre><code>&lt;meta http-equiv=&quot;expires&quot; content=&quot;cookievalue=xxx; expires=Fri, 5 Jul 2013 01:13:13 GMT&quot;&gt;
+</code></pre>
+            <p><code>window-target</code>，强制页面在特定的框架中（特别是在<code>iframe</code>中）显示，如：</p> <pre><code>&lt;meta http-equiv=&quot;widow-target&quot; content=&quot;_top&quot;&gt;
+</code></pre>
+            <p>可选的取值为<code>_blank</code>、<code>_top</code>、<code>_self</code>、<code>_parent</code>。</p>
+            <p><code>X-UA-Compatible</code>，指定IE的文档兼容模式（这个太有用了），如：</p> <pre><code>&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot;&gt;
+</code></pre>
+            <p>表示IE以最高版本的标准模式运行，如果有Google Chrome Frame则使用其渲染该页面。</p>
+            <h3 id="html5">HTML5</h3>
+            <p>最后讲一个只有HTML5才有的<code>meta</code>：</p> <pre><code>&lt;meta charset=&quot;utf-8&quot; /&gt;
+</code></pre>
+            <h3 id="-">总结</h3>
+            <p><code>meta</code>标签由于SEO而被重视，但是其作用不仅仅是用作SEO，还能制造出类似HTTP协议头的效果。当需要IE浏览器处于某种特定的文档模式，也要注意使用<code>meta</code>哦亲！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/03/a-tag.html" title="HTML A 标签简析">上一篇</a></li>
+              <li><a href="/posts/2013/07/05/href-javascript-expression.html" title="Href中的JavaScript link">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用Grunt去构建</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用Grunt去构建</h2>
+            <p class="blog-post-meta">写于2013年09月22日 关于<a href="/tags/前端">前端</a></p>
+            <p>之前已经接触过grunt了，在去年的工作中就已经使用grunt去做一些零星的构建工作，但是没有系统地使用过，而且也是使用原生的node比较多。今天自己使用grunt的构建工具已经差不多编写完成了，在这里写一下，顺便也当作一个不是很正式的文档吧。</p>
+            <h3 id="-">准备工作</h3>
+            <hr>
+            <p>grunt是使用node作为运行环境的，所以先要安装一个node。</p>
+            <p>安装grunt-cli和项目脚手架工具：</p> <pre><code>npm install -g grunt-cli
+npm install -g grunt-init
+</code></pre>
+            <p>这两个node的模块都要安装到全局里面，方便在任何一个地方调用。</p>
+            <p>由于使用了SPM去安装外部依赖，需要安装SPM：</p> <pre><code>npm install -g spm
+</code></pre>
+            <p>先从仓库里面把必须的文件checkout出来。暂时存了一份在github上，可以通过<code>git clone</code>来checkout，地址是<a href="https://github.com/amkit2/amkit2.git">https://github.com/amkit2/amkit2.git</a>。</p>
+            <p>checkout之后，在该目录上面执行命令：</p> <pre><code>npm install
+</code></pre>
+            <p>把需要的node模块下载下来，有grunt的几个官方插件，例如copy、clean等；由于使用了seajs作为模块化开发的工具，所以还有几个关于seajs的插件，例如transport、concat等。完整的插件及其版本列表在<code>package.json</code>里面。</p>
+            <p>以Windows为例，在我的文档下面新建一个<code>.grunt-init</code>的文件夹（可能需要使用命令行新建）。在里面把项目的模板checkout出来，暂时也放在github，地址是<a href="https://github.com/amkit2/grunt-init-amkit2.git">https://github.com/amkit2/grunt-init-amkit2.git</a>。</p>
+            <p>到现在环境已经准备好了，可以开始创建第一个模块！</p>
+            <h3 id="-">新建一个模块</h3>
+            <hr>
+            <p>在根目录下面可以任意创建项目的根文件夹，用SPM的术语来说就是family。这里没有什么family和module的概念，只有路径。这里用一个约定去判断一个目录是否为一个基本的模块：目录里面有一个<code>src</code>文件夹和<code>package.json</code>文件。所有的构建都是基于这个原子模块来进行的。</p>
+            <p>简单起见，以SPM规定的文件目录结构去开始我们的第一个模块。在根文件夹里面新建一个目录作为模块目录，在这个目录里面执行命令：</p> <pre><code>grunt-init amkit2
+</code></pre>
+            <p>按照向导输入模块的名字、版本和<code>package.json</code>的父<code>package.json</code>。这个是模仿maven pom文件中的<code>parent</code>字段，可以把一些全局配置抽取到顶层目录的<code>package.json</code>中。</p>
+            <p>执行完毕后可以看到在这个文件夹中生成了一个<code>src</code>文件夹和<code>package.json</code>文件，按照惯例这个文件夹就是一个模块文件夹。</p>
+            <p>现在可以编写我们的逻辑代码了！</p>
+            <h3 id="-">部署我们的代码</h3>
+            <hr>
+            <p>当我们辛辛苦苦把代码编写完毕之后，可以在根文件夹中执行<code>grunt</code>来进行部署。默认的task会遍历根文件夹下面的所有目录，如果满足以上的惯例则把相对路径存储下来。遍历完毕之后会对每一个路径进行打包部署操作。</p>
+            <p>打包的过程使用grunt的各个task去组装，有：</p>
+            <ol>
+              <li><code>clean:target</code>，把当前目录对应的模块版本的相关文件删掉。</li>
+              <li><code>install:target</code>，使用<code>spm install</code>下载外部依赖（例如<code>seajs</code>、<code>jquery</code>等）。</li>
+              <li><code>copy:temp</code>，复制源码到一个临时目录。</li>
+              <li><code>transport:target</code>，使用SPM提供的grunt插件转化CMD模块，为模块增加Id和依赖数组。</li>
+              <li><code>concat:target</code>，使用SPM提供的grunt插件合并CMD模块。</li>
+              <li><code>uglify:target</code>，脚本的扰码和压缩。</li>
+              <li><code>cssmin:target</code>，样式表的扰码和压缩。</li>
+              <li><code>clean:temp</code>，清除临时目录。</li>
+              <li><code>install:deploy</code>，在部署目录下载外部依赖。</li>
+              <li><code>clean:deploy</code>，把部署目录对应的模块版本的相关文件删掉。</li>
+              <li><code>copy:deploy</code>，把生成好的文件复制到部署目录。</li>
+            </ol>
+            <p>部署目录现在是使用了一个环境变量去声明，这个做法是方便在不同机器上设置不同的部署目录，又不会在代码文件中生成，不用上传到版本控制的服务器（例如svn），减少冲突的可能。也可以使用相对目录去声明这个部署目录，以后会加入部署目录的默认值。</p>
+            <p>也可以使用以下的命令去部署特定的模块：</p> <pre><code>grunt pub:path:to:module
+</code></pre>
+            <p>其中的参数是模块目录相对于根文件夹的相对路径。</p>
+            <h3 id="-watcher">实时watcher</h3>
+            <hr>
+            <p>由于项目是使用打包部署后的代码才能看到效果，所以在日常的工作中我们需要快速修改、快速看到效果。有两种实现方式：</p>
+            <ol>
+              <li>在开发的时候使用源码去看效果，这样就限制了部署的时候只能按照源码的目录结构进行部署，不然的话需要修改使用模块的代码，以适应路径的变化。</li>
+              <li>通过一个watcher，当我们在编辑源码的时候，实时进行小范围的打包部署（例如只打包部署文件所在的模块），这样只需要刷新页面就能看到效果了。</li>
+            </ol>
+            <p>暂时的方案是使用第2种方式，编写了一个watcher。当脚本、样式和模板文件发生变化的时候，就会自动地打包部署到部署目录。watcher的task为了提高效率，减少了下载外部依赖的步骤。</p>
+            <p>使用方式很简单，在根文件夹下面执行命令：</p> <pre><code>grunt watch
+</code></pre>
+            <p>就可以使用到watcher的功能了哦！</p>
+            <h3 id="-">总结</h3>
+            <hr>
+            <p>基本上整个打包部署的流程就是这样了，还有很多可以完善的东西，例如测试、持续集成、开发期间的代码调试等。边用边改进的节奏！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/21/javascript-handle-cross-browser-event-2.html" title="Secrets of the JavaScript Ninja 读书笔记之 跨浏览器处理事件（二）">上一篇</a></li>
+              <li><a href="/posts/2013/09/23/jquery-ajax-prefilter.html" title="jQuery扫盲之jQuery.ajaxPrefilter">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

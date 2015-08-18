@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>window.getComputedStyle</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.getComputedStyle</h2>
+            <p class="blog-post-meta">写于2013年11月20日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/css">css</a></p>
+            <p>使用DOM的<code>style</code>属性只能获取<code>style</code>特性指定的CSS属性，而外部样式表（<code>link</code>）或者内联样式表（<code>style</code>）中对这个元素生效的CSS属性是不能通过<code>style</code>获取的。这时，调用<code>getComputedStyle</code>可以返回一个DOM元素当前的CSS属性，即经过层叠之后的CSS属性（包括外部样式表、内联样式表还有<code>style</code>）。</p>
+            <p>这个方法可以接受两个参数：</p>
+            <ol>
+              <li><code>element</code>，要获取CSS属性的DOM元素。</li>
+              <li><code>pseudoElt</code>，可选，一个伪类，可以获取到这个DOM元素的某个伪类的CSS属性，如<code>:hover</code>、<code>:active</code>，甚至是<code>:before</code>。IE和Opera不支持这个参数。</li>
+            </ol>
+            <p>返回的对象可以像<code>style</code>属性一样的使用，不过只能读，写是无效的：</p> <pre><code>var result = getComputedStyle(elem);
+alert(result.height);
+</code></pre>
+            <p>也可以调用元素上的<code>getPropertyValue</code>去获取对应的CSS属性：</p> <pre><code>alert(result.getPropertyValue(&quot;height&quot;);
+</code></pre>
+            <p>这个方法IE9才支持。我们可以利用这个方法在脚本中准确判断现在是哪个响应式的样式表在生效。以前我们判断现在是哪个生效，可能会写这么一些代码：</p> <pre><code>if ($(window).width() &gt; 1024) {
+  // min-width: 1024px
+} else if ($(window).width() &gt; 768) {
+  // max-width: 1024px and  min-width: 768px
+} else {
+  // max-width: 768px
+}
+</code></pre>
+            <p>但是这样有几个问题。第一个就是由于浏览器的不同的实现，没有办法保证样式跟代码一致；第二个就是响应式的宽度判断需要在脚本和样式那边都要写。这个时候，我们可以使用<code>getComputedStyle</code>。首先在样式表中编写以下代码：</p> <pre><code>body: after{ display: none; }
+@media (min-width: 1024px) {
+  body:after{ content: &quot;l&quot; }
+}
+@media (max-width: 1023px) and (min-width: 768px) {
+  body:after{ content: &quot;m&quot; }
+}
+@media (max-width: 767px) {
+  body:after{ conetnt: &quot;s&quot; }
+}
+</code></pre>
+            <p>然后编写以下脚本：</p> <pre><code>var size = getComputedStyle(document.body, &quot;:after&quot;).
+  getPropertyValue(&quot;content&quot;);
+if (size == &quot;l&quot;) {
+  // something happend in large size
+}
+</code></pre>
+            <p>太牛逼了！详细过程请参考<a href="http://www.zhangxinxu.com/wordpress/2012/05/after-js-content-css3-media-queries/">伪类+js实现CSS3 media queries跨界准确判断</a>。里面还有一个大图自动变小图的例子，十分棒。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/19/elem-in-viewport.html" title="判断一个元素是否在视口之中">上一篇</a></li>
+              <li><a href="/posts/2013/11/22/jquery-csshooks.html" title="jQuery扫盲之cssHooks">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

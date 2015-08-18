@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>High Performance JavaScript 读书笔记之 减少Repaint和Reflow的次数</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 减少Repaint和Reflow的次数</h2>
+            <p class="blog-post-meta">写于2013年12月07日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>之前已经讨论过Repaint和Reflow会对性能造成一定的影响，所以我们在进行DOM操作的时候，需要注意的是要把这些操作“集中”到一个地方，然后一次性地应用到页面上面。例如以下的代码：</p> <pre><code>var el = document.getElementById(&#39;mydiv&#39;);
+el.style.borderLeft = &#39;1px&#39;;
+el.style.borderRight = &#39;2px&#39;;
+el.style.padding = &#39;5px&#39;;
+</code></pre>
+            <p>这里用了3行代码设置DOM的样式。虽然浏览器会对这些操作进行优化，但是最坏的情况下会进行3次Reflow。为了减少Reflow可能发生的次数，这样修改可能比较合适：</p> <pre><code>var el = document.getElementById(&#39;mydiv&#39;);
+el.style.cssText = &#39;border-left: 1px; border-right: 2px; padding: 5px;&#39;;
+</code></pre>
+            <p>虽然这样可以减少Reflow可能发生的次数，但是造成代码的可读性变差。最佳实践是使用<code>class</code>：</p> <pre><code>var el = document.getElementById(&#39;mydiv&#39;);
+el.className = &#39;active&#39;;
+</code></pre>
+            <p>当对样式的修改不依赖于运行时的时候，修改<code>class</code>这种方式最优。</p>
+            <p>进行影响几何属性的DOM操作的时候，可以依照下面的步骤去进行，最小化Reflow或者Repaint的次数：</p>
+            <ol>
+              <li>把DOM从展现树中暂时“抽出去”。</li>
+              <li>操作这个DOM。</li>
+              <li>把DOM插入到原来它在展现树的位置，完成这些DOM操作。</li>
+            </ol>
+            <p>我们可以使用以下几个方法把DOM从展现树中暂时抽出去：</p>
+            <ol>
+              <li>把这个DOM弄成不可见的（<code>display: none</code>等）。</li>
+              <li>使用<code>documentFregment</code>（推荐使用这个）。</li>
+              <li>复制一个DOM，然后擦作这个复制出来的DOM，最后把它替换原DOM。</li>
+            </ol>
+            <p>抽出去之后就可以随意地进行DOM操作了，无论如何修改其几何属性，都不会对原来的页面造成影响。在完成这些DOM操作之后，把DOM显示出来，或者用把DOM替换回去就可以应用这些修改了，而这样最多就只会触发一次Reflow或者Repaint哦。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/05/as3-urlloader.html" title="在Flash中发送请求之二：URLLoader">上一篇</a></li>
+              <li><a href="/posts/2013/12/08/hp-other-about-repaints-and-reflows.html" title="High Performance JavaScript 读书笔记之 还有一些关于Repaint和Reflow">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

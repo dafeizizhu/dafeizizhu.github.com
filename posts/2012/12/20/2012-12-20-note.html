@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>2012 12 20 Note</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">2012 12 20 Note</h2>
+            <p class="blog-post-meta">写于2012年12月20日 关于<a href="/tags/notes">notes</a></p>
+            <h3 id="vertical-align-line-height-">vertical-align 与line-height的垂直居中</h3>
+            <p>vertical-align用于块元素内的行内元素的垂直居中，而line-height则用于在行内元素中文字居中，当行高被块元素内部的某个元素（display: inline-block）撑大之后，使用前两个垂直居中的方法都不凑效。</p>
+            <ol>
+              <li>vertical-aligin作用在块元素中，不能使其他行内元素垂直居中，因为受到了那个撑大元素的影响</li>
+              <li>line-height则要显式的设置固定像素值，不能满足自适应那个撑大元素的高度</li>
+            </ol>
+            <p>到最后还是要使用表格布局……</p>
+            <p>遗留一个题目，等自己以后想起来了可以做一下，让那个span居中显示：</p> <pre><code>&lt;style&gt;
+    p {
+        vertical-align: center;
+    ｝
+    label {
+        width: 50px;
+        display: inline-block;
+    ｝
+&lt;/style&gt;
+&lt;p&gt;
+    &lt;label&gt;This is a long long long label&lt;/label&gt;
+    &lt;span&gt;I need to be vertical center!&lt;/span&gt;
+&lt;/p&gt;
+</code></pre>
+            <h3 id="css-background">css background</h3>
+            <ol>
+              <li>背景色background-color，不能被继承，默认值是transparent</li>
+              <li>背景图片background-image，不能被继承，默认值是none</li>
+            </ol>
+            <p>根据血的教训，同时设置这两个属性时要小心互相覆盖，最好还是使用shortcut的background属性确保设置的背景是所需要的背景</p>
+            <nav class="pager">
+              <li><a href="/posts/2012/12/18/note-2012-12-18.html" title="2012-12-18 笔记">上一篇</a></li>
+              <li><a href="/posts/2012/12/22/note-2012-12-22.html" title="2012 12 22 笔记">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

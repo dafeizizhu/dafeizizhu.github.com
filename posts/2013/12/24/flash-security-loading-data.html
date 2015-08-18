@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之加载数据</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之加载数据</h2>
+            <p class="blog-post-meta">写于2013年12月24日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>类似于HTML中的Ajax或者表单提交，Flash必须也可以与服务端交换数据。比HTML要灵活一点的是，Flash可以通过在站点上配置策略文件允许跨域访问，而Ajax则不能（当然，现在可以配置服务端的响应头实现跨域的Ajax……）。</p>
+            <p>在Flash中可以使用<code>URLLoader</code>或者<code>URLStream</code>的<code>load</code>方法加载数据：</p> <pre><code>var request:URLRequest = new URLRequest(&quot;path/to/res&quot;);
+var urlLoader:URLLoader = new URLLoader(request);
+urlLoader.load();
+</code></pre>
+            <p>跟Ajax类似，加载的过程是异步的，需要监听事件才能获取到加载完之后的数据。Flash内建了<code>Progress</code>的事件，这个比传统的Ajax真要方便多了（虽然貌似现在HTML5也有……）。</p>
+            <p>比HTML跟进一步的是，Flash可以直接连接Socket，当然，也需要配置策略文件保护安全。Socket的策略文件可以从以下几个地方获取：</p>
+            <ol>
+              <li>端口<code>843</code>，这个是主策略文件，相当与<code>http://host/crossdomain.xml</code>。</li>
+              <li>与主套接字连接相同的端口。</li>
+              <li>之外的其他端口，由其他策略文件指定。</li>
+            </ol>
+            <p>在Flash中可以调用<code>Socket.connet</code>或者<code>XMLSocket.connet</code>来链接套接字：</p> <pre><code>var socket:Socket = new Socket();
+socket.connet(&quot;host&quot;, 12345);
+</code></pre>
+            <p>当需要传送敏感数据的时候，可以使用传输层安全性（TLS）或者套接字安全性（SSL）来保护数据，可以使用<code>HTTPS</code>协议来连接。</p>
+            <p>在调用<code>URLLoader.load</code>和<code>URLStream.load</code>的时候，可以把一些数据（例如文本、文件、二进制数据等）发送到服务器，这时候也要遵循基于域的安全沙箱机制。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/23/flash-security-accessing-loaded-media-as-data.html" title="Flash安全性之访问加载媒体中的数据">上一篇</a></li>
+              <li><a href="/posts/2013/12/30/html-form-multipart.html" title="HTML Form的enctype">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

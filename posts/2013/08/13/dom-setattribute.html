@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>DOM的setAttribute方法</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">DOM的setAttribute方法</h2>
+            <p class="blog-post-meta">写于2013年08月13日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论了<code>getAttribute</code>，今天继续讨论<code>setAttribute</code>的使用方法。</p>
+            <h3 id="-">标准</h3>
+            <blockquote>
+              <p>Adds a new attribute or changes the value of an existing attribute on the specified element.</p>
+            </blockquote>
+            <p><code>setAttribute</code>这个方法就是用来增加或者修改一个DOM元素上的特性（Attribute）。当指定名称的特性不存在，则会新增一个该名称的特性；如果该特性已经存在，则会修改现有特性的值。这个方法接受两个参数：</p>
+            <ol>
+              <li>表示特性名称的字符串。</li>
+              <li>这个特性的新的值。当传入的参数不是字符串的时候会隐式调用参数的<code>toString</code>方法。例子<a href="http://jsfiddle.net/7Tenq/">参考这里</a>。IE7貌似有不一样的行为，下面会提到。</li>
+            </ol>
+            <p>使用的例子如下:</p> <pre><code>var d = document.getElementById(&quot;d1&quot;); 
+d.setAttribute(&quot;align&quot;, &quot;center&quot;);
+</code></pre>
+            <p>与<code>getAttribute</code>类似，在HTML DOM里面<code>setAttribute</code>也是大小写不敏感的。当需要删除一个特性的时候不应该使用<code>setAttribute(&quot;someAttr&quot;, null)</code>，而是应该使用<code>removeAttribute</code>。</p>
+            <h3 id="-ie">又是IE</h3>
+            <p>与<code>getAttribute</code>类似，IE7以及更早的版本有一套自己的实现。在比较早的IE的版本又可以传入第三个参数：<code>lflag</code>，这个标志位接受以下两个值：</p>
+            <ol>
+              <li><code>0</code>，默认值，对特性的名称大小写不敏感。</li>
+              <li><code>1</code>，对特性的名称是大小写敏感的。</li>
+            </ol>
+            <p>同样，在IE8之前的版本特性（Attribute）与属性（Property）的名称必须一致（例如<code>className</code>等）、在IE8以及更高版本的IE上第三个参数已经不支持了，不要使用。这个方法甚至可以绑定事件处理程序，如：</p> <pre><code>document.getElementById(&quot;test&quot;).setAttribute(&#39;onclick&#39;, &#39;alert(1)&#39;);
+</code></pre>
+            <p>经测试，IE7不支持，例子<a href="http://jsfiddle.net/M3PLw/2/">参考这里</a>。</p>
+            <p>有一个比较有趣的现象，就是第二个参数<code>val</code>的取值类型。标准里面应该是传入字符串的，会隐式调用这个参数的<code>toString</code>方法。但是，在IE7，通过<code>getAttribute</code>返回的特性值与标准实现是不一样的，如以下代码：</p> <pre><code>function test(attr, val) {
+  var el = document.getElementById(&quot;test&quot;);
+  el.setAttribute(attr, val);
+  alert(&quot;Set Attr: &quot; + attr + 
+    &quot; value: &quot; + el.getAttribute(attr) + 
+    &quot; valute type: &quot; + typeof el.getAttribute(attr));
+}
+
+test(&quot;a&quot;, null); // null
+test(&quot;b&quot;, undefined); // undefeined
+test(&quot;c&quot;, {}); // object
+test(&quot;d&quot;, [1, 2, 3]); // Array
+test(&quot;e&quot;, /test/); // RegExp
+test(&quot;f&quot;, 0); // Number
+test(&quot;g&quot;, true); // Boolean
+</code></pre>
+            <p>在IE7上面，通过<code>getAttribute</code>返回的值的类型竟然跟<code>setAttribute</code>的第二个参数的类型一样的！而在高版本的IE或者Chrome等现代浏览器里面<code>getAttribute</code>返回的都是字符串。说明在IE7上，<code>setAttribute</code>并没有把第二个参数转化成字符串，而是把参数直接存在DOM上面了。例子<a href="http://jsfiddle.net/7Tenq/show/">参考这里</a>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/12/dom-getattribute.html" title="DOM的getAttribute方法">上一篇</a></li>
+              <li><a href="/posts/2013/08/14/dom-removeattribute.html" title="DOM 的removeAttribute方法">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Document Fragment</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Document Fragment</h2>
+            <p class="blog-post-meta">写于2013年09月16日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>如果我们需要对一些DOM进行操作，而又不想这些操作造成的变化体现在浏览器中，可以创建一个文档片段（Document Fragment）临时把我们要操作的DOM放入其中，待操作完成后再放回原来的位置。</p>
+            <h3 id="document-fragment">Document Fragment</h3>
+            <hr>
+            <blockquote>
+              <p>The DocumentFragment interface represents a minimal document object that has no parent. It is used as a light-weight version of Document to store well-formed or potentially non-well-formed fragments of XML.</p>
+            </blockquote>
+            <p>一个文档片段相当于一个轻量级的文档，可以存放一部分的XML（HTML）DOM。可以通过<code>document.createDocumentFragment</code>来创建一个文档片段。</p>
+            <p>其实一个文档片段就是一个小型的文档，可以使用<code>appendChild</code>加入DOM、使用<code>childNodes</code>去获取文档片段中的子元素等。</p>
+            <h3 id="document-createdocumentfragment">document.createDocumentFragment</h3>
+            <hr>
+            <p>上文已经提到了这个方法。这个方法的作用就是创建一个空白的文档片段，所以这个方法不接受任何参数，而返回一个文档片段的DOM。这个DOM不在当前的文档树中。通常会在这个文档片段中进行DOM操作，例如从某个地方使用<code>appendChild</code>把相关的DOM插入到文档片段中，然后对文档片段中的DOM进行修改或者删除，最后把这个文档片段（或者只把它的子元素）插入到当前的文档树中。这时这些DOM操作才真正生效。</p>
+            <p>由于这种操作方式不会导致页面的reflow，所以使用文档片段去操作DOM是一种效率比较高的方式，建议使用。</p>
+            <h3 id="range-createcontextualfragment">range.createContextualFragment</h3>
+            <hr>
+            <p>今天看书的时候提到了一种比<code>document.createFragment</code>效率更高的方式，就是<code>range.createContexualFragment</code>，其中<code>range</code>是通过<code>document.createRange</code>创建的对象。</p>
+            <blockquote>
+              <p>The Range.createContextualFragment() method returns a DocumentFragment by invoking the HTML fragment parsing algorithm or the XML fragment parsing algorithm with the start of the range (the parent of the selected node) as the context node.</p>
+            </blockquote>
+            <p>这个方法的作用是使用<code>range</code>所表示的选择区域去创建一个文档片段，即这个方法也是返回一个文档片段。跟<code>document.createFragment</code>不同的是：</p>
+            <ol>
+              <li>需要以选中的开始元素作为文档片段的上下文。</li>
+              <li>接受一个参数，就是HTML格式的字符串。</li>
+            </ol>
+            <p>创建的文档片段会自动包括该参数表示的DOM。例子<a href="http://jsfiddle.net/ppS3x/">参考这里</a>。</p>
+            <p>这个方法会调用浏览器解析XML或者HTML的解析器去转化这个HTML字符串，类似于<code>innerHTML</code>属性，一方面效率会比较高，另一方面使用起来也比较方便。由于只是一个实验性质的API，所以不是所有浏览器都支持，特别是IE哦亲！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/15/javascript-fetch-computed-styles.html" title="Secrets of the JavaScript Ninja 读书笔记之 获取层叠后的style">上一篇</a></li>
+              <li><a href="/posts/2013/09/17/jquery-ajax-jqxhr.html" title="jQuery扫盲之jqXHR对象">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

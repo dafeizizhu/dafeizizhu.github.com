@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用HTML5的audio和video（二）</h2>
+            <p class="blog-post-meta">写于2013年10月22日 关于<a href="/tags/html5">html5</a></p>
+            <p>昨天讨论了如何加入一个媒体、如何进行简单控制等内容。今天继续来看一下关于html5内建媒体<code>audio</code>和<code>vedio</code>还有什么其他功能。</p>
+            <p>除了控制媒体的播放、暂停和音量，通过<code>currentTime</code>我们还可以定位到具体的某个时间点。</p>
+            <p>先通过<code>seekable</code>这个属性去获取媒体的范围：</p> <pre><code>var mediaElement = 
+  document.getElementById(&#39;mediaElementID&#39;);
+mediaElement.seekable.start();
+mediaElement.seekable.end();
+</code></pre>
+            <p>其中<code>start</code>和<code>end</code>方法会返回整个媒体的开始和结束，单位是秒。然后我们就可以设置<code>currentTime</code>让媒体定位到指定的时间点：</p> <pre><code>mediaElement.currentTime = 122;
+</code></pre>
+            <p>除了以上的方法，我们还可以通过DOM上的<code>played</code>属性去获取媒体已经播放过的时间：</p> <pre><code>mediaElement.played.end();
+</code></pre>
+            <p>全部都以秒为单位。</p>
+            <p>我们还可以指定媒体的播放范围。在URL后增加<code>#t=[starttime][,endtime]</code>参数即可。里面的参数可以是秒，也可以是类似<code>2:05:01</code>这样的字符串：</p>
+            <p><a href="/posts/2013/10/22/using-html5-audio-and-video-2.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用HTML5的audio和video（一）</h2>
+            <p class="blog-post-meta">写于2013年10月21日 关于<a href="/tags/html5">html5</a></p>
+            <p>HTML5提供了内建<code>audio</code>和<code>video</code>，使用它们可以简单地在我们的页面中插入一些媒体：</p> <pre><code>&lt;video src=&quot;http://v2v.cc/~j/theora_testsuite/320x240.ogg&quot; controls&gt;
+  Your browser does not support the &lt;code&gt;video&lt;/code&gt; element.
+&lt;/video&gt;
+</code></pre>
+            <p>以下是一个真实的例子：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/BzGex/embedded/html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>以<code>video</code>为例：</p>
+            <ol>
+              <li><code>src</code>，声明这个媒体文件的路径，可以是一个URL或者是一个本地路径。</li>
+              <li><code>controls</code>，声明是否显示控件。</li>
+              <li><code>autoplay</code>，声明是否自动开始播放。</li>
+              <li><code>loop</code>，声明是否自动循环播放。</li>
+              <li><code>preload</code>，声明缓存的方式：
+                <ol>
+                  <li><code>none</code>表示不缓存文件。</li>
+                  <li><code>auto</code>表示缓存文件。</li>
+                  <li><code>metadata</code>表示只缓存文件的元数据。</li>
+                </ol>
+              </li>
+            </ol>
+            <p>其中<code>src</code>可以通过<code>sorce</code>子标签声明多个：</p>
+            <p><a href="/posts/2013/10/21/using-html5-audio-and-video-1.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 使用XPath</h2>
+            <p class="blog-post-meta">写于2013年10月20日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>当浏览器不支持W3C标准的CSS选择器API，我们可以使用XPath作为替代的实现。XPath是一个用来在DOM文档中选择元素的一门语言，比CSS选择器功能更为强大。在大部分的现代浏览器中也实现了XPath，我们可以使用相关的API在HTML文档中去获取元素。可惜IE6以及之前的版本只支持在XML DOM中使用XPath（囧）。</p>
+            <p>其中一个使用XPath的原因是，当选择器比较复杂的时候XPath的效率要比纯JavaScript实现的选择器引擎高。相反的，当选择器比较简单（例如Id选择器或者是标签等）XPath的效率就比较低了。</p>
+            <p>浏览器实现了一个<code>evaluate</code>方法去使用XPath选择DOM元素，下面是书中的一个例子：</p> <pre><code>if (typeof document.evaluate === &quot;funtion&quot;) {
+  function getElementByXPath(expression, parentElement) {
+    var results = [];
+    var query = document.evaluate(expression,
+        parentElement || document,
+        null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    for (var i = 0, length = query.snapshotLength; i &lt;length; i++) {
+      results.push(query.snapshotItem(i));
+    }
+    return results;
+  }
+}
+</code></pre>
+            <p>但是如果直接使用XPath的表达式的话，对于用户来说是比较复杂的。我们可以把CSS选择器映射到特定的XPath表达式，用户就可以通过CSS选择器来使用我们提供的API了，例如：</p> <pre><code>$(&quot;#foo&quot;); // XPath: *[@id=&#39;foo&#39;]
+</code></pre>
+            <p><a href="/posts/2013/10/20/javascript-xpath-css-selector.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 W3C CSS选择器API</h2>
+            <p class="blog-post-meta">写于2013年10月19日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>由于jQuery的风靡，W3C在规范中加入了浏览器内置的CSS选择器引擎，来减少我们去实现一个纯JavaScript的CSS选择器引擎所导致的额外工作量。所有现代浏览器都已经实现了对应的API，并且如果该浏览器完全支持CSS3的话，所有CSS选择器都是可用的。</p>
+            <p>浏览器提供了以下两个API供我们使用CSS选择器去选择我们要操作的DOM：</p>
+            <ol>
+              <li><code>querySelector</code>，该方法接受一个CSS选择器，并返回匹配的<strong>第一个</strong>DOM元素。</li>
+              <li><code>querySelectorAll</code>，该方法接受一个CSS选择器，返回一个包含所有匹配的DOM元素的一个<code>NodeList</code>。</li>
+            </ol>
+            <p>这两个方法在所有<code>document</code>、<code>documentFragment</code>和DOM元素上都有。在哪个对象上调用这些API即视该DOM为根元素，会在该对象的子孙寻找匹配的元素。</p>
+            <p>恐怕这些API最大的局限性就是浏览器对CSS选择器的支持程度，而纯JavaScript实现的CSS选择器则不会受到浏览器默认实现的影响。而且还有一个可能看起来比较别扭的使用场景：</p> <pre><code>&lt;div id=&quot;test&quot;&gt;
+  &lt;b&gt;Hello&lt;/b&gt;, I&#39;m a ninja!
+&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  window.onload = function () {
+  var b = document.getElementById(&quot;test&quot;).querySelector(&quot;div b&quot;);
+  assert(b, &quot;Only the last part of the selector matters.&quot;);
+};
+&lt;/script&gt;
+</code></pre>
+            <p>在这个例子里面，选择器的愿意是寻找<code>div</code>子孙中的<code>b</code>。但是由于<code>querySelector</code>是在<code>div</code>上调用的，而这个元素是不计入选择器的匹配范围的，即上面的代码是找<code>div</code>下面的<code>div</code>下面的<code>b</code>，所以自然就匹配不上了。</p>
+            <p><a href="/posts/2013/10/19/javascript-w3c-css-selector-api.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS outline</h2>
+            <p class="blog-post-meta">写于2013年10月18日 关于<a href="/tags/css">css</a></p>
+            <p>如果我们没有任何<code>reset.css</code>，当Chrome上的输入框获得焦点的时候会有一圈淡黄色的“边框”，这个就是<code>outline</code>在搞鬼。</p>
+            <blockquote>
+              <p>An outline is a line that is drawn around elements, outside the border edge, to make the element stand out.</p>
+            </blockquote>
+            <p><code>outline</code>是在<code>border</code>之外的另外一圈“边框”，让该元素能突显出来。它是一个复合的CSS样式，跟<code>border</code>一样，由以下几个部分组成：</p>
+            <ol>
+              <li><code>outline-color</code>，表示“边框”的颜色。</li>
+              <li><code>outline-width</code>，表示“边框”的宽度。</li>
+              <li><code>outline-style</code>，表示“边框”的样式，取值的范围几乎跟<code>border</code>是一样的。</li>
+            </ol>
+            <p>每个部分都跟<code>border</code>类似，那<code>outline</code>跟<code>border</code>有什么不一样的地方吗？主要是以下两个方面：</p>
+            <ol>
+              <li><code>outline</code>不会占用空间，而<code>border</code>则是盒模型的一部分，有独立的空间。<code>outline</code>就像“浮空”在元素上面一样。</li>
+              <li><code>outline</code>在某些浏览器（例如Opera）上可以不是矩形的，而<code>border</code>则什么时候都是矩形的。</li>
+            </ol>
+            <p>这个会造成一些非常有意思的例子，如：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/aaG3R/embedded/css,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>这个例子里面，两个元素的HTML是一样的，一个是设置了<code>outline</code>，一个是设置了<code>border</code>。可以看到<code>outline</code>里面的框是把折行后的<code>span</code>包围起来，而中间重复的部分是没有框的。而<code>border</code>重复的部分则把原来<code>span</code>的元素给遮住了。</p>
+            <p>正如<code>outline</code>的定义所说，这个样式就是为了让一个元素“突显”出来，所以设置这个样式是不会影响布局的。可能也是因为这样所以Chrome的默认样式里面就为获得焦点的<code>input</code>设置<code>outline</code>，让用户更清晰地知道焦点在哪。</p>
+            <p><a href="/posts/2013/10/18/css-outline.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery DataTable 配置之特性配置</h2>
+            <p class="blog-post-meta">写于2013年10月17日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>表格其实是一个非常难开发得好的组建，因为其需求太多了。排序、分页、过滤、单元格个性化……考虑到这些东西，还是使用DataTable作为底层比较方便（可惜已经很久没更新了，估计太重了坑太多……）。DataTable的用法非常简单：</p> <pre><code>$(elem).dataTable();
+</code></pre>
+            <p>可以传入一个<code>options</code>作为配置。DataTable的配置十分丰富，分成特性、选项等几个方面，今天先看看如何配置DataTable支持的特性。</p>
+            <p><strong>bAutoWidth</strong></p>
+            <p>布尔值，默认是<code>true</code>。表示启用或者禁用自动调整列宽的功能。自动调整列宽可以通过显式制定列宽（通过配置<code>aoColumns</code>）来禁用：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/hKpX4/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p><strong>bDeferRender</strong></p>
+            <p>布尔值，默认是<code>false</code>。表示是否需要动态加载数据。当表格的数据量很大的时候，为了提高加载的速度，只能加载一页数据，当用户翻页的时候才加载下一页的数据。这样，需要把<code>bDeferRender</code>设置成<code>true</code>，并提供一个地址作为数据源（<code>sAjaxSource</code>）。</p>
+            <p><strong>bFilter</strong></p>
+            <p>布尔值，默认是<code>true</code>。表示是否需要过滤器。如果设成<code>false</code>则不会显示默认的过滤器。</p>
+            <p><strong>bInfo</strong></p>
+            <p><a href="/posts/2013/10/17/jquery-datatable-feature.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之prop</h2>
+            <p class="blog-post-meta">写于2013年10月16日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>与昨天介绍的<code>attr</code>一样，<code>prop</code>也是个getter、setter一体的方法。</p>
+            <h3 id="getter">getter</h3>
+            <hr>
+            <blockquote>
+              <p>Get the value of a property for the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>作为getter的<code>prop</code>方法接受一个参数<code>propertyName</code>，就是要获取的属性名字。和<code>attr</code>一样，它也只会获取jQuery对象中第一个元素的属性值。</p>
+            <p>那<code>prop</code>跟<code>attr</code>有什么区别呢？在jQuery 1.6之前，<code>attr</code>有时候会获取到属性值而不是特性值，这样会导致一些不一致的场景。例如：</p> <pre><code>$(elem).attr(&quot;checked&quot;); // 1.6 return true or false
+</code></pre>
+            <p>所以，在1.6之后，<code>prop</code>返回的是属性值，<code>attr</code>返回的是特性值：</p> <pre><code>$(elem).attr(&quot;checked&quot;); // as of 1.6 return &quot;checked&quot; or null
+</code></pre>
+            <p>其中，<code>selectedIndex</code>、<code>tagName</code>、<code>nodeName</code>、<code>nodeType</code>、<code>ownerDocument</code>、<code>defaultChecked</code>和<code>defaultSelected</code>应该使用<code>prop</code>去获取它们的值，因为它们是DOM的属性，在DOM上也没有对应的特性。</p>
+            <p>而有相同名称的特性的属性，使用这两个方法获取有什么区别呢？下面以<code>checked</code>这个特性为例：</p> <pre><code>elem.checked; // true or false
+</code></pre>
+            <p><a href="/posts/2013/10/16/jquery-prop.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之attr</h2>
+            <p class="blog-post-meta">写于2013年10月15日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p><code>jQuery.fn.attr</code>是一个根据传入参数的个数判断是setter还是getter的一个方法。</p>
+            <h3 id="getter">getter</h3>
+            <hr>
+            <blockquote>
+              <p>Get the value of an attribute for the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>作为getter的<code>attr</code>方法只接受一个参数：<code>attrName</code>，指定需要获取的特性的名字。如果该jQuery对象包含多个元素，则只会返回第一个元素的特性值。如果需要获取所有元素的值，需要遍历这个jQuery对象，再逐个调用<code>attr</code>方法。</p>
+            <p>调用这个方法获取特性值有两个好处：</p>
+            <ol>
+              <li>方便，直接通过jQuery对象就可以调用。</li>
+              <li>跨浏览器兼容。有一些特性在不同的浏览器中表现是不一致的，<code>attr</code>方法封装了这些不一致，提供统一的API以及结果。</li>
+            </ol>
+            <p>有两个值得注意的地方：</p>
+            <ol>
+              <li>返回的值一般都是字符串，而一些<code>value</code>和<code>tabindex</code>除外。</li>
+              <li>修改一个已经存在在文档中的<code>input</code>的<code>type</code>特性，在IE6、7、8会抛出异常。</li>
+            </ol>
+            <p>如果指定的特性不存在，则<code>attr</code>返回<code>undefined</code>。诸如<code>checked</code>、<code>disabled</code>或者<code>selected</code>等特性，最好使用<code>prop</code>来获取。再介绍完<code>prop</code>之后会为两者进行一个对比。</p>
+            <h3 id="setter">setter</h3>
+            <p><a href="/posts/2013/10/15/jquery-attr.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之处理class</h2>
+            <p class="blog-post-meta">写于2013年10月14日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>这个class当然是指HTML上面的class了！今天看一些jQuery有关操作DOM的class的一些方法，就是增删改查它们！</p>
+            <h3 id="jquery-fn-addclass">jQuery.fn.addClass</h3>
+            <hr>
+            <blockquote>
+              <p>Adds the specified class(es) to each of the set of matched elements.</p>
+            </blockquote>
+            <p>为DOM加上特定的class，该方法接受一个参数，但是可以传入两种不同的参数：</p>
+            <ol>
+              <li><code>className</code>，要增加的class的名字，可以是多个，用空格分开。</li>
+              <li><code>function(index, currentClass)</code>，一个回调函数，返回一个字符串，增加字符串指定的class。回调函数接受的参数，<code>index</code>是当前jQuery对象的索引，而<code>currentClass</code>则为当前的class，也可以有多个，用空格隔开。</li>
+            </ol>
+            <p>不用担心重复，jQuery已经做了这些工作，所以重复增加相同的class是没有问题的。</p>
+            <h3 id="jquery-fn-removeclass">jQuery.fn.removeClass</h3>
+            <hr>
+            <blockquote>
+              <p>remove a single class, multiple classes, or all classes from each element in the set of matched elements.</p>
+            </blockquote>
+            <p>这个方法接受的参数跟<code>addClass</code>一模一样。有一个要注意的是，如果什么都不传入，则会把元素上的所有class都删掉，如：</p> <pre><code>$(elem).removeClass(); // remove all class
+</code></pre>
+            <p><a href="/posts/2013/10/14/jquery-manipulate-class.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 简述CSS选择器引擎</h2>
+            <p class="blog-post-meta">写于2013年10月13日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>随着jQuery的风靡，CSS选择器引擎已经作为一个标准，现代浏览器都可以通过例如<code>querySelector</code>等API去使用像jQuery那样的CSS选择器去选择DOM了。既然这样，为什么还要讨论JavaScript实现的CSS选择器引擎呢？</p>
+            <p>其中一个比较重要的原因是因为浏览器实现的CSS选择器引擎还是一个半成品，所以有一些细节没有考虑，例如DOM的缓存、错误报告机制和扩展机制等。而一些JavaScript类库提供的CSS选择器引擎（尤其是jQuery），以上的这些细节都是有所考虑的。所以，在现实的项目中，由于使用场景比较多，其性能可能比浏览器实现的CSS选择器引擎要高，例如多次使用相同的选择器去选择DOM等。</p>
+            <p>那又是为什么要去了解一个JavaScript实现的选择器引擎是如何工作的呢？通过了解其工作机制，我们可以了解怎样去遍历一个文档树。而且，只有了解一个选择器引擎的工作机制，我们才可以写出高性能的选择器（例如<code>.className</code>和<code>div.className</code>的区别）。由于使用CSS选择器去获取DOM几乎是我们每个功能都必须要使用，而且要使用多次的功能，所以提高其性能是十分重要的哦。</p>
+            <p>其实，我们的日常工作都可以抽象成以下两个步骤：</p>
+            <ol>
+              <li>获取我们需要操作的DOM。</li>
+              <li>在这些DOM上面弄点什么。</li>
+            </ol>
+            <p>在使用CSS选择器之前，由于浏览器的API的限制（<code>document.getElementById</code>和<code>document.getElementsByTagName</code>），要选中我们需要操作的DOM，可能还需要一大部分代码。所以，通过CSS选择器选择DOM元素是一个十分高效而且准确的手段。通过减少步骤1的代码量，我们可以把更多的心思花在步骤2里面，例如提供更好的用户体验等。</p>
+            <p>除了以上的原因，我们需要一个JavaScript实现的CSS选择器引擎的原因，就是要支持那些没有内置CSS选择器的浏览器，所以需要我们抽象另外一个接口去使用CSS选择器引擎。一般实现一个JavaScript的CSS选择器有以下几个步骤：</p>
+            <ol>
+              <li>优先使用W3C的标准API。</li>
+              <li>使用XPath。</li>
+              <li>使用JavaScript遍历DOM树。</li>
+            </ol>
+            <p><a href="/posts/2013/10/13/javascript-css-selector-engine.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/6.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li class="active"><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/8.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之安全沙箱</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之安全沙箱</h2>
+            <p class="blog-post-meta">写于2013年12月10日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>在HTML中，传统Ajax的限制就是跨域。在Flash中，安全性比较复杂，因为<code>swf</code>文件可以在本地通过Flash Player直接播放，也可以嵌入HTML页面中播放。在不同的环境中的<code>swf</code>文件的安全策略是不一样的。我们可以通过访问<code>Security</code>的只读静态属性<code>sandboxType</code>来确定<code>swf</code>文件当前是处于那种沙箱当中。</p>
+            <h3 id="-">远程沙箱</h3>
+            <p>第一种情况是来自Internet的资源，例如在页面播放的<code>swf</code>文件等。这时候，Flash Player会根据资源所在的域把它们分到不同的安全沙箱中。默认情况下，这些资源只能访问自身所在的安全沙箱中的内容。这个策略是基于域控制的，可以通过Web站点许可（通过昨天介绍的<code>crossdomain.xml</code>来配置）或者作者许可（调用<code>Security.allowDomain</code>方法），可以允许远程的<code>swf</code>文件访问其他安全沙箱中的资源。</p>
+            <p>当<code>swf</code>文件处于远程沙箱中，<code>Security.sandboxType</code>为<code>Security.REMOTE</code>。来自Internet的资源无法加载任何本地文件和资源。</p>
+            <h3 id="-">本地沙箱</h3>
+            <p>本地文件的意思是通过<code>file</code>协议或者统一命名约定（UNC）路径引用的任何文件，例如一个本地HTML文件嵌入的<code>swf</code>或者直接在本地Flash Player播放的<code>swf</code>。本地<code>swf</code>文件有四种安全沙箱的类型，映射到<code>Security.sandboxType</code>这个静态只读属性：</p>
+            <ol>
+              <li><code>Security.LOCAL_WITH_FILE</code>，表示<code>swf</code>文件是本地文件，但是未受信任，且没有使用网络名称发布。此<code>swf</code>文件可以从本地读取数据，但无法与Internet进行通讯。</li>
+              <li><code>Security.LOCAL_WITH_NETWORK</code>，表示<code>swf</code>文件是本地文件，但是未受信任，但已使用网络名称进行发布。此<code>swf</code>文件可以与Internet通讯，但是无法读取本地数据。</li>
+              <li><code>Security.LOCAL_TRUSTED</code>，表示<code>swf</code>已受信任。此<code>swf</code>文件既可以读取本地数据，也可以访问Internet。</li>
+              <li><code>Security.APPLICATION</code>，表示<code>swf</code>文件在AIR应用程序中运行，并随AIR文件一起安装。此<code>swf</code>文件可以访问AIR应用程序沙箱的任何文件。</li>
+            </ol>
+            <p>其中<code>Security.LOCAL_WITH_FILE</code>跟<code>Security.LOCAL_WITH_NETWORK</code>这两类安全沙箱中的内容是无法互相访问的。</p>
+            <p>经过实验观察，直接从本地Flash Player播放的<code>swf</code>文件显示的是<code>Security.LOCAL_TRUSTED</code>，表示这个<code>swf</code>文件既可以访问本地数据也可以访问Internet，不受基于域的沙箱规则控制。而嵌入在远程HTML页面中的<code>swf</code>文件显示的是<code>Security.REMOTE</code>，这种情况下要进行跨域访问需要在远程服务器中配置We站点许可，也就是<code>crossdomain.xml</code>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/09/flash-crossdomain-xml.html" title="crossdomain.xml">上一篇</a></li>
+              <li><a href="/posts/2013/12/11/flash-security-permission-controls.html" title="Flash安全性之权限控制">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

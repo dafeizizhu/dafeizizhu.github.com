@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>CSS等高布局</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS等高布局</h2>
+            <p class="blog-post-meta">写于2013年07月16日 关于<a href="/tags/css">css</a></p>
+            <p>今天本来想写express的，不过还没看清楚它的文档，以免误人子弟，先放一下。今天来写一个以前遗留的问题，CSS三列布局如何等高。</p>
+            <p>接着上次写的“经典三列布局之如何让中间的列先显示出来“的代码，<a href="http://jsfiddle.net/zBXbp/7/">参考这里</a>：</p>
+            <p>HTML：</p> <pre><code>&lt;div id=&quot;container&quot;&gt;
+    &lt;div id=&quot;middle&quot;&gt;This is middle!&lt;/div&gt;
+    &lt;div id=&quot;left&quot;&gt;This is left!&lt;/div&gt;
+    &lt;div id=&quot;right&quot;&gt;This is right!&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>CSS：</p> <pre><code>#left { width: 100px; background: red;}
+#right { width: 100px; background: blue;}
+#middle { width: 100%; background: green;}
+
+#container { 
+    position: relative;
+    padding: 0 100px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#middle {
+    float: left;
+}
+
+#left {
+    position: relative;
+    left: -100px;
+    float: left;
+    margin-left: -100%;   
+}
+
+#right {
+    float: left;
+    margin-right: -100%;
+}
+</code></pre>
+            <p>从效果看来，虽然左右固定像素、中间自适应的布局是实现了，但是可以看到，三列的高也“自适应”了，非常难看。怎么能这三列等高显示呢？</p>
+            <p>首先，绝对的等高，出了用JavaScript之外，用HTML、CSS实现是不行的。所以这个只能看上去“等高”。我们的目的就是让这三列的背景色等高。参考了一些网上的资料，最简单的方法是加入以下一条样式：</p> <pre><code>#left, #middle, #right {
+    margin-bottom: -10000px;
+    padding-bottom: 10000px;
+} 
+</code></pre>
+            <p>原理看似简单又不简单，最好的解释可以参考这里：</p>
+            <blockquote>
+              <p>首先把列的padding-bottom设为一个足够大的值，再把列的margin-bottom设一个与前面的padding-bottom的正值相抵消的负值，父容器设置超出隐藏，这样子父容器的高度就还是它里面的列没有设定padding-bottom时的高度，当它里面的任一列高度增加了，则父容器的高度被撑到它里面最高那列的高度，其他比这列矮的列则会用它们的padding-bottom来补偿这部分高度差。因为背景是可以用在padding占用的空间里的，而且边框也是跟随padding变化的，所以就成功的完成了一个障眼法。</p>
+            </blockquote>
+            <p>效果<a href="http://jsfiddle.net/3depS/1/">参考这里</a>。</p>
+            <p>这个方案也有缺点，当需要用<code>border</code>显示边框的时候，边框是不能自适应的。只能通过背景的层叠模拟边框的效果。能否不通过JavaScript解决，留一个遗留问题。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/15/event-constructor-and-jquery-trigger.html" title="模拟触发DOM事件之jQuery trigger">上一篇</a></li>
+              <li><a href="/posts/2013/07/17/viewport.html" title="响应式设计入门之viewport">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

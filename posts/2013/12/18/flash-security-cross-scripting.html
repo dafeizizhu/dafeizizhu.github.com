@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之跨脚本访问</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之跨脚本访问</h2>
+            <p class="blog-post-meta">写于2013年12月18日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>如果使用AS3.0编写的两个<code>swf</code>文件来自同一个域，那么它们是可以互相访问和修改另一个文件的变量、对象、属性和方法。反之则视为是跨脚本访问。</p>
+            <p>在默认情况下，Flash Player不允许这种跨域的脚本访问。通过调用<code>Security.allowDomain</code>，可以授予其他域的<code>swf</code>文件编写其脚本的权限。例如：</p> <pre><code>Security.allowDomain(&quot;siteA.com&quot;);
+</code></pre>
+            <p>这样，这个<code>swf</code>文件就可以被<code>siteA.com</code>中的<code>swf</code>访问其变量、对象、属性和方法。</p>
+            <p>注意，调用<code>Security.allowDomain</code>是不对称的，这个<code>swf</code>文件想要访问<code>siteA.com</code>中的<code>swf</code>文件需要在<code>siteA.com</code>的<code>swf</code>文件中也调用<code>allowDomain</code>。</p>
+            <h3 id="stage-">Stage安全性</h3>
+            <p><code>stage</code>对象的所有者是地一个加载的<code>swf</code>文件。<code>stage</code>对象的一些属性和方法只能用于在所有者同一安全沙箱中的<code>swf</code>文件，例如<code>stage.align</code>或者<code>stage.addChild</code>等。</p>
+            <p>在所这者的<code>swf</code>文件中调用<code>allowDomain</code>可以授予其他安全沙箱中的<code>swf</code>访问<code>stage</code>的这些属性和方法。</p>
+            <h3 id="-">遍历显示列表</h3>
+            <p>一个<code>swf</code>文件能够访问从其他沙箱中加载的显示对象也受到一定的限制。如果需要能访问到其他沙箱中的<code>swf</code>文件，需要在目标文件中调用<code>allowDomain</code>授予相应的权限。</p>
+            <h3 id="-">事件安全性</h3>
+            <p>与显示列表相关的事件具有一定的安全性限制。如果父对象和源显示对象位于不同的安全沙箱，则不或阶段和冒泡阶段在父对象的下方停止，除非两个对象的所有者是互相信任的，例如通过调用<code>allowDomain</code>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/17/flash-security-loading-content.html" title="Flash安全性之加载内容">上一篇</a></li>
+              <li><a href="/posts/2013/12/23/flash-security-accessing-loaded-media-as-data.html" title="Flash安全性之访问加载媒体中的数据">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

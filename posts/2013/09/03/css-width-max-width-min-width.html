@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>CSS的width、max-width和min-width</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS的width、max-width和min-width</h2>
+            <p class="blog-post-meta">写于2013年09月03日 关于<a href="/tags/css">css</a></p>
+            <p>昨天虽然说用<code>width</code>和<code>height</code>控制图片大小的方法生成缩略图的方式不是十分完美，但总是有它适用的场景的。使用这个方式生成缩略图，重要的是保持图片的宽高比，而且高度和宽度都不能超过特定的值。这时候，使用<code>max-width</code>和<code>max-height</code>就是非常好的选择了。今天就简单讨论一下<code>width</code>、<code>max-width</code>和<code>min-width</code>三个CSS样式的属性的区别。</p>
+            <h3 id="width">width</h3>
+            <hr>
+            <blockquote>
+              <p>The width CSS property specifies the width of the content area of an element. The content area is inside the padding, border, and margin of the element.</p>
+            </blockquote>
+            <p><code>width</code>声明的是元素的内容宽度，即不包括<code>padding</code>、<code>border</code>和<code>margin</code>的宽度。</p>
+            <p><code>width</code>的默认值是<code>auto</code>，块元素会继承包含块的宽度，而行内元素则会根据行内内容自适应宽度，所以行内元素设置<code>width</code>是没有效果的。</p>
+            <p><code>width</code>可以是绝对的长度，例如<code>100px</code>、<code>100em</code>等，也可以是百分比的长度（包含块的绝对宽度的百分比）。</p>
+            <h3 id="max-width">max-width</h3>
+            <hr>
+            <blockquote>
+              <p>The max-width CSS property is used to set the maximum width of a given element. It prevents the used value of the width property from becoming larger than the value specified for max-width.</p>
+            </blockquote>
+            <p>从名字就可以看出来，<code>max-width</code>就是为了限制元素的宽度不能超过某个特定的值。当元素的宽度（无论是绝对长度或者是经百分比计算后的长度）超过<code>max-width</code>所设置的值，元素的宽度就是等于<code>max-width</code>设置的值。这样就是说<strong><code>max-width</code>能覆盖<code>width</code>的值</strong>。</p>
+            <p><code>max-width</code>的默认值是<code>none</code>，表示元素默认是没有最大宽度的。与<code>width</code>一样，值可以是绝对长度也可以是百分比长度（同样是包含块的绝对宽度的百分比）。</p>
+            <h3 id="min-width">min-width</h3>
+            <hr>
+            <blockquote>
+              <p>The min-width CSS property is used to set the minimum width of a given element. It prevents the used value of the width property from becoming smaller than the value specified for min-width.</p>
+            </blockquote>
+            <p>从名字又可以看出来，<code>min-width</code>是为了限制元素的宽度不能低于某个特定的值。当元素的宽度低于<code>min-width</code>所设置的值，元素的宽度就是等于<code>min-width</code>设置的值。有一个比较有趣的事情：<strong><code>min-width</code>能覆盖<code>max-width</code>和<code>width</code>的值</strong>，如：</p> <pre><code>#test {
+  width: 200px;
+  max-width: 100px;
+  min-width: 150px;
+  background: red;
+}
+</code></pre>
+            <p>执行结果<a href="http://jsfiddle.net/DxyYH/">参考这里</a>。可以看到<code>div</code>的宽度是<code>min-width</code>设置的<code>150px</code>。</p>
+            <p>与<code>max-width</code>一致，<code>min-width</code>的默认值也是<code>none</code>，值可以是绝对长度或者是百分比长度。</p>
+            <h3 id="-">兼容性</h3>
+            <hr>
+            <p>很遗憾，这么好的属性，IE6又是不支持。当要支持IE6的时候，而又要使用<code>max-width</code>等CSS样式的时候，就是考虑兼容方案。第一个是使用脚本，获取需要设置<code>max-width</code>等样式DOM元素，根据需要显式设置<code>width</code>。如果不想使用脚本，则可以考虑使用CSS表达式：</p> <pre><code>max-width: 100px;
+_width: expression((documentElement.clientWidth &gt; 100) ? &quot;100px&quot; : &quot;auto&quot;);
+</code></pre>
+            <p>例子<a href="http://jsfiddle.net/N7jSx/show/">参考这里</a>。在IE6上面宽度也被限制在<code>100px</code>以内。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/02/html-img-size.html" title="img的大小问题">上一篇</a></li>
+              <li><a href="/posts/2013/09/04/jquery-append.html" title="jQuery扫盲之jQuery.fn.append">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

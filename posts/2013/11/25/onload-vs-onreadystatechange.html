@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Script标签上的onload和onreadystatechange</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Script标签上的onload和onreadystatechange</h2>
+            <p class="blog-post-meta">写于2013年11月25日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>之前做一个效果，涉及到动态加载脚本的问题。这个效果需要做成本地文件直接打开可以看到效果，所以下面的代码在Chrome是会报错的：</p> <pre><code>$.getScript(&quot;./js/dynamic.js&quot;, function () {...});
+</code></pre>
+            <p>由于本地文件使用的是<code>file</code>协议，而<code>$.getScript</code>在这个情况下是使用Ajax去请求脚本的内容，Chrome在使用<code>file</code>协议的页面进行Ajax请求时会抛出跨域访问的异常。所以只能用动态插入<code>script</code>标签的方式去实现：</p> <pre><code>var done = false;
+var head = document.getElementsByTagName(&quot;head&quot;)[0];
+var s = document.createElement(&quot;script&quot;);
+s.type = &quot;text/javascript&quot;;
+s.onload = s.onreadystatechange = function (evt) {
+  if (!done &amp;&amp; (!this.readyState || 
+    this.readyState == &quot;loaded&quot; ||
+    this.readyState == &quot;complete&quot;)) {
+    // do something with the script
+    s.onload = s.onreadystatechange = null;
+    head.removeChild(s);
+  }
+}
+s.src = &quot;path/to/script.js&quot;;
+head.appendChild(s);
+</code></pre>
+            <p>在Chrome和FireFox上，<code>onload</code>会在脚本加载完之后触发，在回调函数中脚本的内容已经加载完全。而这两个浏览器的<code>script</code>标签是不支持<code>onreadystatechange</code>事件的。</p>
+            <p>在IE上比较有趣。IE9两个事件都是支持的，而IE8、7、6则只支持<code>onreadystatechange</code>。在<code>onreadystatechange</code>事件处理程序中还需要判断<code>script.readyState</code>属性。经观察之后发现其实当<code>loaded</code>的时候，脚本的内容已经可用了。但是在某些情况下，<code>loaded</code>之后脚本的内容还没有完全加载。遇到这些情况只能增加一个<code>setTimeout</code>了。实验的代码可以参考下面的例子：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/8HY6k/2/embedded/js,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/24/hp-html-collections.html" title="High Performance JavaScript 读书笔记之 访问和修改DOM（二）">上一篇</a></li>
+              <li><a href="/posts/2013/11/26/javascript-swfobject.html" title="使用JavaScript在页面中嵌入Flash">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

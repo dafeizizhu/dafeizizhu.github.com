@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>换行还是不换行之word-wrap</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">换行还是不换行之word-wrap</h2>
+            <p class="blog-post-meta">写于2013年07月23日 关于<a href="/tags/css">css</a></p>
+            <p>继续昨天的话题，今天介绍另一个影响文字换行的属性<code>word-wrap</code>。</p>
+            <blockquote>
+              <p>This property specifies whether the UA may arbitrarily break within a word to prevent overflow when an otherwise-unbreakable string is too long to fit within the line box. <strong>It only has an effect when ‘white-space’ allows wrapping.</strong></p>
+            </blockquote>
+            <p><code>word-wrap</code>这个属性声明用户代理（一般就是指浏览器）能否从一个单词中间断开，防止这个单词溢出容器。这里值得注意的是，要<code>word-wrap</code>属性生效，必须让<code>white-space</code>这个属性允许自动换行（即<code>white-space</code>的属性只能是<code>normal</code>、<code>pre-wrap</code>和<code>pre-line</code>）。</p>
+            <p>可选的取值有：</p>
+            <ol>
+              <li><code>normal</code>，默认值，不允许从一个单词中间断开，显示溢出部分。</li>
+              <li><code>break-word</code>，如果一行中没有其他可接受的断点，那么将强行断开文本单词。</li>
+            </ol>
+            <p>这里的“单词”，指的是非CJK（Chinese、Japanese、Korean）中由若干个字母组成的单词。这个单词是有独立意义的，不同单词使用空格或者<code>-</code>分开。所以如果随意把超长的单词从中间断开，可能会导致理解上的误差。例子<a href="http://jsfiddle.net/VKP78/">参考这里</a>。</p>
+            <p>这个属性所有浏览器都支持。IE引入了一个别名叫<code>-ms-word-wrap</code>，在标准的IE8里面已经支持标准的<code>word-wrap</code>，所以也不需要加上这个前缀了。</p>
+            <p>还有一个值得注意的是，在最近的CSS3规范中，<code>word-wrap</code>已经被改名叫<code>overflow-wrap</code>了，在最新的Chrome和Opera中已经支持新名字了哦。在往后的标准实现中，<code>word-wrap</code>只能作为<code>overflow-wrap</code>的一个别名存在，太悲催了。</p>
+            <p>总结一下，在<code>white-space</code>声明支持自动换行的情况下：</p>
+            <ol>
+              <li><code>normal</code>不会中断一个非CJK单词。</li>
+              <li><code>break-wrod</code>会最大限度维持排版规则去中断溢出的非CJK单词。</li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/22/css-white-space.html" title="换行还是不换行之white-space">上一篇</a></li>
+              <li><a href="/posts/2013/07/24/css-word-break.html" title="换行还是不换行之word-break">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title> jQuery扫盲之jQuery</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title"> jQuery扫盲之jQuery</h2>
+            <p class="blog-post-meta">写于2013年11月08日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>jQuery的<code>jQuery</code>方法（通常是<code>$</code>）相信是最最最最常用的方法了，通常会传入一个选择器然后返回匹配这个选择器的元素的集合（jQuery对象）。其实这个函数还有一些其他的调用形式，一起看下去。</p>
+            <h3 id="-">选择元素</h3>
+            <p>第一类是在文档中选择元素，有以下几种调用形式：</p>
+            <p><strong>jQuery(selector, context)</strong></p>
+            <p>其中<code>selector</code>就是CSS选择器，<code>context</code>是可选的上下文元素，默认是在整个文档中查找。传入<code>context</code>即等于<code>jQuery(context).find(selector)</code>。</p>
+            <p><strong>jQuery(element)</strong></p>
+            <p>其中<code>element</code>就是DOM元素，即把DOM元素“包裹”成jQuery对象。</p>
+            <p><strong>jQuery(elementArray)</strong></p>
+            <p>同上，只是传入的是DOM元素的一个数组。</p>
+            <p><strong>jQuery(object)</strong></p>
+            <p>其中<code>object</code>是一个普通的JavaScript对象，也是把它“包裹”成jQuery对象。这样我们就可以在普通的元素上使用jQuery的方法，例如一个简单的观察者模式：</p> <pre><code>var obj = {};
+$(obj).on(&quot;foo&quot;, function () {
+  alert(&quot;foo&quot;);
+});
+$(obj).trigger(&quot;foo&quot;);
+</code></pre>
+            <p><strong>jQuery(jQueryObject)</strong></p>
+            <p>克隆一个jQuery对象（只复制引用哦）。</p>
+            <p><strong>jQuery()</strong></p>
+            <p>什么都不传，在jQuery 1.4之后会返回一个空的（<code>length</code>为<code>0</code>）jQuery对象。</p>
+            <h3 id="-">创建元素</h3>
+            <p><code>jQuery</code>方法也可以由HTML字符串创建DOM对象：</p>
+            <p><strong>jQuery(html, ownerDocument)</strong></p>
+            <p>其中<code>html</code>就是HTML字符串，可选的<code>ownerDocument</code>就是这个DOM属于哪个文档对象，默认是当前的文档。</p>
+            <p><strong>jQuery(html, attributes)</strong></p>
+            <p>第一个参数同上，<code>attribute</code>就是DOM对象上的特性。例如：</p> <pre><code>$( &quot;&lt;div/&gt;&quot;, {
+  &quot;class&quot;: &quot;test&quot;,
+  text: &quot;Click me!&quot;,
+  click: function() {
+    $( this ).toggleClass( &quot;test&quot; );
+  }
+}).appendTo( &quot;body&quot; );
+</code></pre>
+            <p>奇怪的是，查找元素和创建元素的第一个参数都是字符串，jQuery是怎么判断是哪种模式呢？原来jQuery会判断这个字符串是否类似于一个HTML字符串，如果不是则当作是CSS选择器。第二个值得注意的是jQuery会自动纠错，例如：</p> <pre><code>$(&quot;&lt;a/&gt;&quot;); // $(&quot;&lt;a&gt;&lt;/a&gt;&quot;);
+$(&quot;&lt;a&gt;&quot;); // $(&quot;&lt;a&gt;&lt;/a&gt;&quot;);
+</code></pre>
+            <p>第三个要注意的是某些标签可能会被过滤，例如<code>html</code>、<code>title</code>、<code>head</code>等。</p>
+            <h3 id="-">文档准备好了！</h3>
+            <p>这个也是十分常用的一个用法，就是<code>jQuery(callback)</code>，其中<code>callback</code>会在文档准备好的时候触发（可以<a href="http://dafeizizhu.github.io/2013/10/01/javascript-document-ready-event/">参考这里</a>）。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/07/jquery-callbacks-object.html" title="jQuery扫盲之callbacks对象">上一篇</a></li>
+              <li><a href="/posts/2013/11/09/javascript-filter-the-set.html" title="Secrets of the JavaScript Ninja 读书笔记之 过滤元素">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

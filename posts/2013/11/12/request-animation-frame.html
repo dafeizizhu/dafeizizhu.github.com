@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>window.requestAnimationFrame</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.requestAnimationFrame</h2>
+            <p class="blog-post-meta">写于2013年11月12日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>基于脚本的动画，我们通常会使用<code>setTimeout</code>或者<code>setInterval</code>去做：</p> <pre><code>setInterval(step, interval);
+</code></pre>
+            <p>但是有没有想过当中的<code>interval</code>要设置多少才合适呢？为了动画的流畅，我们可能会把这个时间设置成尽可能的小，例如<code>10</code>。这样，动画就会每10毫秒绘制一祯。但是，由于显示的时候还是有一个频率的（例如60HZ），过小的时间间隔会造成某些祯处于显示的间隔时间，这样这些祯就显示不出来。而且设置这么小的时间间隔也会加大浏览器对CPU的消耗。</p>
+            <p>这时候，可以使用<code>window.requestAnimationFrame</code>来替代以前基于<code>setTimeout</code>的实现：</p>
+            <blockquote>
+              <p>The window.requestAnimationFrame() method tells the browser that you wish to perform an animation and requests that the browser call a specified function to update an animation before the next repaint.</p>
+            </blockquote>
+            <p>这个方法告诉浏览器现在需要为一个动画重绘一祯，浏览器会自行计算调用的时间，调用传入的回调函数。回调函数的单位时间调用次数跟显示设备的刷新频率有关，不过不用担心，这些东西浏览器都会帮我们算好的。回调函数接受一个参数，就是这次调用的时间间隔。调用这个方法之后跟<code>setTimeout</code>一样，会返回一个<code>id</code>，调用<code>window.cancelAnimationFrame</code>也可以终止下一个回调函数的执行，跟<code>clearTimeout</code>是一致的。</p>
+            <p>很可惜，<code>window.requestAnimationFrame</code>不是所有IE都支持，只有IE10才支持这个方法。但是由于这个方法的调用方式跟<code>setTimeout</code>是一致的，我们其实可以比较方便地在IE上做一个退化方案：</p> <pre><code>function reqAnimationFrame(callback) {
+  if (typeof requestAnimationFrame == &quot;function&quot;) {
+    return requestAnimationFrame(callback);
+  } else {
+    return setTimeout(callback, 60); // Default interval
+  }
+}
+function cancel(id) {
+  if (typeof requestAnimationFrame == &quot;function&quot;) {
+    cancelAnimationFrame(id);
+  } else {
+    clearTimeout(id);
+}
+</code></pre>
+            <p>在不支持<code>requestAnimationFrame</code>的实现中需要一个默认的时间间隔，基本能满足需求。以后要做动画，记得要使用这个API哦亲！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/11/jquery-hold-ready.html" title="jQuery扫盲之jQuery.holdReady">上一篇</a></li>
+              <li><a href="/posts/2013/11/13/jquery-no-conflict.html" title="jQuery扫盲之jQuery.noConflict">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

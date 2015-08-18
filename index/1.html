@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用ShareObject中的data</h2>
+            <p class="blog-post-meta">写于2014年01月14日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>昨天讨论了Flash中的“cookie”，<code>ShareObject</code>的简单使用方式，今天来讨论一下如何读写这个“cookie“中的数据。</p>
+            <p>通常，我们会使用<code>ShareObject</code>的静态方法<code>getLocal</code>获取一个本地的共享对象：</p> <pre><code>var test:SharedObject = SharedObject.getLocal(&quot;test&quot;);
+</code></pre>
+            <p>然后我们可以访问<code>test</code>的<code>data</code>属性，对这个共享对象的数据进行读写操作。注意，这个<code>data</code>本身是只读的，所以以下的代码是无效的：</p> <pre><code>test.data = &quot;someValue&quot;;
+</code></pre>
+            <p>我们可以直接在<code>data</code>上存储一些数据，可以是任何ActionScript或者JavaScript类型的对象（数组、数字、布尔值、对象等）：</p> <pre><code>test.data.number = 1;
+test.data.string = &quot;String&quot;;
+test.data.obj = {&quot;a&quot;: 1, &quot;b&quot;: &quot;string&quot;};
+test.data.arr = [2, &quot;a&quot;];
+test.data.sprite = new Sprite();
+</code></pre>
+            <p>当程序关闭的时候，这些数据会保存到本地文件中，下次只要使用同样名称的共享对象就可以把这些数据读取回来。</p>
+            <p>要删除共享对象的数据，要使用<code>delete</code>运算符来删除：</p>
+            <p><a href="/posts/2014/01/14/flash-share-object-data.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash的“cookie” ShareObject</h2>
+            <p class="blog-post-meta">写于2014年01月13日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>ShareObject</code>类用于在用户计算机或者服务器上读取和存储有限的数据。在用户计算机上的存储类似于浏览器的cookie，远程共享对象类似于实时数据传输设备，需要Adobe Flash Media Server，这边就简单带过远程共享对象，主要讨论类似cookie的使用方式。</p>
+            <p>使用共享对象可以执行以下操作：</p>
+            <ol>
+              <li>本地持久化，类似于浏览器cookie。在用户计算机上存储数据可以减少服务器的负担。</li>
+              <li>在Flash Media Server上存储并共享数据。通过远程共享对象可以让多个客户端共享数据。</li>
+            </ol>
+            <p>当应用程序关闭的时候，会刷新共享对象或者写入磁盘。使用本地磁盘空间会受到一些限制，用户可以通过设置界面管理每个域可用的磁盘空间。在调用<code>getLocal</code>和<code>flush</code>这两个方法的时候需要执行检查是否能操作成功。</p>
+            <p>注意，为了使设置界面的对话框显示完全，<code>swf</code>文件的宽度至少为215像素，高度至少为138像素。</p>
+            <p>像浏览器cookie一样使用共享对象，例如：</p> <pre><code>var so:SharedObject = SharedObject.getLocal(&quot;savedData&quot;);
+</code></pre>
+            <p>以上的代码会返回一个共享对象的实例，包含以下几个属性：</p>
+            <ol>
+              <li><code>client</code>，表示对其调用回调方法的对象。</li>
+              <li><code>data</code>，只读，表示这个共享对象的数据，可以视为一个键值对。</li>
+              <li><code>defaultObjectEncodeing</code>，表示共享对象的默认对象编码。</li>
+              <li><code>fps</code>，只写，指定每秒种客户端对共享对象所做的更改被发送到服务器的次数。</li>
+              <li><code>objectEncodeing</code>，表示这个共享对象的对象编码。</li>
+            </ol>
+            <p><a href="/posts/2014/01/13/flash-share-object.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用安全域</h2>
+            <p class="blog-post-meta">写于2014年01月08日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>SecurityDomain</code>类代表当前安全性“沙箱”，也称为“安全域”。通过此类的一个实例传递给<code>Loader</code>的<code>load</code>方法，可以请求将所加载的媒体防止到特殊的沙箱中。</p>
+            <p>这个类只有一个静态属性<code>currentDomain</code>，只读，用来获取当前的安全域。通过在<code>load</code>方法的第二个参数<code>context</code>中设置<code>securityDomain</code>这个属性，当前<code>swf</code>文件可以授信给所加载的<code>swf</code>文件，而所加载的<code>swf</code>文件的授信则需要通过URL策略文件：</p> <pre><code>var context:LoaderContext = new LoaderContext(true); 
+context.securityDomain = SecurityDomain.currentDomain; 
+</code></pre>
+            <p>用这种方式加载的<code>swf</code>文件的权力比用<code>allowDomain</code>授权的更大。把<code>swf</code>加载到同一个安全域中，等同于能做任何事，这些<code>swf</code>文件可以在当前域下面做任意操作，例如：</p>
+            <ol>
+              <li>获取当前<code>swf</code>中的任意引用。</li>
+              <li>读取当前<code>swf</code>所在域的文件。</li>
+              <li>读取主域上的共享对象。</li>
+              <li>获取通过当前<code>swf</code>所在域建立的共享连接通讯。</li>
+            </ol>
+            <p>所以在引入跨域<code>swf</code>文件到当前的安全域下面千万要注意，不要引入恶意的<code>swf</code>文件。</p>
+            <p><a href="/posts/2014/01/08/flash-security-domain.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用应用程序域</h2>
+            <p class="blog-post-meta">写于2014年01月07日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>应用程序域<code>ApplicationDomain</code>的用途是存储ActionScript 3.0的定义表。<code>swf</code>文件中的所有代码都被定义在应用程序域中。通过不同的应用程序域，可以允许同一个类有多个定义，并且还允许子级重用父级定义。</p>
+            <p>在使用<code>Loader</code>的<code>load</code>方法的时候，通过<code>context</code>这个参数可以指定加载内容的应用程序域，例如：</p> <pre><code>ldr = new Loader(); 
+var req:URLRequest = new URLRequest(&quot;Greeter.swf&quot;); 
+var ldrContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain); 
+ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler); 
+ldr.load(req, ldrContext);
+</code></pre>
+            <p>以上的代码把加载的<code>swf</code>文件放入到当前<code>swf</code>文件的应用程序域中。在使用应用程序域时，要记住以下几点：</p>
+            <ol>
+              <li><code>swf</code>文件中的所有代码都会被定义在该应用程序域中。</li>
+              <li>已加载的类尽在其父级中没有相关定义时才进行定义，不能用较新的定义覆盖已加载类的定义。</li>
+            </ol>
+            <p>在加载其他<code>swf</code>文件的时候，我们可以通过创建系统域的子与划分子级<code>swf</code>文件：</p> <pre><code>var appDomainA:ApplicationDomain = new ApplicationDomain(); 
+var contextA:LoaderContext = new LoaderContext(false, appDomainA); 
+var loaderA:Loader = new Loader(); 
+loaderA.load(new URLRequest(&quot;application2.swf&quot;), contextA);
+</code></pre>
+            <p><a href="/posts/2014/01/07/flash-application-domain.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">AS3 LoaderContext</h2>
+            <p class="blog-post-meta">写于2014年01月06日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>LoaderContext</code>作为<code>Loader</code>类的<code>load</code>方法的第二个参数，声明加载媒体的上下文选项。使用<code>load</code>方法加载媒体（例如<code>swf</code>文件），需要作出两个决定：</p>
+            <ol>
+              <li>将<code>swf</code>文件放置到哪个安全域中。</li>
+              <li>将<code>swf</code>文件放置到该安全域的哪个应用程序域中。</li>
+            </ol>
+            <p>这两个决定对应于<code>LoaderContext</code>里面的两个属性：<code>securityDomain</code>和<code>applicationDomain</code>。除了这两个属性之外，<code>LoaderContext</code>还指定了一些其他属性，声明这个媒体相关的上下文。</p>
+            <p>第一个属性是<code>allowCodeImport</code>，指定是否可以使用<code>Loader</code>对象包含的内容（例如<code>swf</code>文件）导入到调用方的安全沙箱。当设置成<code>false</code>之后，加载的文件会被限制只能执行安全操作，例如加载图像。这个属性可以防止加载的文件执行不安全的操作。</p>
+            <p>第二个属性是<code>checkPolicyFile</code>，指定在开始加载之前，是否尝试从目标服务器下载URL策略文件。如果不需要对正在加载的图像进行像素级的访问，或者加载的内容是<code>swf</code>文件，建议把这个属性设置成<code>false</code>。</p>
+            <p>第三个属性是<code>parameters</code>，指定要传递到内容的<code>LoaderInfo</code>对象的参数。通常是通过分析请求URL来获得参数的值，如果设置了这个属性，就会使用这个值而忽略URL上面的参数。这个属性在调用<code>loadBytes</code>方法特别有效，因为<code>loadBytes</code>是没有所谓的URL的。</p>
+            <p>第四个属性是<code>requestedContentParent</code>，指定内容的父对象。通常内容的父对象为<code>Loader</code>对象，设置了这个属性之后则会使用这个属性指定的对象作为父对象，除非发生运行时错误，例如触发<code>SecurityErrorEvent</code>。</p>
+            <p>最后介绍一下构造方法，接受三个参数：</p>
+            <ol>
+              <li><code>checkPolicyFile</code>。</li>
+              <li><code>applicationDomain</code>。</li>
+              <li><code>securityDomain</code>。</li>
+            </ol>
+            <p>分别对应于三个属性，设置初始值。最后来个例子，从另一个域加载<code>swf</code>文件并检查策略文件，还将加载的<code>swf</code>文件添加到与<code>Loader</code>对象的类相同的应用程序域中：</p>
+            <p><a href="/posts/2014/01/06/flash-loader-context.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用ByteArray</h2>
+            <p class="blog-post-meta">写于2014年01月03日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>在Flash中，我们可以使用<code>ByteArray</code>来操作二进制数据：</p> <pre><code>var stream:ByteArray = new ByteArray();
+</code></pre>
+            <p>使用<code>ByteArray</code>，可以把数据按照流的形式组织成一个<code>ByteArray</code>。<code>ByteArray</code>提供了<code>readXXX</code>和对应的<code>writeXXX</code>方法，按照同样调用顺序把数据读取和写入到<code>ByteArray</code>中，实现对数据的序列化。例如，我们可以这么写：</p> <pre><code>bytes.writeUTFBytes(&quot;someString&quot;);
+bytes.writeFloat(1);
+</code></pre>
+            <p>可以这么读：</p> <pre><code>var str:String = bytes.readUTFBytes();
+var float:Float = bytes.readFloat();
+</code></pre>
+            <p><code>ByteArray</code>的<code>position</code>属性记录当前指针的位置，初始值为<code>0</code>。当读取或者写入<code>ByteArray</code>的时候，会更新<code>position</code>属性以指向上次读取或者写入字节后的位置：</p> <pre><code>bytes.writeUTFBytes(&quot;Hello World!&quot;);
+// position + 12
+</code></pre>
+            <p>可以更改这个<code>position</code>属性的值实现随机读写的功能。</p>
+            <p><code>ByteArray</code>还提供了两个属性指示其长度。其中<code>bytesAvailable</code>表示当前位置（<code>position</code>）到结尾处还剩多少个字节，而<code>length</code>则表示整个<code>ByteArray</code>的长度。</p>
+            <p><a href="/posts/2014/01/03/flash-bytearray.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用FormData</h2>
+            <p class="blog-post-meta">写于2014年01月02日 关于<a href="/tags/html5">html5</a></p>
+            <p>ABCDEFG</p>
+            <p>边界字符串是由浏览器生成的一个随机的字符串。使用<code>FormData</code>，我们可以方便地构造出<code>multipart/form-data</code>需要的请求体，还可以通过<code>XMLHttpRequest</code>来提交。jQuery也支持<code>FormData</code>：</p> <pre><code>var formData = new FormData();
+formData.append(&quot;name1&quot;, &quot;value1&quot;);
+formData.append(&quot;name2&quot;, &quot;value2&quot;);
+$.ajax({
+  url: &quot;path/to/server&quot;,
+  data: formdata,
+}).done(...);
+</code></pre>
+            <p>最后还是那句，IE10才支持<code>FormData</code>！</p>
+            <p><a href="/posts/2014/01/02/html5-formdata.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML5的File API</h2>
+            <p class="blog-post-meta">写于2013年12月31日 关于<a href="/tags/html5">html5</a></p>
+            <p>如果我们要上传文件，以前只能使用表单的<code>file</code>控件进行上传，而且只能把这个表单POST出去。这时候我们如果需要做类似分块上传的功能，特别是上传大文件，例如视频等，只能通过Flash或者浏览器插件来做这些分块上传的功能。</p>
+            <p>现在HTML5提供了一套文件API，使用这套API配合<code>FormData</code>就可以实现文件分块、Ajax上传二进制数据等功能。今天先来介绍File API。</p>
+            <p>File API提供了一个接口供我们访问文件信息和文件的二进制内容。可以通过表单上的<code>file</code>控件的<code>files</code>属性获取<code>File</code>对象：</p> <pre><code>var file = $(&quot;#upload_file&quot;).files[0];
+</code></pre>
+            <p><code>File</code>实现了<code>Blob</code>这个接口，所以它能处理二进制数据。<code>File</code>对象有以下几个属性，全部都是只读的：</p>
+            <ol>
+              <li><code>lastModifiedDate</code>，表示这个文件的修改日期。</li>
+              <li><code>name</code>，表示这个文件的文件名。</li>
+            </ol>
+            <p>还有两个<code>Blob</code>接口的属性：</p>
+            <ol>
+              <li><code>size</code>，表示这个文件的大小。</li>
+              <li><code>type</code>，表示这个文件的MIME类型。</li>
+            </ol>
+            <p>使用<code>Blob</code>接口的<code>slice</code>方法可以处理文件的内容：</p> <pre><code>blob = file.slice(startPos, endPos);
+</code></pre>
+            <p><a href="/posts/2013/12/31/html5-file-api.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML Form的enctype</h2>
+            <p class="blog-post-meta">写于2013年12月30日 关于<a href="/tags/html">html</a></p>
+            <p>表单的这个特性用来声明这个表单的内容类型。当我们没有显式声明这个特性的值的时候，使用的是其默认值<code>application/x-www-form-urlencoded</code>，对表单中的每个控件的值进行URL编码，提交编码之后的字符串。</p>
+            <p>这种编码方式满足大部分的场景，但是当我们需要传输一些非文本数据（例如文件、二进制数据等），这种方式是低效的。这时候我们需要把表单的<code>enctype</code>特性设置成<code>multipart/form-data</code>。</p>
+            <p>设置成这个值之后提交的表单，请求头的<code>Content-Type</code>会变成<code>multipart/form-data</code>。还需要跟上一个字符串，这个字符串不能存在于每个部分当中。这样表单接收方就可以根据这个字符串正确地分割请求体。分割后的每一个部分对应表单中的一个“控件”，里面包含了这个部分的名字和值。</p>
+            <p>每一个部分由以下几个部分组成：</p>
+            <ol>
+              <li><code>Content-Disposition</code>，固定为<code>form-data</code>。</li>
+              <li><code>name</code>，声明这个部分“控件”的名称，例如一般表单提交的时候就是表单控件对应的<code>name</code>特性的值。</li>
+            </ol>
+            <p>例如：</p> <pre><code>Content-Disposition: form-data; name=&quot;mycontrol&quot;
+</code></pre>
+            <p>然后一个回车换行之后就是这个部分对应的值。默认的<code>Content-Type</code>是<code>text/plain</code>，即是一个文本。当这个部分是一个文件或者二进制数据，需要显式声明这个部分的<code>Content-Type</code>，例如：</p> <pre><code>Content-Disposition: file; filename=&quot;file2.gif&quot;
+Content-Type: image/gif
+</code></pre>
+            <p>这种部分还需要一个额外的头信息，<code>filename</code>，声明这个文件或者二进制块的名称，方便表单接收方获取文件的原来的名字。</p>
+            <p><a href="/posts/2013/12/30/html-form-multipart.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之加载数据</h2>
+            <p class="blog-post-meta">写于2013年12月24日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>类似于HTML中的Ajax或者表单提交，Flash必须也可以与服务端交换数据。比HTML要灵活一点的是，Flash可以通过在站点上配置策略文件允许跨域访问，而Ajax则不能（当然，现在可以配置服务端的响应头实现跨域的Ajax……）。</p>
+            <p>在Flash中可以使用<code>URLLoader</code>或者<code>URLStream</code>的<code>load</code>方法加载数据：</p> <pre><code>var request:URLRequest = new URLRequest(&quot;path/to/res&quot;);
+var urlLoader:URLLoader = new URLLoader(request);
+urlLoader.load();
+</code></pre>
+            <p>跟Ajax类似，加载的过程是异步的，需要监听事件才能获取到加载完之后的数据。Flash内建了<code>Progress</code>的事件，这个比传统的Ajax真要方便多了（虽然貌似现在HTML5也有……）。</p>
+            <p>比HTML跟进一步的是，Flash可以直接连接Socket，当然，也需要配置策略文件保护安全。Socket的策略文件可以从以下几个地方获取：</p>
+            <ol>
+              <li>端口<code>843</code>，这个是主策略文件，相当与<code>http://host/crossdomain.xml</code>。</li>
+              <li>与主套接字连接相同的端口。</li>
+              <li>之外的其他端口，由其他策略文件指定。</li>
+            </ol>
+            <p>在Flash中可以调用<code>Socket.connet</code>或者<code>XMLSocket.connet</code>来链接套接字：</p> <pre><code>var socket:Socket = new Socket();
+socket.connet(&quot;host&quot;, 12345);
+</code></pre>
+            <p>当需要传送敏感数据的时候，可以使用传输层安全性（TLS）或者套接字安全性（SSL）来保护数据，可以使用<code>HTTPS</code>协议来连接。</p>
+            <p><a href="/posts/2013/12/24/flash-security-loading-data.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li class="active"><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/2.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

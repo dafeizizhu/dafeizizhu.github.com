@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>模拟触发DOM事件之jQuery trigger</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">模拟触发DOM事件之jQuery trigger</h2>
+            <p class="blog-post-meta">写于2013年07月15日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>昨天写了一下<code>document.createEvent</code>这个方法，并描述了如何使用该方法模拟DOM事件。今天看看MDN建议的<code>Event</code>构造函数，以及jQuery是如何处理<code>trigger</code>的。</p>
+            <p><code>Event</code>构造函数接受两个参数：</p>
+            <ol>
+              <li>表示事件类型的字符串，如<code>click</code>、<code>change</code>甚至是自定义的字符串。</li>
+              <li>事件的附加属性，用一个JavaScript对象表示，如<code>{ &quot;a&quot;: &quot;something additional&quot; }</code>。</li>
+            </ol>
+            <p>由于简化了事件附加属性的设置，不需要像<code>document.createEvent</code>那样分开各种事件类型，并且使用不同的<code>init</code>方法。下面给出一个MDN上面的例子：</p> <pre><code>var event = new Event(&#39;build&#39;);
+
+// Listen for the event.
+elem.addEventListener(&#39;build&#39;, function (e) { ... }, false);
+
+// Dispatch the event.
+elem.dispatchEvent(event);
+</code></pre>
+            <p><code>Event</code>构造函数在绝大部分的现代浏览器里面都支持（IE9也支持，可怜的IE8）。如果要兼容老版本的IE浏览器，需要使用昨天的<code>document.createEvent</code>方法。</p>
+            <p>现在来看看jQuery的<code>trigger</code>方法，是如何实现跨浏览器模拟触发DOM事件的。</p>
+            <p>看了源码我震惊了，jQuery完全没有使用上述任何一个API，包括<code>document.createEvent</code>和<code>Event</code>构造函数。jQuery使用的是自定义的事件对象<code>jQuery.Event</code>，里面包括了原生事件里面的所有属性和方法（封装了浏览器的差异），以及一些jQuery的扩展属性。当使用<code>trigger</code>时，jQuery会遍历这个DOM元素的事件冒泡路径，就是这个DOM元素在DOM树里面的完整路径。然后收集在DOM树上所有这个事件的处理程序，根据冒泡的顺序触发对应的事件处理程序。整个过程都没有使用DOM原生的模拟事件。</p>
+            <p>有趣的是，即使不是使用jQuery绑定的事件，都可以通过<code>trigger</code>触发，这个是由于有以下两段代码：</p> <pre><code>handle = ontype &amp;&amp; cur[ ontype ];
+if ( handle &amp;&amp; jQuery.acceptData( cur ) &amp;&amp; handle.apply &amp;&amp; handle.apply( cur, data ) === false ) {
+    event.preventDefault();
+}
+</code></pre>
+            <p>和</p> <pre><code>tmp = elem[ ontype ];
+if ( tmp ) {
+    elem[ ontype ] = null;
+}
+// Prevent re-triggering of the same event, since we already bubbled it above
+jQuery.event.triggered = type;
+elem[ type ]();
+jQuery.event.triggered = undefined;
+</code></pre>
+            <p>通过<code>elem</code>上面属性可以获取到通过<code>onXXX</code>（DOM2）以及<code>addEventListener</code>（DOM3）绑定的事件处理程序，并执行它们。可以<a href="http://jsfiddle.net/qxAz8/2/">参考这里</a>。</p>
+            <p>今天终于收到offer了，下个月就离开我司。最后享受这一个月的时光吧，fight！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/14/simulate-event.html" title="模拟触发DOM事件之原生模拟事件">上一篇</a></li>
+              <li><a href="/posts/2013/07/16/css-equal-hight.html" title="CSS等高布局">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

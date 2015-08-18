@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之加载内容</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之加载内容</h2>
+            <p class="blog-post-meta">写于2013年12月17日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>Flash可以加载多种类型的内容，作为显示对象显示在舞台上，包括<code>swf</code>影片、图像、声音、视频等。</p>
+            <h3 id="-swf-">加载SWF和图像</h3>
+            <p>使用<code>Loader</code>可以加载<code>swf</code>文件或者图像。可以加载属于自己沙箱权限范围之内的资源，例如受信任的<code>swf</code>可以加载本地或者网络的资源等。下面是使用<code>Loader</code>的一个例子：</p> <pre><code>var ldr:Loader = new Loader(); 
+var url:String = &quot;http://www.unknown.example.com/content.swf&quot;; 
+var urlReq:URLRequest = new URLRequest(url); 
+ldr.load(urlReq); 
+addChild(ldr);
+</code></pre>
+            <p><code>load</code>方法可以传入第二个参数<code>context</code>，定义如何使用加载的上下文。这个参数有以下几个比较重要的属性：</p>
+            <ol>
+              <li><code>checkPolicyFile</code>，当加载图片的时候使用该属性。如果图像文件所在的域与包含<code>Loader</code>对象的文件所在的域不同，则指定此属性。当设置成<code>true</code>的时候，会检查远程服务器上面的策略文件。如果授予了适当的权限，<code>swf</code>文件就可以访问加载图像中的数据（例如调用<code>BitmapData.draw</code>等操作图像的像素等）。</li>
+              <li><code>securityDomain</code>，当加载<code>swf</code>的时候使用该属性。有两个可选的取值：<code>null</code>或者<code>SecurityDomain.currentDomain</code>。如果指定为后者，则视为远程<code>swf</code>文件在本地服务器加载一样，可以自由访问本地<code>swf</code>文件的属性和方法。请注意，多数情况可以通过执行普通加载操作然后让加载的<code>swf</code>文件调用<code>Security.allowDomain</code>方法来取代沙箱导入。由于加载的<code>swf</code>文件将位于自己的原始沙箱中，并因而能够访问自己实际服务器上的资源，因此后一种方法会更易于使用。</li>
+              <li><code>applicationDomain</code>，当加载ActionScript 3.0编写的<code>swf</code>才会使用这个属性。当加载文件时，可以指定文件应放置在特定的应用程序域中，而不是默认放置在一个新的应用程序域中。</li>
+            </ol>
+            <h3 id="-">加载声音和视频</h3>
+            <p>允许任何内容使用<code>Sound.load</code>、<code>NetConnection.connect</code>和<code>NetStream.play</code>方法从网络源加载声音和视频，只能与本地文件系统内容交互的沙箱中的内容除外。</p>
+            <h3 id="-img-swf-">使用文本域的img标签加载swf和图像</h3>
+            <p>通过使用<code>img</code>标签，可以将<code>SWF</code>文件和位图加载到文本字段中：</p> <pre><code>&lt;img src = &#39;filename.jpg&#39; id = &#39;instanceName&#39; &gt;
+</code></pre>
+            <p>可以通过以下代码获取到图像的显示对象：</p> <pre><code>var loadedObject:DisplayObject = myTextField.getImageReference(&#39;instanceName&#39;);
+</code></pre>
+            <p><code>img</code>标签上可以指定加载上下文，例如：</p> <pre><code>&lt;img src = &#39;filename.jpg&#39; checkPolicyFile = &#39;true&#39; id = &#39;instanceName&#39; &gt;
+</code></pre>
+            <p>当使用这些标签加载外部资源的时候，会在<code>TextField</code>内部创建一个<code>Loader</code>实例去加载这些内容。虽然<code>Loader</code>对象跟本地<code>swf</code>文件是在同一个安全沙箱中，不过访问<code>Loader</code>的<code>content</code>属性的时候，就需要应用到响应的安全规则了。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/16/flash-security-full-screen-interactive-mode-security.html" title="Flash安全性之全屏交互模式安全性">上一篇</a></li>
+              <li><a href="/posts/2013/12/18/flash-security-cross-scripting.html" title="Flash安全性之跨脚本访问">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

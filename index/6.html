@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 解析选择器</h2>
+            <p class="blog-post-meta">写于2013年11月02日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>之前的纯JavaScript实现的CSS选择器引擎中，只是简单地使用标签选择器，所以解析起来十分简单，就是按空格<code>split</code>就好了。但是，CSS选择器有很多种，例如特性选择器（<code>[name=&quot;value&quot;]</code>等）就没有办法通过空格去解析。</p>
+            <p>一个完整的实现需要有很多解析的规则，去处理所有合法的CSS选择器。这时候使用正则表达式就最合适不过了：</p> <pre><code>var selector = &quot;div.class &gt; span:not(:first-child) a[href]&quot;
+var chunker = /((?:\([^\)]+\)|\[[^\]]+\]|[^ ,\(\[]+)+)(\s*,\s*)?/g;
+var parts = [];
+chunker.lastIndex = 0;                        
+while ((m = chunker.exec(selector)) !== null) {     
+  parts.push(m[1]);
+  if (m[2]) {                         
+    extra = RegExp.rightContext;
+    break;
+  }
+}
+</code></pre>
+            <p>使用书中提供的这个正则表达式就可以解析出上面那个这么复杂的选择器了！</p>
+            <p>这个例子只是完整的实现的其中一部分，还有一些其他我们要支持的CSS选择器需要增加自己的规则。某些选择器引擎使用一个Map把正则表达式映射到一个函数，当一个正则表达式匹配的时候，对应的函数就会执行，解析其中的CSS选择器。</p>
+            <p>如果大家有兴趣去查看完整的CSS选择器是如何实现的，可以去查看<a href="https://github.com/jquery/jquery">jQuery的源码</a>。</p>
+            <p><a href="/posts/2013/11/02/javascript-parsing-selector.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">IE的dataavailable事件</h2>
+            <p class="blog-post-meta">写于2013年11月01日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>虽然<code>postMessage</code>已经是跨<code>iframe</code>通讯的一个比较完善的解决方案了，但是，如果，要IE8及以上的版本才支持这个方法。如果这两个<code>iframe</code>是同域的话，其实是可以直接通过脚本操作两个<code>window</code>，直接调用其内部方法就行通讯：</p> <pre><code>// outer
+var innerWin = document.getElemenetById(&quot;iframe&quot;).contentWindow;
+innerWin.doSomething();
+// inner
+function doSomething() {
+  alert(&quot;outer message!&quot;);
+}
+</code></pre>
+            <p>其实还有一个方法，就是<code>dataavailable</code>事件。这个事件是IE特有的事件，当数据源对象的数据准备好之后，可以触发这个事件来通知其他对象。</p>
+            <p>这个事件像其他标准事件一样，可以使用以下几个方式来绑定：</p>
+            <ol>
+              <li>在HTML里面：<code>&lt;element ondataavailable=&quot;handler&quot;&gt;&lt;/element&gt;</code>。</li>
+              <li>作为属性：<code>object.ondataavailable = handler;</code>。</li>
+              <li>使用<code>attachEvent</code>：<code>object.attachEvent(&quot;ondataavailible&quot;, handler);</code>。</li>
+              <li>在IE9还可以使用<code>addEventListener</code>：<code>object.addEventListener(&quot;dataavailible&quot;, handler, useCapture);</code>。</li>
+            </ol>
+            <p>由于这个事件不是用户触发的，我们需要使用脚本在特定的对象上触发这个事件：</p> <pre><code>var event = document.createEventObject();
+</code></pre>
+            <p><a href="/posts/2013/11/01/ie-ondataavailable-event.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.postMessage</h2>
+            <p class="blog-post-meta">写于2013年10月31日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/html5">html5</a></p>
+            <p>以前我们需要在跨域的<code>iframe</code>中通讯，只能使用一个中间<code>iframe</code>跳转（或者<code>window.name</code>）来进行数据交换。而<code>window.postMessage</code>允许我们进行安全的跨域通讯。</p>
+            <p>调用<code>window.postMessage</code>的时候会在目标的<code>window</code>上分发<code>MessageEvent</code>。这个事件对象包括事件类型<code>message</code>和一些关于这次消息通讯的属性，包括数据、源还有调用<code>postMessage</code>的<code>window</code>等。</p>
+            <p>这个方法接受两个参数：</p>
+            <ol>
+              <li><code>message</code>，要传输的数据。</li>
+              <li><code>targetOrigin</code>，声明特定的域接收这个事件，可以是<code>*</code>或者是一个URI。如果目标<code>window</code>的域与这个参数不匹配，则不会把事件分发到这个<code>window</code>。这样就可以防止事件的信息被不信任的代码捕获到。</li>
+            </ol>
+            <p>我们可以通过以下的代码接收别的<code>window</code>发送过来的消息：</p> <pre><code>window.addEventListener(&quot;message&quot;, receiveMessage, false);
+function receiveMessage(event) {
+  if (event.origin !== &quot;http://example.org:8080&quot;)
+    return;
+    // ...
+}
+</code></pre>
+            <p>事件对象有以下几个属性：</p>
+            <ol>
+              <li><code>data</code>，就是通过<code>postMessage</code>传入的第一个参数的值。</li>
+              <li><code>origin</code>，调用<code>postMessage</code>的<code>window</code>所在的域。这个属性包括协议、主机还有端口。这个域只是调用<code>postMessage</code>当时的<code>window</code>所在的域。</li>
+            </ol>
+            <p><a href="/posts/2013/10/31/window-postmessage.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">JavaScript同源策略</h2>
+            <p class="blog-post-meta">写于2013年10月30日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>当一个不是当前页面的域下的脚本要跟当前页面进行交互，要受到这个同源策略的限制。这里的同源指的是页面和脚本路径的协议、端口和主机都一样。其中一项不一样都视作不同源，也就是我们常说的跨域：</p> <pre><code>http://store.company.com/dir/other.html
+http://store.company.com/dir2/other.html // same
+http://store.company.com:81/dir/other.html // not same
+</code></pre>
+            <p>一个页面还可以更改其所在的域，不过有很多限制。可以通过设置<code>document.domain</code>改变当前页面的域，但是只能够设置到当前域的后缀部分，例如：</p> <pre><code>// current domain: www.duowan.com
+document.domain = &quot;duowan.com&quot;; // success
+document.domain = &quot;u.duowan.com&quot;; // error
+</code></pre>
+            <p>设置了域之后的跨域检查都会使用设置后的值去计算。有一点需要注意的是，设置<code>document.domain</code>之后端口会被重置为<code>null</code>，所以<code>company.com:8080</code>和<code>company.com</code>要通讯，两个页面都需要设置<code>document.domain</code>，这样端口才能一致。</p>
+            <p>跨域的访问通常可以分成三种：</p>
+            <ol>
+              <li>a跨域“写”，即链接、跳转和表单提交，这种行为是允许的。</li>
+              <li>a跨域“嵌入”，即<code>script</code>、<code>link</code>、<code>img</code>、<code>video</code>、<code>object</code>、<code>embed</code>、<code>iframe</code>等，这些也是被允许的。</li>
+              <li>a跨域“读”，例如<code>XMLHttpRequest</code>，一般是不允许的，需要设置CORS才能允许这些跨域访问。</li>
+            </ol>
+            <p>在JavaScript中，我们可以通过<code>iframe.contentWindow</code>、<code>window.parent</code>等API去访问页面中的其他文档。如果这些文档不在同一个域，访问这些文档的<code>winodw</code>和<code>location</code>会被禁止。如果需要跨域的<code>iframe</code>通讯，请使用HTML5提供的<code>postMessage</code>API或者使用一些框架去实现，例如
+              <a
+              href="https://github.com/biqing/MessengerJS">MessengerJS</a>。</p>
+            <p><a href="/posts/2013/10/30/javascript-same-origin-policy.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">document.cookie</h2>
+            <p class="blog-post-meta">写于2013年10月29日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>什么是cookie？</p>
+            <blockquote>
+              <p>cookie 是存储于访问者的计算机中的变量。每当同一台计算机通过浏览器请求某个页面时，就会发送这个 cookie。你可以使用 JavaScript 来创建和取回 cookie 的值。</p>
+            </blockquote>
+            <p>对应的JavaScript API就是<code>document.cookie</code>。这是一个非常奇怪的属性，我们可以通过访问这个属性得到当前页面的所有cookie：</p> <pre><code>allCookies = document.cookie;
+</code></pre>
+            <p>返回的字符串是一系列的键值对，用<code>;</code>隔开，键值用<code>=</code>连接：</p> <pre><code>key1=value1;key2=value2
+</code></pre>
+            <p>我们需要使用一个正则表达式去把这个字符串转成JavaScript对象（摘自<a href="https://github.com/aralejs/cookie/blob/master/src/cookie.js">arale/cookie</a>）：</p> <pre><code>var cookieParts = document.cookie.split(/;\s/g);
+for (var i = 0, len = cookieParts.length; i &lt; len; i++) {
+  var cookieNameValue = cookieParts[i].match(/([^=]+)=/i);
+  if (cookieNameValue) {
+    var cookieName = decodeURIComponent(cookieNameValue[1]);
+    var cookieValue = decodeURIComponent(cookieParts[i]
+      .substring(cookieNameValue[1].length + 1));
+    result[cookieName] = cookieValue;
+</code></pre>
+            <p><a href="/posts/2013/10/29/document-cookie.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之Callbacks</h2>
+            <p class="blog-post-meta">写于2013年10月28日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>jQuery在1.7的时候引入了一个<code>jQuery.Callbacks</code>方法，返回一个强力的对象去管理我们的回调函数列表。这个对象支持对回调函数列表的增删改、触发停用等操作。</p>
+            <p>先来看看这个方法用来干嘛的：</p>
+            <blockquote>
+              <p> A multi-purpose callbacks list object that provides a powerful way to manage callback lists</p>
+            </blockquote>
+            <p>简单的说就是返回一个对象让我们去管理回调函数。这个方法接受一个参数，可以配置<code>callbacks</code>的行为。返回的对象提供了一些方法，让我们可以去控制这些回调函数，例如增加、删除、触发或者禁用等。</p>
+            <p>最简单的用法是：</p> <pre><code>var callbacks = $.Callbacks();
+callbacks.add(function () { alert(1); });
+callbacks.fire(); // alert(1);
+</code></pre>
+            <p><code>add</code>就是增加回调函数，<code>fire</code>就是触发这些回调，就是这么简单。在调用<code>jQuery.Callbacks</code>的时候我们还可以传入一个标志位，它是若干的标志的集合，用空格分开，支持以下标志位：</p>
+            <ol>
+              <li><code>once</code>，表示这个回调函数列表只能被<code>fire</code>一次，之后的<code>fire</code>都不会调用这些回调函数。</li>
+              <li><code>memory</code>，表示会跟踪触发的状态，即<code>fire</code>之后再<code>add</code>的回调函数，不需要再次<code>fire</code>也会被执行。</li>
+              <li><code>unique</code>，表示一个回调只能被<code>add</code>一次。</li>
+              <li><code>stopOnFalse</code>，表示当一个回调函数返回<code>false</code>的时候剩下的回调函数都不会被执行。</li>
+            </ol>
+            <p>可以看到这些标志位的设置跟jQuery常用的事件处理的方式都有点联系，例如<code>one</code>可以看到<code>jQuery.fn.one</code>这种绑定事件的方式，而<code>stopOnFalse</code>正好也是jQuery在处理事件的时候<code>return false</code>有点关系。其实jQuery关于事件的操作很多都是基于这个<code>callbacks</code>对象去做的，例如<code>$.Deffered</code>。</p>
+            <p><a href="/posts/2013/10/28/jquery-callbacks-add.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 纯JavaScript实现的CSS选择器引擎</h2>
+            <p class="blog-post-meta">写于2013年10月27日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>一个CSS选择器引擎的核心其实是纯JavaScript实现的这个部分。最主要的功能就是把CSS选择器映射到一系列浏览器原生提供的API（例如<code>getElementById</code>或者<code>getElementsByTagName</code>等）的调用序列，通过这些原生的API去寻找我们想要定位到的元素。</p>
+            <p>为什么还需要一个纯JavaScript实现的CSS选择器引擎？</p>
+            <ol>
+              <li>a因为IE6和IE7不支持原生的CSS选择器、也不支持使用XPath。</li>
+              <li>a因为我们的站点可能需要向前兼容这些古董浏览器。</li>
+              <li>a因为效率，某些CSS选择器使用原生的API速度更快（例如<code>id</code>选择器）。</li>
+              <li>a因为CSS选择器的覆盖率，由于不是所有支持原生CSS选择器的浏览器都支持所有CSS选择器，所以当某个选择器在某个浏览器里面不支持就要退化到纯JavaScript的实现。</li>
+            </ol>
+            <p>通常我们会从左到右分析一个CSS选择器，然后顺着<code>root</code>往下找，例如以下的选择器：</p> <pre><code>div.ninja a span
+</code></pre>
+            <p>按照一般的逻辑，我们会找<code>class</code>是<code>ninja</code>的<code>div</code>，在它的子元素中找<code>a</code>，在<code>a</code>的子元素中找<code>span</code>。这里要注意两个问题：</p>
+            <ol>
+              <li>a返回的结果可能有多个，它们的顺序要跟定义的顺序一致。</li>
+              <li>a返回的结果中不能有重复的DOM。</li>
+            </ol>
+            <p>由于这两个问题，使用从上到下分析DOM文档树的方法可能需要一些额外的工作量，所以就有了从下到上分析DOM文档树的方法去解析CSS选择器。原理就是先找出文档树中匹配最右边的选择器的元素，再去匹配它的祖先元素是否满足左侧的CSS选择器：</p> <pre><code>function find(selector, root) {
+  root  = root || document;
+</code></pre>
+            <p><a href="/posts/2013/10/27/javascript-css-selector-implementation.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之val</h2>
+            <p class="blog-post-meta">写于2013年10月25日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>jQuery提供了一个简便的方法让我们去获取DOM的<code>value</code>特性，就是<code>jQuery.fn.val</code>方法。跟<code>attr</code>和<code>prop</code>一样，它也是一个<code>getter</code>和<code>setter</code>一体的方法。</p>
+            <h3 id="getter">getter</h3>
+            <blockquote>
+              <p>Get the current value of the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>跟<code>attr</code>和<code>prop</code>也一样的是，作为<code>getter</code>的<code>val</code>方法不接受任何参数，只会获取jQuery对象中地一个元素的<code>value</code>的值：</p> <pre><code>$(elem).val();
+</code></pre>
+            <p>通常我们会在<code>input</code>、<code>select</code>或者<code>textarea</code>元素上使用<code>val</code>方法。当<code>select</code>的<code>multiple</code>特性声明为有效的时候，<code>val</code>会返回一个数组，包含了选中的<code>option</code>的<code>value</code>；如果没有选中任何<code>option</code>，则会返回<code>null</code>。</p>
+            <p>如果目标对象不是以上的元素（例如<code>div</code>、<code>a</code>等），<code>val</code>方法会返回一个空字符串。其实就是返回DOM上的<code>value</code>属性，而不是<code>value</code>特性：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/Hrv6u/embedded/js,html/" allowfullscreen="allowfullscreen"
+            frameborder="0"> </iframe>
+            <h3 id="setter">setter</h3>
+            <blockquote>
+              <p>Set the value of each element in the set of matched elements.</p>
+            </blockquote>
+            <p>跟<code>attr</code>和<code>prop</code>也十分类似，有两种传输参数的方式：</p>
+            <p><a href="/posts/2013/10/25/jquery-val.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">字符串的replace方法</h2>
+            <p class="blog-post-meta">写于2013年10月24日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p><code>replace</code>是一个我们经常都会使用到的方法，最简单的就是直接使用字符串进行替换，还有就是可以传入正则表达式进行替换。不仅可以简单地替换字符串，而且还可以传入一个回调函数进行更复杂的替换。今天就简单看一下这个方法可以怎么用。</p>
+            <p><code>replace</code>方法不会改变原来的字符串，它会返回一个替换后的新字符串。它接受两个参数，每个参数都有两种传入形式。</p>
+            <p>第一个参数可以是一个正则表达式，它匹配的结果会被第二个参数的返回值替换；也可以是一个字符串，原字符串中与这个字符串相同的子串会被第二个参数的返回值：</p> <pre><code>&quot;abca&quot;.replace(&quot;a&quot;, &quot;d&quot;); // &quot;dbca&quot;
+&quot;abca&quot;.replace(/a/, &quot;d&quot;); // &quot;dbca&quot;
+</code></pre>
+            <p>注意哦，如果第一个参数是字符串，则只会替换第一个相同的子串，如上例中的第二个<code>a</code>是没有被替换的，如果要替换全部相同的子串只能使用正则表达式：</p> <pre><code>&quot;abca&quot;.replace(/a/g, &quot;d&quot;); // &quot;dbcd&quot;
+</code></pre>
+            <p>第二个参数比较有意思，它可以是一个字符串，作为新值被替换。这个字符串也简单支持了一些模式，例如：</p>
+            <ol>
+              <li><code>$$</code>，表示一个美元符号<code>$</code>。</li>
+              <li><code>$&amp;</code>，表示匹配的子串。</li>
+              <li><code>$[反引号]</code>，表示匹配子串之前的子串。</li>
+              <li><code>$&#39;</code>，表示匹配子串之后的子串。</li>
+              <li><code>$n</code>或者<code>$nn</code>，当<code>n</code>是一个数字的时候表示第n个捕获的子串，只有当第一个参数是正则表达式的时候才有效。</li>
+            </ol>
+            <p>除了字符串，我们还可以指定一个回调函数作为第二个参数。<code>replace</code>会使用这个回调函数返回的值进行替换，例如：</p>
+            <p><a href="/posts/2013/10/24/javascript-string-replace.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Unicode 16进制编码</h2>
+            <p class="blog-post-meta">写于2013年10月23日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>这里的16进制编码，指的是<code>\u0001</code>这样的编码。有时候我们为了防止文件编码格式（例如<code>utf-8</code>或者<code>GBK</code>等）影响到文件中的内容（特别是中文），会在代码中使用这些编码，例如：</p> <pre><code>alert(&#39;\u6211\u662f\u4e2d\u6587&#39;);
+</code></pre>
+            <p>这样写的话，无论文件是什么编码，显示的信息都不会乱码，因为JavaScript无论如何都会把这个字符串解析成Unicode的编码。以前在国际化资源文件中大量使用到这个编码，所有非ASCII的字符都会以这种编码写入（当然是通过工具输入的……）。</p>
+            <p>在原生的JavaScript是没有实现这种编解码的API，写一个也十分方便：</p> <pre><code>function getHex(str) {
+  var result = &quot;&quot;;
+  for(var i = 0; i &lt; str.length; i++) {
+    var c = str.charCodeAt(i).toString(16);
+    for (var j = 4 - (&quot;&quot; + c).length; j &gt; 0; j--) {
+      c = &quot;0&quot; + c;
+    }
+    result += &quot;\\u&quot; + c;
+  }
+  return result;
+}
+</code></pre>
+            <p>为什么要写这个？因为今天发现了一个很厉害的注入：</p>
+            <p><a href="/posts/2013/10/23/javascript-unicode-hex-decode.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/5.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li class="active"><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/7.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 闭包（一）</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 闭包（一）</h2>
+            <p class="blog-post-meta">写于2013年07月26日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>又到读书笔记的时候了！闭包，是JavaScript的重要特性之一，这里不聊什么是闭包，这篇文章主要关注闭包的作用。</p>
+            <h3 id="-">绑定函数的执行上下文</h3>
+            <p>我们知道，为一个DOM元素绑定事件，无论使用原生的<code>addEventListener</code>或者jQuery的<code>on</code>，事件处理程序里面的上下文<code>this</code>都是DOM元素本身。如果把一个对象的方法作为事件处理程序绑定到DOM元素的某个事件上，而这个方法又使用了<code>this</code>引用这个对象的其他方法，这样触发事件执行处理程序的时候必然会出错。所以我们需要手动把事件处理程序的执行上下文<code>this</code>改变成这个对象本身，如：</p>
+            <pre><code>if (!Function.prototype.bind) {
+  Function.prototype.bind = function (context){
+    var fn = this;
+    return function(){                                
+      return fn.apply(context,arguments);  
+    };                                                
+  }
+｝
+</code></pre>
+            <p>这里我作了一些小改动，在JavaScript 1.8.5中，<code>bind</code>已经是<code>Function</code>原型的方法了。通过闭包把原来的方法记录下来，在返回的匿名函数中调用原来方法的<code>apply</code>改变执行上下文<code>this</code>指向的对象，这样就可以手动地改变事件处理程序中的<code>this</code>。</p>
+            <p>我个人更偏好于使用jQuery的<code>proxy</code>方法来做这个事情，如：</p> <pre><code>$(&quot;#id&quot;).on(&quot;click&quot;, $.proxy(obj.func, obj));
+</code></pre>
+            <p>保持对象（或者“类”的“实例”）方法中<code>this</code>的指向永远是该对象本身，对于面向对象的JavaScript来说我认为是十分必要的，可以增加一个“类”中代码的可读性与可维护性。</p>
+            <h3 id="-">柯里化</h3>
+            <p>柯里化就是把一个函数的某些参数预置好，返回一个新的函数，接受没有预置的参数。实现的方式有很多种，如果不通过闭包可以将函数进行二次封装而产生新的函数。纯粹地预置参数，这样做未免有些冗余，如果使用闭包，只需要调用某个<code>curry</code>函数，传入预置的参数，就可以返回一个新的函数了。这里分享一个比较有意思的实现，它能预置一个函数中任意位置的参数：</p> <pre><code>Function.prototype.partial = function() {
+  var fn = this, args = Array.prototype.slice.call(arguments);
+  return function() {
+    var arg = 0;
+    for (var i = 0; i &lt; args.length &amp;&amp; arg &lt; arguments.length; i++) {
+      if (args[i] === undefined) {
+        args[i] = arguments[arg++];
+      }
+    }
+    return fn.apply(this, args);
+  };
+};
+</code></pre>
+            <p>通过柯里化过程中传入<code>undefined</code>的位置，预留给结果函数来传入非预置的参数。传给结果函数的参数会像填坑一样把那些之前标识为<code>undefined</code>的参数填充起来。</p>
+            <p>今天就先到这里，闭包的作用还有很多很多，明天继续！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/25/http-method.html" title="HTTP协议之HTTP方法">上一篇</a></li>
+              <li><a href="/posts/2013/07/27/closure-usage-2.html" title="Secrets of the JavaScript Ninja 读书笔记之 闭包（二）">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

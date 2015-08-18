@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Flash中播放视频之Video</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中播放视频之Video</h2>
+            <p class="blog-post-meta">写于2014年01月21日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>视频广告要播视频了。之前做的是使用<code>Loader</code>去加载<code>swf</code>和图片，播放视频则需要使用另一个类：<code>Video</code>。<code>Video</code>类可以显示实时视频和录制视频，这个视频不需要嵌入到<code>swf</code>文件当中。今天主要讨论的是播放一个已经录制好的视频。</p>
+            <p><code>Video</code>类支持<code>flv</code>、<code>mp4</code>等视频文件，它是<code>DisplayObject</code>的子类，所以可以控制各种属性，例如<code>x</code>、<code>y</code>控制<code>Video</code>的位置等。通常要播放一个视频，需要以下几个步骤：</p>
+            <ol>
+              <li>将视频附加到一个视频流上。视频流是<code>NetStream</code>类的实例。</li>
+              <li>调用<code>addChild</code>把<code>Video</code>实例放到舞台上。</li>
+            </ol>
+            <p>除了从<code>DisplayObject</code>继承来的属性外，还有以下几个属性：</p>
+            <ol>
+              <li><code>deblocking</code>，表示作为后处理的一部分应用于已解码视频的滤镜类型。</li>
+              <li><code>smoothing</code>，指定在缩放视频时是否进行平滑处理。</li>
+              <li><code>videoHeight</code>，只读，视频流的高度，单位是像素。</li>
+              <li><code>videoWidth</code>，只读，视频流的宽度，单位是像素。</li>
+            </ol>
+            <p>方法：</p>
+            <ol>
+              <li><code>attachCamera</code>，附加来自摄像头的视频流。</li>
+              <li><code>attachNetStream</code>，附加一个来自网络的视频流，这个也是我们比较常用的方法，播放外部视频。</li>
+              <li><code>clear</code>，清除<code>Video</code>对象中当前显示的图像，但不会停止播放。视频流对象才能控制播放和停止。</li>
+            </ol>
+            <p>构造方法接受两个参数，就是<code>Video</code>的默认宽和高。这两个参数是可选的，如果不指定，默认的宽度是<code>320</code>像素，默认的高度是<code>240</code>像素。</p>
+            <p>假设现在已经有一个视频流<code>stream</code>，要在舞台上播放一个视频，其实非常简单：</p> <pre><code>var video:Video = new Video();
+video.attachNetStream(stream);
+stream.play(videoURL);
+addChild(video);
+</code></pre>
+            <p><code>Video</code>类的作用其实就是承载一个视频流，然后在其内部显示这个视频而已。最主要的操作还是如何通过一个URL去获取视频流，这时候要使用<code>NetStream</code>类从一个URL上加载视频流。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/20/as3-displayobject-mask.html" title="内容不要超过容器！">上一篇</a></li>
+              <li><a href="/posts/2014/01/22/as3-netstream.html" title="在Flash中播放视频之NetStream">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

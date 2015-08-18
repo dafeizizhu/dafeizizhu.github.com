@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Node上使用Redis</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Node上使用Redis</h2>
+            <p class="blog-post-meta">写于2013年11月06日 关于<a href="/tags/node">node</a></p>
+            <p>Redis是一个开源的，基于<code>key-value</code>的内存数据库，可以作为一个能够存储字符串、哈希表、列表、集合等数据结构的数据服务器。</p>
+            <p>首先是要安装一个Redis。在Unix/Linux下需要下载源码编译安装，今天就来简单看看Windows下如何安装吧。打开Redis的Windows版本的<a href="https://github.com/rgl/redis/downloads">下载页面</a>，选择对应Windows版本的包下载即可。</p>
+            <p>下载完解压到一个地方就可以使用了。首先启动Redis服务，双击<code>redis-server.exe</code>即可：</p> <pre><code>[9612] 07 Nov 18:01:28 # Warning: no config file specified, using the default config. In order to specify a config file use &#39;redis-server /path/to/redis.conf&#39;
+[9612] 07 Nov 18:01:28 * Server started, Redis version 2.4.5
+[9612] 07 Nov 18:01:28 * DB loaded from disk: 0 seconds
+[9612] 07 Nov 18:01:28 * The server is now ready to accept connections on port 6379
+[9612] 07 Nov 18:01:29 - DB 0: 8 keys (0 volatile) in 12 slots HT.
+[9612] 07 Nov 18:01:29 - 0 clients connected (0 slaves), 1182568 bytes in use
+</code></pre>
+            <p>启动后可以看到当前的端口、使用了多少个<code>key</code>还有多少个客户端链接进来等信息。注意哦，这些信息现在都是默认的配置，修改配置文件<code>redis.conf</code>可以修改这些信息，详细的配置文档<a href="http://redis.io/topics/config">参考这里</a>。然后就可以启动<code>redis-cli.exe</code>来使用Redis了：</p> <pre><code>redis 127.0.0.1:6379&gt; set foo bar
+OK
+redis 127.0.0.1:6379&gt; get foo
+&quot;bar&quot;
+</code></pre>
+            <p>今天主要是关注Node下面怎么使用Redis。<a href="https://github.com/mranney/node_redis">这里</a>有封装了一套API，让我们很方便地在Node里面使用Redis。API跟Redis的命令的名称基本上是一致的，例如<code>get</code>、<code>set</code>，还有最常用的哈希表操作<code>hgetAll</code>、<code>hmset</code>等。</p>
+            <p>首先是要在工作目录下载这个包：</p> <pre><code>npm install redis
+</code></pre>
+            <p>然后就可以使用了！我们用Node的命令行来演示一下：</p> <pre><code>var client = require(&quot;redis&quot;).createClient();
+client.set(&quot;foo&quot;, &quot;bar&quot;);
+client.get(&quot;foo&quot;, function (err, reply) {
+  console.log(reply);
+});
+</code></pre>
+            <p>跟上面的命令行的命令保持一致，很方便。这个包还支持一些事件，例如<code>ready</code>、<code>connect</code>等，也提供了一些方便的工具函数，例如<code>redis.print</code>，方便我们用Redis的方式输出内容等，有兴趣的童鞋可以查看github上的文档哦。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/05/css-content.html" title="css content">上一篇</a></li>
+              <li><a href="/posts/2013/11/07/jquery-callbacks-object.html" title="jQuery扫盲之callbacks对象">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

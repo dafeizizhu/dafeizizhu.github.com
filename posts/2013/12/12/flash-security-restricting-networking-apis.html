@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之限制网络API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之限制网络API</h2>
+            <p class="blog-post-meta">写于2013年12月12日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>可以使用两种方式限制网络API。这些限制不能通过代码覆盖。</p>
+            <h3 id="-">阻止的端口</h3>
+            <p>Flash Player和Adobe AIR对某些端口的HTTP访问设有限制。通常用于非HTTP类型服务器的某些标准端口上不允许使用HTTP请求。</p>
+            <p>适用于端口阻止的API包括：</p>
+            <ol>
+              <li><code>FileReference</code>的<code>download</code>、<code>upload</code>方法。</li>
+              <li><code>Loader</code>的<code>load</code>、<code>loadBytes</code>方法。</li>
+              <li><code>navigateToURL</code>方法。</li>
+              <li><code>NetConnection</code>的<code>call</code>、<code>connect</code>方法。</li>
+              <li><code>NetStream</code>的<code>play</code>方法。</li>
+              <li><code>Security.loadPolicyFile</code>。</li>
+              <li><code>sendToURL</code>。</li>
+              <li><code>Sound</code>、<code>URLLoader</code>和<code>URLStream</code>的<code>load</code>方法。</li>
+            </ol>
+            <p>端口阻止也适用于文本字段中有关<code>url</code>的字段，例如<code>img</code>、<code>object</code>或者<code>embed</code>等。</p>
+            <h3 id="-allownetworking-">使用allowNetworking参数</h3>
+            <p>可以在<code>object</code>或者<code>embed</code>标签中设置<code>allowNetworking</code>参数来控制<code>swf</code>文件访问网络功能。它可以有以下的取值：</p>
+            <ol>
+              <li><code>all</code>，允许<code>swf</code>文件访问所有网络的API。</li>
+              <li><code>internal</code>，不可调用浏览器导航或者浏览器交互的API，如<code>navigateToURL</code>等。</li>
+              <li><code>none</code>，除了浏览器交互的API，也不能使用任何<code>swf</code>到<code>swf</code>通信的API，如<code>Loader.load</code>等。</li>
+            </ol>
+            <p>调用被禁止的API会触发<code>SecurityError</code>。这个参数的使用示例如下：</p> <pre><code>&lt;object&gt;
+  &lt;param name=&quot;allowNetworking&quot; value=&quot;none&quot; /&gt;
+&lt;/object&gt;
+</code></pre>
+            <p>或者：</p> <pre><code>&lt;embed allowNetworking=&quot;none&quot; /&gt;
+</code></pre>
+            <p>如果该参数的值为<code>none</code>，除了API被禁用，当<code>TextField</code>对象的<code>htmlText</code>属性包含<code>img</code>等涉及URL的参数的标签时，也是无法引用到外部资源的哦。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/11/flash-security-permission-controls.html" title="Flash安全性之权限控制">上一篇</a></li>
+              <li><a href="/posts/2013/12/13/flash-security-full-screen-mode-security.html" title="Flash安全性之全屏模式安全性">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

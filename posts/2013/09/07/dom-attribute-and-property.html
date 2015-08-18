@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 DOM的特性和属性</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 DOM的特性和属性</h2>
+            <p class="blog-post-meta">写于2013年09月07日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天介绍一下DOM上面的特性（Attribute）和属性（property）。</p>
+            <p>当我们需要获取一个DOM元素上面的特性值，例如<code>id</code>，我们可以使用原生的<code>getAttribute(&quot;id&quot;)</code>，也可以使用<code>elem.id</code>直接获取<code>id</code>的值。但是不要简单地认为这两个方式获取的值都是一样的。</p>
+            <h3 id="-">跨浏览器的命名</h3>
+            <hr>
+            <p>每一个浏览器对于特性和属性的命名都有一些细微的差别。例如<code>class</code>这个特性，Chrome、FireFox可以用<code>getAttribute(&quot;class&quot;)</code>去获取其值，而IE则需要使用<code>className</code>作为特性的名字才能获取到值，例子<a href="http://jsfiddle.net/DVHvy/show/">参考这里</a>。</p>
+            <p>我们可以使用jQuery等库去规范这些命名，而当我们使用原生的JavaScript的时候也要注意这些命名的细微差别。</p>
+            <h3 id="-">命名的限制</h3>
+            <hr>
+            <p>由于特性的名称是一个字符串，理论上特性的命名是没有限制的。而属性则不一样，由于属性是一个JavaScript标识符，受到很多标识符的限制，例如不能是JavaScript的关键字或者保留字等等。例如<code>for</code>这个特性对应的属性名称是<code>htmlFor</code>，<code>class</code>这个特性对应的属性名称是<code>className</code>等。</p>
+            <h3 id="xml-html">XML和HTML</h3>
+            <hr>
+            <p>为DOM元素上的特性创建对应的属性其实是HTML DOM的一个能力，而XML DOM是没有这个能力的。这样可以通过以下代码判断一个DOM是否XML DOM：</p> <pre><code>function isXML(elem) {
+  return (elem.ownerDocument ||
+    elem.documentElement.nodeName.toLowerCase() !== &quot;html&quot;;
+}
+</code></pre>
+            <h3 id="-">自定义特性的行为</h3>
+            <hr>
+            <p>只有HTML DOM定义的特性，才会自动创建其对应的属性。如果是自定义的特性，则不会自动创建属性。要访问这些自定义特性的值，只能通过<code>getAttribute</code>来获取。</p>
+            <p>强烈建议自定义特性使用<code>data-</code>作为前缀，以区分自定义特性和HTML DOM定义的原生的特性。这样写以后就可以方便地过渡到HTML5了。</p>
+            <h3 id="-">性能</h3>
+            <hr>
+            <p>通常来说，访问DOM元素上的属性会比使用<code>getAttribute</code>访问特性性能要高，尤其是IE。为了提高性能，我们需要优先访问DOM元素上的属性，如果没有，则访问其对应的特性。由于属性名和特性名之间并不是一模一样的，所以要注意一些属性名和特性名之间的转化规则（使用一个<code>map</code>去保存这些规则）。</p>
+            <h3 id="-">还有其他坑</h3>
+            <hr>
+            <p>浏览器的一些实现也可能对特性和属性造成一些影响，而不仅仅是名字不同而已。明天将继续这个话题，去试探更多的坑。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/05/javascript-get-viewport-dimension.html" title="获取浏览器视口的大小">上一篇</a></li>
+              <li><a href="/posts/2013/09/08/dom-attribute-cross-browser-issue.html" title="Secrets of the JavaScript Ninja 读书笔记之 DOM特性跨浏览器的那些事">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 W3C CSS选择器API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 W3C CSS选择器API</h2>
+            <p class="blog-post-meta">写于2013年10月19日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>由于jQuery的风靡，W3C在规范中加入了浏览器内置的CSS选择器引擎，来减少我们去实现一个纯JavaScript的CSS选择器引擎所导致的额外工作量。所有现代浏览器都已经实现了对应的API，并且如果该浏览器完全支持CSS3的话，所有CSS选择器都是可用的。</p>
+            <p>浏览器提供了以下两个API供我们使用CSS选择器去选择我们要操作的DOM：</p>
+            <ol>
+              <li><code>querySelector</code>，该方法接受一个CSS选择器，并返回匹配的<strong>第一个</strong>DOM元素。</li>
+              <li><code>querySelectorAll</code>，该方法接受一个CSS选择器，返回一个包含所有匹配的DOM元素的一个<code>NodeList</code>。</li>
+            </ol>
+            <p>这两个方法在所有<code>document</code>、<code>documentFragment</code>和DOM元素上都有。在哪个对象上调用这些API即视该DOM为根元素，会在该对象的子孙寻找匹配的元素。</p>
+            <p>恐怕这些API最大的局限性就是浏览器对CSS选择器的支持程度，而纯JavaScript实现的CSS选择器则不会受到浏览器默认实现的影响。而且还有一个可能看起来比较别扭的使用场景：</p> <pre><code>&lt;div id=&quot;test&quot;&gt;
+  &lt;b&gt;Hello&lt;/b&gt;, I&#39;m a ninja!
+&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  window.onload = function () {
+  var b = document.getElementById(&quot;test&quot;).querySelector(&quot;div b&quot;);
+  assert(b, &quot;Only the last part of the selector matters.&quot;);
+};
+&lt;/script&gt;
+</code></pre>
+            <p>在这个例子里面，选择器的愿意是寻找<code>div</code>子孙中的<code>b</code>。但是由于<code>querySelector</code>是在<code>div</code>上调用的，而这个元素是不计入选择器的匹配范围的，即上面的代码是找<code>div</code>下面的<code>div</code>下面的<code>b</code>，所以自然就匹配不上了。</p>
+            <p>为了能让选择器能从根元素上开始匹配，我们需要编写另外一个API去实现这个功能：</p> <pre><code>(function() {                       
+  var count = 1;
+  this.rootedQuerySelectorAll = function (elem, query) { 
+    var oldID = elem.id;                                 
+    elem.id = &quot;rooted&quot; + (count++);          
+    try {
+      return elem.querySelectorAll(&quot;#&quot; + elem.id + &quot; &quot; + query);
+    }
+    catch (e) {
+      throw e;
+    }
+    finally {
+      elem.id = oldID;             
+    }
+  };
+});
+</code></pre>
+            <p>通过加入一个<code>id</code>选择器（该<code>id</code>就是根元素的<code>id</code>，是我们临时设置的）去实现从根上进行匹配的API。</p>
+            <p>使用浏览器提供的API，可以让现在的JavaScript库中关于DOM选择的一大段代码变成一行代码。随着浏览器对CSS支持的完善，还有旧浏览器的退出市场，浏览器提供的CSS选择器的用武之地必然会大大提高！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/18/css-outline.html" title="CSS outline">上一篇</a></li>
+              <li><a href="/posts/2013/10/20/javascript-xpath-css-selector.html" title="Secrets of the JavaScript Ninja 读书笔记之 使用XPath">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

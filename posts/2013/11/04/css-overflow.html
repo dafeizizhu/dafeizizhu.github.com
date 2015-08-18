@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>css overflow</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">css overflow</h2>
+            <p class="blog-post-meta">写于2013年11月04日 关于<a href="/tags/css">css</a></p>
+            <p><code>overflow</code>声明当一个块元素的内容超过块元素的高度的时候应该如何显示。</p>
+            <p>当这个属性的值不是默认值（<code>visible</code>）的时候，会创建一个BFC，这意味着这个容器会把里面的<code>float</code>的元素包裹起来（也就是修复浮动元素的高度塌陷问题）。注：即使是<code>hidden</code>，还是可以用脚本控制内部元素的<code>scrollTop</code>等滚动相关的属性。</p>
+            <p>这个属性可选的值有4个：</p>
+            <ol>
+              <li><code>visible</code>，默认值，内容不被裁剪，直接渲染到盒子外面，但是不影响布局。</li>
+              <li><code>hidden</code>，内容被裁剪，且没有滚动条，意味着这些内容在页面上没法直接看见。</li>
+              <li><code>scroll</code>，内容被裁剪，浏览器会显示滚动条，通过滚动条可以查看完整的内容。注：在打印设备上<code>scroll</code>是没效的，同<code>visible</code>。</li>
+              <li><code>auto</code>，由浏览器去决定怎么显示，一般是当内容超过容器的时候自动出现滚动条。</li>
+            </ol>
+            <p>常见的用法就是修复容器内部浮动元素导致的高度塌陷问题，一般只需要在容器上写上一条CSS：</p> <pre><code>overflow: hidden;
+</code></pre>
+            <p>这样容器就可以把内部浮动元素也包裹起来，高度也就是正常的了。</p>
+            <p>最后有兴趣的童鞋可以看看<a href="http://edskes.net/ie/ie8overflowandexpandingboxbugs.htm">这里</a>，是一些关于IE8的<code>overflow</code>的bug，竟然有一个bug是可以把页面弄不见的，太牛逼了！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/03/javascript-find-the-elements.html" title="Secrets of the JavaScript Ninja 读书笔记之 寻找元素">上一篇</a></li>
+              <li><a href="/posts/2013/11/05/css-content.html" title="css content">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>High Performance JavaScript 读书笔记之 还有一些关于Repaint和Reflow</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 还有一些关于Repaint和Reflow</h2>
+            <p class="blog-post-meta">写于2013年12月08日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <h3 id="-">缓存关于布局的信息</h3>
+            <p>之前已经讨论过了，虽然浏览器会把触发Repaint和Reflow的DOM操作用一个队列缓存起来，但是只要我们去访问有关布局的属性（例如各种<code>offset</code>），这时候浏览器为了保证返回的值是正确的，只能把操作队列清空，把之前的DOM操作应用到页面中去。例如以下的代码是非常低效的：</p> <pre><code>myElement.style.left = 1 + myElement.offsetLeft + &#39;px&#39;;
+myElement.style.top = 1 + myElement.offsetTop + &#39;px&#39;;
+if (myElement.offsetLeft &gt;= 500) {
+  stopAnimation();
+}
+</code></pre>
+            <p>由于在设置DOM的位置的时候访问了<code>offsettLeft</code>和<code>offsetTop</code>两个有关布局的属性，导致第一行代码和第二行代码分别触发了Reflow。比较好的方式是使用一个局部变量把当前位置相关的值记录下来，而不是使用<code>offset</code>这样的属性：</p> <pre><code>currentLeft++;
+myElement.style.left = currentLeft + &quot;px&quot;;
+</code></pre>
+            <h3 id="-dom-">在动画的过程中把DOM从文档流中移除</h3>
+            <p>举个例子，像jQuery的<code>slideDown</code>和<code>slideUp</code>这样的效果在日常的页面中出现的次数非常多，例如各种手风琴菜单、下拉菜单等。像手风琴菜单那样的效果，当菜单展开的时候，会把它之后的菜单往后挤。由于位置不断发生变化，会频繁地触发Reflow。后面的内容越多，对性能的影响就越大。</p>
+            <p>为了减少动画造成的Reflow次数，我们可以这么修改一下这个效果：</p>
+            <ol>
+              <li>把展开的菜单项的<code>position</code>设置成<code>absolute</code>。（注：这样可能会导致页面在展开的过程中样式发生错误。）</li>
+              <li>在菜单项上应用动画，由于是绝对定位，DOM已经从文档流中移除，只会导致Repaint。</li>
+              <li>在动画完毕之后，把<code>position</code>恢复回来，样式恢复正常。</li>
+            </ol>
+            <h3 id="ie-hover-">IE和hover伪类</h3>
+            <p>从IE7开始，IE就支持<code>:hover</code>了。不过，如果有很多元素都适用于这个<code>:hover</code>定义的样式的时候，性能会受到严重的影响，IE8更甚。当存在500－1000个DOM应用<code>:hover</code>定义的样式的时候，在IE7、8下CPU占用可能会长期达到80%－90%。所以在大量的DOM存在的时候，在IE7、8上要小心<code>:hover</code>造成的性能影响。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/07/minimizing-repaints-and-reflows.html" title="High Performance JavaScript 读书笔记之 减少Repaint和Reflow的次数">上一篇</a></li>
+              <li><a href="/posts/2013/12/09/flash-crossdomain-xml.html" title="crossdomain.xml">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

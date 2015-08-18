@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>三种原生JavaScript绑定事件方式对比</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">三种原生JavaScript绑定事件方式对比</h2>
+            <p class="blog-post-meta">写于2013年08月02日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天又被问到三种原生JavaScript绑定事件的方式有什么不一样。感觉自己答不全啊，惭愧。晚上立马来恶补一下它们究竟有什么区别。下文主要从执行上下文（<code>this</code>）、返回值等几个方面说明三者的区别。</p>
+            <h3 id="html-onclick-">HTML标签上面的<code>onclick</code>特性</h3>
+            <p>曾经有那么一个时候，以下这种事件绑定的方式使用频率最高：</p> <pre><code>&lt;input type=&quot;button&quot; value=&quot;Click me!&quot; onclick=&quot;alert(&#39;Hello World&#39;);&quot; /&gt;
+</code></pre>
+            <p>当单击按钮的时候会弹出一个消息框。先来看看这个事件处理程序的特点：</p>
+            <ol>
+              <li>执行上下文是DOM元素。而MDN上面说的是<code>window</code>对象。</li>
+              <li>当返回值是<code>false</code>的时候阻止默认行为，但不阻止事件传播。</li>
+              <li>事件的传播只能是冒泡的。</li>
+            </ol>
+            <p>对于第一点MDN说的情况我猜是这样的，假如有以下代码：</p> <pre><code>&lt;input type=&quot;button&quot; value=&quot;Click me!&quot; onclick=&quot;doSomething();&quot; /&gt;
+</code></pre>
+            <p>JavaScript：</p> <pre><code>function doSomething() { alert(this === window); } // true
+</code></pre>
+            <p>当单击按钮的时候执行<code>doSomething</code>函数时，里面的<code>this</code>就是<code>window</code>，因为执行上下文在<code>window</code>中。</p>
+            <p>例子<a href="http://jsfiddle.net/MB9af/5/">参考这里</a>。当JavaScript代码偏少的时候，这种方式还能勉强接受。当代码规模变大的时候，这种方式明显地带来很多不方便的东西。例如修改行为的时候还需要去修改HTML文件，这不是我们想要看到的。我们希望HTML与JavaScript能够分开维护，当修改行为的时候不要修改负责显示的东西。所以就有了下面这个绑定事件的方式。</p>
+            <h3 id="dom-onclick-">DOM对象上的<code>onclick</code>属性</h3>
+            <p>为了能够分开HTML和JavaScript代码，我们也曾经广泛使用了一下这种方式去绑定事件：</p> <pre><code>var button = document.getElementById(&quot;#id&quot;);
+button.onclick = function (evt) { evt = evt || windowo.event; alert(&quot;Hello World&quot;); };
+</code></pre>
+            <p>这个事件处理程序的特点是：</p>
+            <ol>
+              <li>执行上下文是绑定的DOM元素<code>button</code>。</li>
+              <li>返回值是<code>false</code>的时候阻止默认行为，但不阻止事件传播。</li>
+              <li>事件的传播只能是冒泡的。</li>
+            </ol>
+            <p>例子<a href="http://jsfiddle.net/ZbR4J">参考这里</a>。以上这段JavaScript代码就为一个按钮绑定了一个单击事件。从代码结构上看，HTML和JavaScript确实分开了。但是这种方式有个严重的问题，就是只能为一个DOM元素的一个事件绑定唯一一个事件处理程序，重复绑定会覆盖了第一个绑定的事件处理程序，如：</p> <pre><code>button.onclick = function (evt) { alert(1); }
+button.onclick = function (evt) { alert(2); }
+</code></pre>
+            <p>以上代码，单击<code>button</code>只会弹出<code>2</code>，第一个事件处理程序已经被覆盖了。而且在低版本的IE浏览器里面这种写法很容易就会导致DOM与JavaScript对象的循环引用，导致内存泄露。</p>
+            <h3 id="addeventlistener">addEventListener</h3>
+            <p>为了能在一个DOM上面的一个事件绑定多个事件处理程序，DOM level 2定义了以下的方式去绑定事件：</p> <pre><code>button.addEventListener(&quot;click&quot;, function (evt) { ... }, true); // IE9, IE9+, Chrome, Safari, Opera
+button.attatchEvent(&quot;onclick&quot;, function () { ... }); // IE9-
+</code></pre>
+            <p>这个事件处理程序的特点是：</p>
+            <ol>
+              <li>执行上下文是DOM元素。</li>
+              <li>返回值是<code>false</code>的时候不阻止默认行为，也不阻止事件传播，只能通过调用事件对象的<code>preventDefault</code>才能阻止默认行为，调用<code>stopPropagation</code>才能阻止事件传播。</li>
+              <li>事件的传播可以选择是冒泡（默认）或者是捕获的。（IE不支持事件捕获）</li>
+              <li>绑定的事件处理程序可以通过<code>removeEventHandler</code>或者<code>detachEvent</code>来删除。</li>
+              <li>多个事件处理程序的执行顺序是由绑定的顺序决定的，而且如果一个事件处理程序报错，不影响其他事件处理程序的执行。例子<a href="http://jsfiddle.net/myPP7/">参考这里</a>。</li>
+            </ol>
+            <p>例子<a href="http://jsfiddle.net/5zpLT/3/">参考这里</a>。DOM level 2的事件绑定机制可以让我们把HTML和JavaScript代码分开，也支持为一个DOM的同一个事件绑定多个事件处理程序，基本满足了我们对事件绑定的需求。由于IE这个奇葩不支持事件捕获机制，所以要写跨浏览器的代码，只能使用冒泡来传播事件哦！</p>
+            <p>貌似还不太够啊，等哥再仔细看看MDN和W3的规范后再补补。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/01/javascript-typeof.html" title="JavaScript typeof操作符">上一篇</a></li>
+              <li><a href="/posts/2013/08/03/yahoo-performance-rules.html" title="Yahoo!性能优化规则">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

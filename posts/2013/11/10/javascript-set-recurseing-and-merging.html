@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 递归与合并</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 递归与合并</h2>
+            <p class="blog-post-meta">写于2013年11月10日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>CSS选择器引擎需要递归访问元素及其子孙元素，然后合并多个匹配的结果，返回完整的结果。但是我们需要保证这个结果的结合里面没有重复的元素。由于调用类似<code>getElementsByTagName</code>这样的API，如果在子孙元素上调用的时候会返回相同的结果，例如：</p> <pre><code>&lt;div id=&quot;outer&quot;&gt;Outer
+  &lt;div id=&quot;middle&quot;&gt;Middle
+    &lt;div id=&quot;inner&quot;&gt;Inner&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>如果这么调用：</p> <pre><code>document.getElementById(&quot;outer&quot;).getElementsByTagName(&quot;div&quot;); // middle and inner
+document.getElementById(&quot;middle&quot;).getElementsByTagName(&quot;div&quot;); // inner
+</code></pre>
+            <p>可以看到两个都返回了<code>inner</code>，这样的重复明显是不必要的，所以我们需要一些额外的机制去判断这个元素是否已经存在在集合当中了：</p> <pre><code>this.unique = function(array) {
+  var ret = [];
+  run++;
+  for (var i = 0, length = array.length; i &lt; length; i++) {
+    var elem = array[i];
+    if (elem.uniqueID !== run) {
+      elem.uniqueID = run;
+      ret.push(array[i]);
+    }
+  }
+  return ret;
+}
+</code></pre>
+            <p>其中<code>run</code>是一个计数器，生成全局唯一的标识。使用这个方法可以从集合中过滤出重复的元素，返回的集合里面就没有重复的元素了。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/09/javascript-filter-the-set.html" title="Secrets of the JavaScript Ninja 读书笔记之 过滤元素">上一篇</a></li>
+              <li><a href="/posts/2013/11/11/jquery-hold-ready.html" title="jQuery扫盲之jQuery.holdReady">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

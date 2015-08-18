@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>beforeunload事件</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">beforeunload事件</h2>
+            <p class="blog-post-meta">写于2013年07月30日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>去jsFiddle写代码片段的时候，如果没保存又去关闭浏览器的话，会弹出一个浏览器自带的消息框，提示是否要离开这个编辑中的页面。这种类似的功能使用的就是<code>beforeunload</code>这个事件。</p>
+            <blockquote>
+              <p>The beforeunload event is fired when the window, the document and its resources are about to be unloaded.</p>
+            </blockquote>
+            <p>这个事件在页面即将被unload的时候触发，并可以通过返回值告诉浏览器是否要弹出消息框。如果返回非空字符串，则浏览器会弹出消息框，并显示返回的字符串；否则这个事件的处理程序会静默地执行。</p>
+            <p>注意，这个事件不能让浏览器跳转到某个URL，例如以下的代码是无效的，例子<a href="http://jsfiddle.net/wpMpa/5/show/">参考这里</a>：</p> <pre><code>$(window).on(&quot;beforeunload&quot;, function () {
+  window.location.href = &quot;http://some.other.site&quot;; // 这句代码没有任何作用
+  return &quot;Are you sure to leave?&quot;;
+});
+</code></pre>
+            <p>还有一个值得注意的地方是，FireFox、IE跟Safari、Chrome对显示信息的处理方式也不一样。前者是通过事件对象的<code>returnValue</code>属性去控制显示信息，而后者则是通过<code>return</code>返回的字符串控制显示信息。以下是一个兼容多个浏览器的写法：</p> <pre><code>window.addEventListener(&quot;beforeunload&quot;, function (e) {
+  var confirmationMessage = &quot;\o/&quot;;
+  (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
+  return confirmationMessage;                                //Webkit, Safari, Chrome etc.
+});
+</code></pre>
+            <p>这个事件的效果不能通过弹出自定义的对话框（例如jQuery UI中的dialog）来模拟同样的效果哦。如果不需要弹出确认框，又需要在页面卸载的时候处理一些逻辑，例如垃圾回收之类的操作，那最好还是绑定<code>unload</code>事件。以后也会继续讨论<code>unload</code>事件的用法。</p>
+            <p>坚持自己的步伐，不回头，默默地前进，共勉之。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/29/html-link-tag.html" title="HTML LINK 标签">上一篇</a></li>
+              <li><a href="/posts/2013/07/31/javascript-instanceof.html" title="JavaScript instanceof操作符">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

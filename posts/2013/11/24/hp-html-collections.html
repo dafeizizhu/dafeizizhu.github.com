@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>High Performance JavaScript 读书笔记之 访问和修改DOM（二）</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 访问和修改DOM（二）</h2>
+            <p class="blog-post-meta">写于2013年11月24日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天讨论一下<code>HTMLCollection</code>。<code>HTMLCollection</code>是一个类似数组的东西，里面包含了一组DOM对象。下面的API返回的结果都是一个<code>HTMLCollection</code>：</p>
+            <ol>
+              <li><code>document.getElementsByName</code>。</li>
+              <li><code>document.getElementsByClassName</code>。</li>
+              <li><code>document.getElementsByTagName</code>。</li>
+            </ol>
+            <p>而下面的这些<code>document</code>的属性也会返回一个<code>HTMLCollection</code>：</p>
+            <ol>
+              <li><code>document.images</code>，返回文档中所有<code>img</code>。</li>
+              <li><code>document.links</code>，返回文档中所有带<code>href</code>特性的<code>a</code>。</li>
+              <li><code>document.forms</code>，返回文档中所有<code>form</code>。</li>
+              <li><code>document.forms[0].elements</code>，返回第一个表单中的所有表单域。</li>
+            </ol>
+            <p><code>HTMLCollection</code>不是数组，所以它没有<code>push</code>或者<code>slice</code>等方法。但是它有<code>length</code>属性，也可以通过下标访问，所以它是一个“类数组”。值得注意的是，<code>HTMLCollection</code>是“活”的，即在访问这个集合的时候，该集合的状态是当前文档的状态。例如这样的代码可能会进入一个死循环：</p> <pre><code>var alldivs = document.getElementsByTagName(&quot;div&quot;);
+for (var i = 0; i &lt; alldivs.length; i++) {
+  document.body.appendChild(
+    document.createElement(&quot;div&quot;));
+}
+</code></pre>
+            <p>由于在循环中不断加入<code>div</code>，导致<code>alldiv.length</code>不断被增大，退出条件永远都不会成立。</p>
+            <p>除了这些逻辑上的问题，每次去访问这个集合的时候，浏览器都需要在文档中重新查询，这样会导致性能问题。为了防止这种查询，在进行DOM操作之前，我们可以先用一个数组缓存<code>HTMLCollection</code>的内容：</p> <pre><code>for(var i = 0, a = [], len = alldivs.length; i &lt; len; i++) {
+  a[i] = alldivs[i];
+}
+</code></pre>
+            <p>操作<code>a</code>就可以避免每次去查询文档。更简单的办法就是用一个变量去记录<code>length</code>属性，防止每次访问<code>length</code>的时候浏览器重新查询文档内容。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/23/hp-innerhtml-versus-dom-methods.html" title="High Performance JavaScript 读书笔记之 访问和修改DOM（一）">上一篇</a></li>
+              <li><a href="/posts/2013/11/25/onload-vs-onreadystatechange.html" title="Script标签上的onload和onreadystatechange">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>XMLHttpRequest对象</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">XMLHttpRequest对象</h2>
+            <p class="blog-post-meta">写于2013年09月18日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>XMLHttpRequest最初是微软设计的，现在已经是W3C的标准了。使用XMLHttpRequest，我们可以不需要重新刷新页面，又可以获得服务端的数据。这样，我们就可以只更新页面的某一个部分，而不影响其他的部分。基本上所有Ajax的应用都在使用XMLHttpRequest（除了老式的某些应用使用<code>iframe</code>）。</p>
+            <p>尽管名字含有XML，使用XMLHttpRequest可以获取任何类型的数据，不仅是XML。它也不仅仅支持HTTP协议，例如<code>file</code>、<code>ftp</code>等它也支持。</p>
+            <h3 id="-">构造</h3>
+            <hr>
+            <p>可以通过以下这行代码实例化一个XMLHttpRequest对象（IE6除外）：</p> <pre><code>var myRequest = new XMLHttpRequest();
+</code></pre>
+            <h3 id="-">实例方法</h3>
+            <hr>
+            <ol>
+              <li><code>abort()</code>，手动终止一个已经发出去的请求。</li>
+              <li><code>getAllResponseHeaders()</code>，返回包含所有相应头信息的字符串。</li>
+              <li><code>getResponseHeader(header)</code>，返回<code>header</code>指定名称的相应头信息的字符串。</li>
+              <li><code>open(method, url, async, user, password)</code>，初始化一个请求。<strong>注意，如果重复调用<code>open</code>则第二次调用视为是调用了<code>abort</code>，会中止已经发出的请求。例子可以<a href="http://jsfiddle.net/C6RNA/">参考这里</a>。</strong></li>
+              <li><code>overrideMimeType(mimeType)</code>，使用<code>mimeType</code>指定的MIME类型覆盖服务端返回的MIME类型。</li>
+              <li><code>send(data)</code>，发送该请求。如果请求是异步的，调用这个方法后会立刻返回；否则会一直阻塞直到请求返回。其中<code>data</code>是可选的，可以是各种类型的数据，例如二进制数据、XML文档、字符串或者是表单数据等。<strong>注意，所有事件监听器都必须在调用<code>send</code>之前绑定好，不然就没法触发了。</strong></li>
+              <li><code>setRequestHeader(header, value)</code>，设置请求头，其中<code>header</code>为请求头的名字，<code>value</code>为对应请求头的值。</li>
+            </ol>
+            <h3 id="-">实例属性</h3>
+            <hr>
+            <ol>
+              <li><code>onreadystatechange</code>，当请求的状态发生变化的时候会触发<code>readystatechange</code>事件，当事件触发的时候会调用这个方法。<strong>注意，当请求是同步的时候不要使用这个事件回调机制。</strong></li>
+              <li><code>readyState</code>，这个请求当前的状态：
+                <ol>
+                  <li><code>0</code>，表示<code>UNSENT</code>，即还没有调用<code>open</code>。</li>
+                  <li><code>1</code>, 表示<code>OPENED</code>，即调用了<code>open</code>但是还没调用<code>send</code>。</li>
+                  <li><code>2</code>，表示<code>HEADERS_RECEIVED</code>，即调用了<code>send</code>，而且相应头已经返回。</li>
+                  <li><code>3</code>，表示<code>LOADING</code>，正在下载<code>responseText</code>。</li>
+                  <li><code>4</code>, 表示<code>DONE</code>，即这个请求已经完成。</li>
+                </ol>
+              </li>
+              <li><code>response</code>，请求返回的内容，根据<code>responseType</code>来决定是什么数据类型，例如XML文档或者json对象等。当请求没有完成或者请求失败的时候这个属性的值是<code>null</code>。</li>
+              <li><code>responseText</code>，请求返回内容的字符串表达形式，这个属性是只读的。当请求没有完成或者请求失败的时候这个属性是<code>null</code>。</li>
+              <li><code>responseType</code>，请求返回的数据类型，默认是字符串。可以更改它的值去改变返回的数据类型。</li>
+              <li><code>responseXML</code>，请求返回内容的XML表达形式。这个属性是只读的。当请求没有完成或者请求失败或者请求返回的内容不能转成一个XML或者HTML文档，这个属性的值是<code>null</code>。</li>
+              <li><code>status</code>，这个请求返回的HTTP状态码，例如成功返回的<code>200</code>等。这个属性是只读的。</li>
+              <li><code>statusText</code>，服务端返回的状态字符串，除了状态码之外还能包含一些别的信息，例如一些自定义的错误提示信息等。这个属性是只读的。</li>
+              <li><code>timeout</code>，超时时间，当超过这个超时时间请求还没有返回，则自动中止。默认是<code>0</code>，表示没有超时时间。</li>
+            </ol>
+            <h3 id="-">事件</h3>
+            <hr>
+            <p><code>onreadystatechange</code>是所有浏览器都支持的事件。通过监听这个事件我们可以针对（异步）请求的每个阶段作不同的处理。</p>
+            <p>还有一些不是所有浏览器都都支持的事件，例如<code>onload</code>、<code>onerror</code>、<code>onprocess</code>等。使用它们的时候要留意要支持的浏览器列表中有没有不支持这些事件的浏览器哦。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/17/jquery-ajax-jqxhr.html" title="jQuery扫盲之jqXHR对象">上一篇</a></li>
+              <li><a href="/posts/2013/09/19/about-frontend-framework.html" title="关于框架的一点思考">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

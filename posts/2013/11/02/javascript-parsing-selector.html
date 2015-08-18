@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 解析选择器</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 解析选择器</h2>
+            <p class="blog-post-meta">写于2013年11月02日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>之前的纯JavaScript实现的CSS选择器引擎中，只是简单地使用标签选择器，所以解析起来十分简单，就是按空格<code>split</code>就好了。但是，CSS选择器有很多种，例如特性选择器（<code>[name=&quot;value&quot;]</code>等）就没有办法通过空格去解析。</p>
+            <p>一个完整的实现需要有很多解析的规则，去处理所有合法的CSS选择器。这时候使用正则表达式就最合适不过了：</p> <pre><code>var selector = &quot;div.class &gt; span:not(:first-child) a[href]&quot;
+var chunker = /((?:\([^\)]+\)|\[[^\]]+\]|[^ ,\(\[]+)+)(\s*,\s*)?/g;
+var parts = [];
+chunker.lastIndex = 0;                        
+while ((m = chunker.exec(selector)) !== null) {     
+  parts.push(m[1]);
+  if (m[2]) {                         
+    extra = RegExp.rightContext;
+    break;
+  }
+}
+</code></pre>
+            <p>使用书中提供的这个正则表达式就可以解析出上面那个这么复杂的选择器了！</p>
+            <p>这个例子只是完整的实现的其中一部分，还有一些其他我们要支持的CSS选择器需要增加自己的规则。某些选择器引擎使用一个Map把正则表达式映射到一个函数，当一个正则表达式匹配的时候，对应的函数就会执行，解析其中的CSS选择器。</p>
+            <p>如果大家有兴趣去查看完整的CSS选择器是如何实现的，可以去查看<a href="https://github.com/jquery/jquery">jQuery的源码</a>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/01/ie-ondataavailable-event.html" title="IE的dataavailable事件">上一篇</a></li>
+              <li><a href="/posts/2013/11/03/javascript-find-the-elements.html" title="Secrets of the JavaScript Ninja 读书笔记之 寻找元素">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

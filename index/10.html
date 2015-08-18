@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用Grunt去构建</h2>
+            <p class="blog-post-meta">写于2013年09月22日 关于<a href="/tags/前端">前端</a></p>
+            <p>之前已经接触过grunt了，在去年的工作中就已经使用grunt去做一些零星的构建工作，但是没有系统地使用过，而且也是使用原生的node比较多。今天自己使用grunt的构建工具已经差不多编写完成了，在这里写一下，顺便也当作一个不是很正式的文档吧。</p>
+            <h3 id="-">准备工作</h3>
+            <hr>
+            <p>grunt是使用node作为运行环境的，所以先要安装一个node。</p>
+            <p>安装grunt-cli和项目脚手架工具：</p> <pre><code>npm install -g grunt-cli
+npm install -g grunt-init
+</code></pre>
+            <p>这两个node的模块都要安装到全局里面，方便在任何一个地方调用。</p>
+            <p>由于使用了SPM去安装外部依赖，需要安装SPM：</p> <pre><code>npm install -g spm
+</code></pre>
+            <p>先从仓库里面把必须的文件checkout出来。暂时存了一份在github上，可以通过<code>git clone</code>来checkout，地址是<a href="https://github.com/amkit2/amkit2.git">https://github.com/amkit2/amkit2.git</a>。</p>
+            <p>checkout之后，在该目录上面执行命令：</p>
+            <p><a href="/posts/2013/09/22/use-grunt-to-build.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 跨浏览器处理事件（二）</h2>
+            <p class="blog-post-meta">写于2013年09月21日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>虽然使用昨天讨论的东西，已经能写出一个能跨浏览器实现绑定、解绑定事件的接口，但是还有一些小的细节，例如由于使用了一个匿名函数内部调用<code>apply</code>去改变事件处理函数的<code>this</code>，导致需要返回这个匿名函数才能解绑对应的事件处理程序；而且也没有传入处理后的事件对象作为事件处理程序的参数等。</p>
+            <p>书中介绍了jQuery绑定事件的一些方式，比起昨天介绍的相关接口的实现要有想法得多。</p>
+            <h3 id="-">管理事件处理程序</h3>
+            <hr>
+            <p>jQuery不直接把用户传入的函数绑定成事件处理函数，而是把这些函数存储在一个对象中，用一个键值跟DOM关联起来。这种做法可以避免低版本的IE由于循环引用而引发的内存泄漏，而且使用统一的存储可以让我们能在事件触发的过程中实现更灵活的控制，例如阻止冒泡、阻止默认行为、阻止本DOM上的其他事件处理程序执行等。</p>
+            <h3 id="-">触发事件</h3>
+            <hr>
+            <p>之前讨论过使用<code>document.createEvent</code>和<code>elem.dispatchEvent</code>来模拟DOM事件，通过代码模拟用户与浏览器的交互行为。而使用jQuery绑定的事件，则不需要使用这些API去手动触发事件。根据事件的类型，可以获取到对应DOM对象上关于这个事件的所有事件处理程序，直接执行它们即可。</p>
+            <p>但是还是要注意一个地方，就是还要递归地去寻找父元素，在父元素上触发对应的事件。</p>
+            <p>通过jQuery实现的事件机制，我们可以为绑定一个自定义的事件（即不是浏览器的标准事件）。自定义事件可以实现观察者模式，在拆分模块的时候可以通过触发事件、监听时间来解藕这些模块，提高可重用性和可维护性。</p>
+            <p><a href="/posts/2013/09/21/javascript-handle-cross-browser-event-2.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 跨浏览器处理事件（一）</h2>
+            <p class="blog-post-meta">写于2013年09月20日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>处理事件是JavaScript最最最最最最重要的一部分，负责用户与页面的交互逻辑。由于种种历史遗留问题，从绑定事件，到事件对象、处理程序的上下文等，IE跟标准的浏览器不太一样，这需要我们抽象出绑定事件的一般接口，根据不同的浏览器给出不同的实现。</p>
+            <h3 id="-">绑定与解绑定事件</h3>
+            <hr>
+            <p>标准浏览器使用<code>addEventListener</code>和<code>removeEventListener</code>去绑定和解绑定事件，而IE9之前版本的IE使用<code>attachEvent</code>和<code>detachEvent</code>。</p>
+            <p>标准的事件处理有捕获和冒泡两个阶段，而IE只支持事件冒泡阶段。还有，标准的事件处理程序中的<code>this</code>是DOM元素，而IE则是<code>window</code>对象。标准的事件处理程序接受一个事件对象作为参数，而IE则是把事件对象存储在一个全局变量（<code>window.event</code>）中。</p>
+            <p>为了保持每个浏览器的行为一致，我们需要编写一些代码使得IE也具有跟标准事件绑定一致的行为：</p>
+            <ol>
+              <li>抽象通用的接口绑定事件。</li>
+              <li>抽象通用的接口解绑定事件。</li>
+              <li>调用事件处理程序的时候传入事件对象。</li>
+              <li>调用事件处理程序的时候保证上下文为DOM本身。</li>
+            </ol>
+            <p>最简单的实现就是使用特性检测：</p> <pre><code>if (document.addEventListener) {
+  // DOM Modal
+} else if (document.attachEvent) {
+  // IE Modal
+</code></pre>
+            <p><a href="/posts/2013/09/20/javascript-handle-cross-browser-event-1.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">关于框架的一点思考</h2>
+            <p class="blog-post-meta">写于2013年09月19日 关于<a href="/tags/前端">前端</a></p>
+            <p>由于昨天听了一个非常有意思的培训，觉得对自己作为程序员的价值观有比较大的冲击，今天来分享一下这些与技术关系不大的东西。培训是关于一个PHP框架的反思，也可以算是一个Web框架的反思吧，感觉有很多东西都是共同的。</p>
+            <h3 id="-">关于框架</h3>
+            <hr>
+            <p>框架要实现三个目标：快速开发、快速运行和快速学习。快速开发，就是说使用框架可以提高开发效率，快速构建可使用的应用系统；快速运行就是使用框架后代码的性能会得到提升；快速学习就是框架本身比较简单，学习成本低。</p>
+            <p>现在很多框架跟这三个目标是有偏差的，最主要体现在性能和学习成本上。现在的框架，动辄上万行的代码，原来使用一行代码的功能，使用框架后可能成倍地增长，而由于PHP等解释型的语言缺少编译过程（这个方面JavaScript是类似的），多行代码的性能肯定比不上一行代码；而由于上万行的代码，学习成本也会响应地提升，繁多的配置让人却步。</p>
+            <p>要构建一个符合以上三个目标的Web框架，首先需要的是简单。只有框架本身足够简单，才能保证运行的效率，才能快速上手。而基于Web应用的模式，与企业应用不同，一般可以简单地归纳成数据存取，就是说每一个业务都是数据存取并展现的一个过程。框架只要着眼于这两点就可以了。</p>
+            <p>框架还分成通用型和专用型两种。前者考虑了全世界，例如支持多数据库、国际化、目录结构、配置、HTML生成方式、各个过程的钩子……通用框架就是希望做到世界上任何一个应用都可以用它来开发。这样的出发点就决定了通用框架不可能简单，它要考虑的东西太多了。而对于一个公司来说，通用框架所需要考虑的事情有很多都是用不着的，例如公司只用MySql，不用考虑多数据库；规定了目录结构和配置，所有项目都必须根据这个目录结构和配置来进行开发……这种专用框架，到了外边肯定是行不通的，但是在公司内部绝对是效率最高，而且最简单的一种实现方式。实现以上的三个目标，专用框架要简单地多。</p>
+            <p>对于需求的把握也是十分重要的。其中有一个我觉得比较有意思的观点：小众需求的声音才是最大的。当大部分用户使用这个框架觉得没有什么问题的时候，一些小众提出的需求就占了反馈声音中的绝大部分，这使得框架开发者必须关注这些小众需求，但是这些需求在大部分用户那是没有必要的。时刻紧记要为大部分用户服务！</p>
+            <p>还有一个比较有意思的观点是：代码能不写就不写，写得少错得少。不仅是框架本身的代码，甚至是使用框架开发的业务层的代码，都要精简。最近经常听到他们在讨论一些框架方法的命名问题，就是在纠结命名的长短，都是基于这个观点出发的吧。而且写得少，功能照样实现，对于程序员来说不也是一件很爽的事情吗？</p>
+            <h3 id="-">关于规范</h3>
+            <hr>
+            <p>这部分的观点与我做了4年程序员的观点有比较大的冲突。在我看来，规范是个好东西，可以统一团队内部的编码风格，提高项目的可维护性等。遵循某些规范，并使用一些手段去检测我们的代码是否符合规范，能够避免一些低级错误。而昨天培训持的是反面的观点，认为规范这个东西，出现的前提是认为程序员“性本惡”。由于害怕程序员出问题，故提出各种规范、各种流程（例如代码检视、领导签字合入等），来限制程序员。用人不疑，疑人不用。把任务交给一个程序员，就要认同这个程序员能在完成这个任务。程序员不需要考虑什么规范、什么流程，认真努力去做就行了。</p>
+            <p><a href="/posts/2013/09/19/about-frontend-framework.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">XMLHttpRequest对象</h2>
+            <p class="blog-post-meta">写于2013年09月18日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>XMLHttpRequest最初是微软设计的，现在已经是W3C的标准了。使用XMLHttpRequest，我们可以不需要重新刷新页面，又可以获得服务端的数据。这样，我们就可以只更新页面的某一个部分，而不影响其他的部分。基本上所有Ajax的应用都在使用XMLHttpRequest（除了老式的某些应用使用<code>iframe</code>）。</p>
+            <p>尽管名字含有XML，使用XMLHttpRequest可以获取任何类型的数据，不仅是XML。它也不仅仅支持HTTP协议，例如<code>file</code>、<code>ftp</code>等它也支持。</p>
+            <h3 id="-">构造</h3>
+            <hr>
+            <p>可以通过以下这行代码实例化一个XMLHttpRequest对象（IE6除外）：</p> <pre><code>var myRequest = new XMLHttpRequest();
+</code></pre>
+            <h3 id="-">实例方法</h3>
+            <hr>
+            <ol>
+              <li><code>abort()</code>，手动终止一个已经发出去的请求。</li>
+              <li><code>getAllResponseHeaders()</code>，返回包含所有相应头信息的字符串。</li>
+              <li><code>getResponseHeader(header)</code>，返回<code>header</code>指定名称的相应头信息的字符串。</li>
+              <li><code>open(method, url, async, user, password)</code>，初始化一个请求。<strong>注意，如果重复调用<code>open</code>则第二次调用视为是调用了<code>abort</code>，会中止已经发出的请求。例子可以<a href="http://jsfiddle.net/C6RNA/">参考这里</a>。</strong></li>
+              <li><code>overrideMimeType(mimeType)</code>，使用<code>mimeType</code>指定的MIME类型覆盖服务端返回的MIME类型。</li>
+              <li><code>send(data)</code>，发送该请求。如果请求是异步的，调用这个方法后会立刻返回；否则会一直阻塞直到请求返回。其中<code>data</code>是可选的，可以是各种类型的数据，例如二进制数据、XML文档、字符串或者是表单数据等。<strong>注意，所有事件监听器都必须在调用<code>send</code>之前绑定好，不然就没法触发了。</strong></li>
+              <li><code>setRequestHeader(header, value)</code>，设置请求头，其中<code>header</code>为请求头的名字，<code>value</code>为对应请求头的值。</li>
+            </ol>
+            <p><a href="/posts/2013/09/18/javascript-httpxmlrequest.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jqXHR对象</h2>
+            <p class="blog-post-meta">写于2013年09月17日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>当执行<code>jQuery.ajax</code>的时候会返回一个jQuery封装的XMLHttpRequest对象，简称jqXHR对象。该对象是原生的XMLHttpRequest对象扩展，不仅含有所有原生对象中的属性和方法，jQuery还加入了一些新的属性，例如promise模式的<code>done</code>、<code>fail</code>等方法。还有，jQuery为jsonp等方式获取的脚本模拟了XMLHttpRequest对象，使得所有Ajax的行为趋于一致。</p>
+            <p>从1.5之后，jQuery在jqXHR中提供了Promise接口。接口中的方法接受一个或者多个回调函数，当Ajax请求终止的时候会根据请求的状态，例如成功或者失败等，调用不同的回调函数。接口中的方法有：</p>
+            <ol>
+              <li><code>jqXHR.done</code>，跟<code>ajaxSetting</code>中的<code>success</code>类似，在Ajax请求成功时调用作为参数的回调函数。</li>
+              <li><code>jqXHR.fail</code>，跟<code>ajaxSetting</code>中的<code>error</code>类似，在Ajax请求失败时调用作为参数的回调函数。</li>
+              <li><code>jqXHR.always</code>，跟<code>ajaxSetting</code>中的<code>complete</code>类似，无论请求成功或者失败都调用作为参数的回调函数。</li>
+              <li><code>jqXHR.then</code>，接受两个参数，第一个是成功时的回调函数，同<code>done</code>中的参数；第二个是失败时的回调函数，同<code>fail</code>中的参数。</li>
+            </ol>
+            <p>回调函数中的<code>this</code>指向的都是调用<code>jQuery.ajax</code>时，指定的<code>context</code>。如果没有指定<code>context</code>，则为这次调用的<code>ajaxSetting</code>对象。</p>
+            <p>由于需要兼容原生的XMLHttpRequest，jqXHR对象中还有很多XMLHttpRequest上的属性，例如<code>readyState</code>、<code>status</code>、<code>responseText</code>等。唯一不同的是<code>onreadystatechange</code>机制不再提供，需要使用<code>jqXHR.done</code>等Promise接口去处理对应的逻辑。</p>
+            <p>包含<code>jQuery.ajax</code>的配置还有这几个Promise接口，jQuery允许我们在各种不同的阶段”勾入“我们的代码，这些钩子按以下的顺序执行：</p>
+            <ol>
+              <li><code>ajaxSetting.beforeSend</code>。</li>
+              <li><code>ajaxSetting.error</code>。</li>
+              <li><code>ajaxSetting.dafaFilter</code>。</li>
+              <li><code>ajaxSetting.success</code>。</li>
+              <li><code>jqXHR.done</code>等Promise接口。</li>
+              <li><code>ajaxSetting.complete</code>。</li>
+            </ol>
+            <p><a href="/posts/2013/09/17/jquery-ajax-jqxhr.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Document Fragment</h2>
+            <p class="blog-post-meta">写于2013年09月16日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>如果我们需要对一些DOM进行操作，而又不想这些操作造成的变化体现在浏览器中，可以创建一个文档片段（Document Fragment）临时把我们要操作的DOM放入其中，待操作完成后再放回原来的位置。</p>
+            <h3 id="document-fragment">Document Fragment</h3>
+            <hr>
+            <blockquote>
+              <p>The DocumentFragment interface represents a minimal document object that has no parent. It is used as a light-weight version of Document to store well-formed or potentially non-well-formed fragments of XML.</p>
+            </blockquote>
+            <p>一个文档片段相当于一个轻量级的文档，可以存放一部分的XML（HTML）DOM。可以通过<code>document.createDocumentFragment</code>来创建一个文档片段。</p>
+            <p>其实一个文档片段就是一个小型的文档，可以使用<code>appendChild</code>加入DOM、使用<code>childNodes</code>去获取文档片段中的子元素等。</p>
+            <h3 id="document-createdocumentfragment">document.createDocumentFragment</h3>
+            <hr>
+            <p>上文已经提到了这个方法。这个方法的作用就是创建一个空白的文档片段，所以这个方法不接受任何参数，而返回一个文档片段的DOM。这个DOM不在当前的文档树中。通常会在这个文档片段中进行DOM操作，例如从某个地方使用<code>appendChild</code>把相关的DOM插入到文档片段中，然后对文档片段中的DOM进行修改或者删除，最后把这个文档片段（或者只把它的子元素）插入到当前的文档树中。这时这些DOM操作才真正生效。</p>
+            <p>由于这种操作方式不会导致页面的reflow，所以使用文档片段去操作DOM是一种效率比较高的方式，建议使用。</p>
+            <h3 id="range-createcontextualfragment">range.createContextualFragment</h3>
+            <hr>
+            <p>今天看书的时候提到了一种比<code>document.createFragment</code>效率更高的方式，就是<code>range.createContexualFragment</code>，其中<code>range</code>是通过<code>document.createRange</code>创建的对象。</p>
+            <p><a href="/posts/2013/09/16/javascript-document-fragment.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 获取层叠后的style</h2>
+            <p class="blog-post-meta">写于2013年09月15日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论过，简单通过<code>elem.style</code>只能获取到内联在HTML标签的样式值，而不能获取到<code>style</code>标签的样式和<code>link</code>标签的外部样式表的样式。需要获取经过浏览器计算后的元素“真正的”样式，要调用浏览器特定的API。很遗憾，又是IE。</p>
+            <h3 id="-">标准</h3>
+            <hr>
+            <p>这里的标准浏览器是所有现代浏览器加上IE9及其以上的版本。标准的浏览器提供<code>window.getComputedStyle</code>这个API去获取经过层叠计算后的样式。这个方法接受一个参数，就是要计算样式的DOM元素。该方法返回一个接口，通过调用其上面的<code>getPropertyValue</code>去获取特定名称的CSS样式的值，如：</p> <pre><code>var computedStyle = window.getComputedStyle(elem);
+var fontSize = computedStyle.getPropertyValue(&quot;font-size&quot;);
+</code></pre>
+            <p>注意哦，<code>getPropertyValue</code>接受的是CSS样式真正的名字，不需要转化成驼峰大小写的形式。</p>
+            <h3 id="-ie">老IE</h3>
+            <hr>
+            <p>在IE9之前的版本，需要通过DOM上面的<code>currentStyle</code>来获取经过层叠后的样式。这个属性跟<code>style</code>属性的使用方式相同，唯一的区别就是前者可以获取到<code>style</code>标签或者外部样式表中的CSS样式的值。</p>
+            <p>由于是使用属性，<code>currentStyle</code>上的CSS样式的名字跟<code>style</code>一样，也要使用驼峰大小写的形式。</p>
+            <h3 id="-">坑</h3>
+            <hr>
+            <p><a href="/posts/2013/09/15/javascript-fetch-computed-styles.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 style的那些事</h2>
+            <p class="blog-post-meta">写于2013年09月14日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p><code>style</code>算是一个比较麻烦的东西，因为使用<code>getAttribute(&quot;style&quot;)</code>和<code>elem.style</code>这两个返回的结果是不一样的。通常的用法是使用后者，返回一个<code>style</code>对象，通过这个对象操作DOM的各种CSS样式。而通过这个对象访问DOM上的CSS样式，<strong>只能访问到内联的CSS样式</strong>，而通过样式表（<code>style</code>标签、外部CSS样式表）叠加的CSS样式则不能通过这个对象访问。不过还是可以通过一些方式得到“层叠后”的CSS样式。</p>
+            <h3 id="style-">style属性的命名</h3>
+            <hr>
+            <p>很多CSS样式都是使用<code>-</code>来连接多个单词，例如<code>border-width</code>、<code>margin-left</code>等。要访问这些<code>style</code>对象的属性，需要通过以下的代码访问：</p> <pre><code>elem.style[&#39;border-width&#39;];
+</code></pre>
+            <p>如果使用<code>.</code>来访问属性，例如<code>elem.style.border-width</code>，中间的<code>-</code>会被解析成减号，导致逻辑错误或者是语法错误。需要使用<code>.</code>访问这些CSS样式，需要把这些样式名改成驼峰大小写的形式，例如：</p> <pre><code>elem.style.borderWidth;
+</code></pre>
+            <p>可以简单使用以下代码去进行转换：</p> <pre><code>name = name.replace(/-([a-z])/ig,                   
+  function(all,letter){
+    return letter.toUpperCase();
+  });
+</code></pre>
+            <h3 id="float">float</h3>
+            <hr>
+            <p><a href="/posts/2013/09/14/javascript-style-attribute-issue.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.ajax</h2>
+            <p class="blog-post-meta">写于2013年09月13日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>继续扫盲，今天是<code>jQuery.ajax</code>方法详解。</p>
+            <blockquote>
+              <p>Perform an asynchronous HTTP (Ajax) request.</p>
+            </blockquote>
+            <p>这个方法应该是jQuery有关Ajax的最底层的一个方法。</p>
+            <h3 id="-">用法</h3>
+            <hr>
+            <p>这个方法有两种调用形式：</p>
+            <ol>
+              <li>接受两个参数，第一个是<code>url</code>，第二个是Ajax的配置。</li>
+              <li>接受一个参数，就是Ajax的配置。</li>
+            </ol>
+            <p>其实第一种调用方式就是方便发出请求，只需要传递URL作为参数即可。注意哦，所有配置都是可选的，可以通过<code>$.ajaxSetup</code>来设置默认配置。</p>
+            <h3 id="-">配置</h3>
+            <hr>
+            <ol>
+              <li><code>accepts</code>，用来设置接受那些MIME类型的数据，例如<code>accepts: { xml: &quot;text/xml&quot; }</code>。默认值与<code>dataType</code>配置有关。</li>
+              <li><code>async</code>，声明这个Ajax请求是否异步。默认值是<code>true</code>，表示请求是异步的。可以通过<code>async: false</code>来显式声明这个请求是同步的。使用跨域的请求或者是jsonp的时候，不支持同步请求。<strong>注意，在1.8之后，同步的请求只能通过<code>success</code>等回调进行处理，而不能使用jqXHR的promise。</strong></li>
+              <li><code>beforeSend</code>，配置一个回调函数，在Ajax请求发出之前调用。接受两个参数，第一个是jqXHR对象，第二个是这次Ajax请求的配置。如果在回调函数中返回<code>false</code>，则这个Ajax请求会被取消。</li>
+            </ol>
+            <p><a href="/posts/2013/09/13/jquery-ajax.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/9.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li class="active"><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/11.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

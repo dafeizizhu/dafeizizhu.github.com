@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>全局声音控制：SoundMixer</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">全局声音控制：SoundMixer</h2>
+            <p class="blog-post-meta">写于2014年01月26日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>之前讨论的<code>MovieClip</code>实例中的<code>soundTransform</code>可以控制这个视频剪辑的声音播放以及声音大小的控制。但不是所有从<code>Loader</code>中加载的<code>swf</code>都是<code>MovieClip</code>实例，例如使用早期Flash创作工具创作的<code>swf</code>文件，它并没有<code>soundTransform</code>这个属性。这时候，我们只能通过全局声音来控制这个视频剪辑的声音播放。</p>
+            <p>在AS3中，全局声音控制是通过<code>SoundMixer</code>类提供的静态属性和方法来控制的。这个类有两个静态属性：</p>
+            <ol>
+              <li><code>bufferTime</code>，表示预加载到缓冲区中所用的秒数。</li>
+              <li><code>soundTransform</code>，是<code>SoundTransform</code>的实例，通过控制这个属性的<code>volumn</code>方法就可以控制声音播放的大小。</li>
+            </ol>
+            <p>这个类还提供了几个静态工具方法：</p>
+            <ol>
+              <li><code>areSoundsInaccessible</code>，确定是否因安全限制而无法访问任何声音，例如播放的声音所在的服务器没有授权所在域访问的URL策略文件等。</li>
+              <li><code>computeSpectrum</code>，用来获取当前声音波形的快照。使用获取到的数据可以绘制出当前声音播放的波形。</li>
+              <li><code>stopAll</code>，停止当前正在播放的声音。默认情况下，只会停止与调用此方法的对象在相同安全沙箱中的声音。注，没有恢复功能，只能调用<code>Sound</code>实例的<code>play</code>方法恢复声音播放。</li>
+            </ol>
+            <p>由于普通的应用不会出现同时播放两种声音的情况，所以大多数情况下我们可以使用这个全局的声音控制方法为我们的<code>swf</code>应用提供静音功能：</p> <pre><code>var soundtrans:SoundTransform = new SoundTransform(0, 0);
+SoundMixer.soundTransform = soundtrans;
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/24/as3-sound-transform.html" title="在Flash中控制声音之SoundTransform">上一篇</a></li>
+              <li><a href="/posts/2014/02/11/as3-externalinterface-call.html" title="Flash调用外部JavaScript">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

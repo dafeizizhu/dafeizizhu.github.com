@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Flash中发送请求之一：URLRequest</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中发送请求之一：URLRequest</h2>
+            <p class="blog-post-meta">写于2013年12月04日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>无论在哪个前端开发的环境中，向后台发送请求获取数据、修改数据都是必须的。在AS3中，可以使用<code>URLRequest</code>配合<code>URLLoader</code>来发送请求。今天先简单看看<code>URLRequest</code>怎么用。</p>
+            <p><code>URLRequest</code>像一个包含这次请求的配置、内容等信息的一个类。类似浏览器中的Ajax，这个类的对象包含一些跟HTTP请求有关的参数，例如头、发送的数据、HTTP方法以及请求的URL等。具体有以下几个属性：</p>
+            <ol>
+              <li><code>contentType</code>，<code>data</code>的MIME类型，默认跟表单一样<code>application/x-www-form-urlencoded</code>。</li>
+              <li><code>data</code>，跟随请求一起发送到服务端的数据。</li>
+              <li><code>followRedirects</code>，是否遵循重定向。</li>
+              <li><code>method</code>，HTTP方法。</li>
+              <li><code>requestHeaders</code>，请求头，是一个包含<code>URLRequestHeader</code>实例的数组。</li>
+              <li><code>url</code>，请求的URL。</li>
+              <li><code>userAgent</code>，标识用户代理的字符串，类似于浏览器的<code>window.navigator.usrAgent</code>。</li>
+            </ol>
+            <p>大部分参数都是字符串。<code>data</code>是一个对象，默认会按照表单形式进行编码：</p> <pre><code>key1=value1&amp;key2=value2
+</code></pre>
+            <p>其中<code>URLRequestHeader</code>的实例其实就是一个键值对：</p> <pre><code>var urlRequestHeader:URLRequestHeader = 
+  new URLRequestHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+</code></pre>
+            <p>然后这么加到<code>URLRequest</code>中：</p> <pre><code>urlRequest.requestHeaders.push(urlRequestHeader);
+</code></pre>
+            <p>由于这个类的作用是用于存储请求的具体信息，所以在方法上面比较简单。除了构造方法之外只有一个方法。构造方法可以传入一个可选的<code>url</code>参数，如果传入这个参数则在实例化之后<code>url</code>属性会自动设置为参数的值：</p> <pre><code>var urlRequest:URLRequest = new URLRequest(&quot;my/url&quot;);
+trace(urlRequest.url); // &quot;my/url&quot;
+</code></pre>
+            <p>另外一个方法就是<code>useRedirectedURL</code>方法，允许用源<code>URLRequest</code>中的重定向URL替换新<code>URLRequest</code>中的某部分URL，用于在重定向的情况下，允许对URL进行操作，然后再一次发送该请求。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/03/flashvars.html" title="使用flashvars传递参数">上一篇</a></li>
+              <li><a href="/posts/2013/12/05/as3-urlloader.html" title="在Flash中发送请求之二：URLLoader">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

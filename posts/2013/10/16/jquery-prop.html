@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之prop</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之prop</h2>
+            <p class="blog-post-meta">写于2013年10月16日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>与昨天介绍的<code>attr</code>一样，<code>prop</code>也是个getter、setter一体的方法。</p>
+            <h3 id="getter">getter</h3>
+            <hr>
+            <blockquote>
+              <p>Get the value of a property for the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>作为getter的<code>prop</code>方法接受一个参数<code>propertyName</code>，就是要获取的属性名字。和<code>attr</code>一样，它也只会获取jQuery对象中第一个元素的属性值。</p>
+            <p>那<code>prop</code>跟<code>attr</code>有什么区别呢？在jQuery 1.6之前，<code>attr</code>有时候会获取到属性值而不是特性值，这样会导致一些不一致的场景。例如：</p> <pre><code>$(elem).attr(&quot;checked&quot;); // 1.6 return true or false
+</code></pre>
+            <p>所以，在1.6之后，<code>prop</code>返回的是属性值，<code>attr</code>返回的是特性值：</p> <pre><code>$(elem).attr(&quot;checked&quot;); // as of 1.6 return &quot;checked&quot; or null
+</code></pre>
+            <p>其中，<code>selectedIndex</code>、<code>tagName</code>、<code>nodeName</code>、<code>nodeType</code>、<code>ownerDocument</code>、<code>defaultChecked</code>和<code>defaultSelected</code>应该使用<code>prop</code>去获取它们的值，因为它们是DOM的属性，在DOM上也没有对应的特性。</p>
+            <p>而有相同名称的特性的属性，使用这两个方法获取有什么区别呢？下面以<code>checked</code>这个特性为例：</p> <pre><code>elem.checked; // true or false
+$(elem).prop(&quot;checked&quot;); // true or false
+elem.getAttribute(&quot;checked&quot;); // &quot;checked&quot; or null
+$(elem).attr(&quot;checked&quot;); // &quot;checked&quot; or null
+</code></pre>
+            <p>为什么这两个方法获取的值会不一样，就是因为<code>checked</code>特性跟<code>checked</code>属性的值是没有关联在一起的。<code>checked</code>特性不会随着<code>input</code>的状态而更改，它表示的是<code>input</code>标签上的<code>checked=“checked”</code>的值。所以，判断一个<code>input</code>是否被选中，不能通过<code>attr</code>去判断，而应该要用<code>prop</code>。</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/q4ehm/2/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>同样也适用于<code>selected</code>或者<code>value</code>等。</p>
+            <h3 id="setter">setter</h3>
+            <hr>
+            <blockquote>
+              <p>Set one or more properties for the set of matched elements.</p>
+            </blockquote>
+            <p>使用方法跟<code>attr</code>完全一致，只是<code>prop</code>是设置属性值而已。上述需要用<code>prop</code>获取的属性在1.6之后也只能用<code>prop</code>去设置其值。</p>
+            <p>修改属性可以影响DOM的表现行为，而对应名字的特性则不会发生改变。所以，我们在设置一个checkbox被选中，或者禁用一个input的时候应该这么写：</p> <pre><code>$( &quot;input&quot; ).prop( &quot;disabled&quot;, false );
+$( &quot;input&quot; ).prop( &quot;checked&quot;, true );
+</code></pre>
+            <h3 id="removeprop-">removeProp()</h3>
+            <hr>
+            <blockquote>
+              <p>Remove a property for the set of matched elements.</p>
+            </blockquote>
+            <p>像<code>attr</code>一样，我们也可以调用<code>removeProp</code>去删除一个属性。该方法接受一个参数，就是要删除的属性的名字。</p>
+            <p>当我们尝试去删除某些浏览器内建的属性，某些浏览器可以会抛出异常。jQuery会先把这先属性的值设为<code>undefined</code>，而且忽略所有错误。其实，这个方法只是用来删除自定义的属性，浏览器内建的属性是没必要去删除的。</p>
+            <p>还有一个比较坑的，就是<strong>不要删除类似<code>checked</code>、<code>disabled</code>或者<code>selected</code>的属性</strong>。一旦删除，则不能再重新加上了，也意味着之后的代码无法再根据其属性判断DOM的状态：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/KDEmb/1/embedded/js,html,result/"
+            allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/15/jquery-attr.html" title="jQuery扫盲之attr">上一篇</a></li>
+              <li><a href="/posts/2013/10/17/jquery-datatable-feature.html" title="jQuery DataTable 配置之特性配置">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

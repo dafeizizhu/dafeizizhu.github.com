@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Unicode 16进制编码</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Unicode 16进制编码</h2>
+            <p class="blog-post-meta">写于2013年10月23日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>这里的16进制编码，指的是<code>\u0001</code>这样的编码。有时候我们为了防止文件编码格式（例如<code>utf-8</code>或者<code>GBK</code>等）影响到文件中的内容（特别是中文），会在代码中使用这些编码，例如：</p> <pre><code>alert(&#39;\u6211\u662f\u4e2d\u6587&#39;);
+</code></pre>
+            <p>这样写的话，无论文件是什么编码，显示的信息都不会乱码，因为JavaScript无论如何都会把这个字符串解析成Unicode的编码。以前在国际化资源文件中大量使用到这个编码，所有非ASCII的字符都会以这种编码写入（当然是通过工具输入的……）。</p>
+            <p>在原生的JavaScript是没有实现这种编解码的API，写一个也十分方便：</p> <pre><code>function getHex(str) {
+  var result = &quot;&quot;;
+  for(var i = 0; i &lt; str.length; i++) {
+    var c = str.charCodeAt(i).toString(16);
+    for (var j = 4 - (&quot;&quot; + c).length; j &gt; 0; j--) {
+      c = &quot;0&quot; + c;
+    }
+    result += &quot;\\u&quot; + c;
+  }
+  return result;
+}
+</code></pre>
+            <p>为什么要写这个？因为今天发现了一个很厉害的注入：</p> <pre><code>[flash]http://1.com/\u0022\u003e\u003c\u0069\u0066\u0072\u0061\u006d\u0065\u0020\u006f\u006e\u006c\u006f\u0061\u0064\u003d\u0022\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0029\u0022\u003e\u003c\u002f\u0069\u0066\u0072\u0061\u006d\u0065\u003e.swf[flash]
+</code></pre>
+            <p>这个是一个论坛粘贴视频（Flash）的例子。看上去没有任何问题啊，就是一个比较奇怪的URL而已。如果我们有一段这样的代码：</p> <pre><code>eval(
+  &#39;document.getElementById(&quot;test&quot;).innerHTML = \&#39;&#39; +
+  &#39;&lt;embed src=&quot;&#39; + 
+  document.getElementById(&quot;testInput&quot;).value + 
+  &#39;&quot;&gt;&lt;/embed&gt;\&#39;;&#39;);
+</code></pre>
+            <p>然后在<code>testInput</code>中输入的就是上面那个字符串，就被注入了一个<code>iframe</code>：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/bJwUu/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>可能我们直接这么写<code>eval</code>的场景比较少，但是考虑一下这种场景：用户输入一个地址作为URL，服务端接收这个地址，把这个地址当作JavaScript函数的参数来生成一段JavaScript脚本：</p> <pre><code>echo &#39;&lt;script&gt;somefunc(&#39; . $_POST[&#39;flash&#39;] . &#39;);&lt;/script&gt;&#39;
+</code></pre>
+            <p>这样就导致了以上的注入行为。最简单的方式是不使用这种生成JavaScript脚本的方式，把用户输入直接作为脚本的参数是非常危险的。如果一定要使用，则需要吧反斜杠转义成<code>\\</code>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/22/using-html5-audio-and-video-2.html" title="使用HTML5的audio和video（二）">上一篇</a></li>
+              <li><a href="/posts/2013/10/24/javascript-string-replace.html" title="字符串的replace方法">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

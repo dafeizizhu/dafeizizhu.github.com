@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML5的File API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML5的File API</h2>
+            <p class="blog-post-meta">写于2013年12月31日 关于<a href="/tags/html5">html5</a></p>
+            <p>如果我们要上传文件，以前只能使用表单的<code>file</code>控件进行上传，而且只能把这个表单POST出去。这时候我们如果需要做类似分块上传的功能，特别是上传大文件，例如视频等，只能通过Flash或者浏览器插件来做这些分块上传的功能。</p>
+            <p>现在HTML5提供了一套文件API，使用这套API配合<code>FormData</code>就可以实现文件分块、Ajax上传二进制数据等功能。今天先来介绍File API。</p>
+            <p>File API提供了一个接口供我们访问文件信息和文件的二进制内容。可以通过表单上的<code>file</code>控件的<code>files</code>属性获取<code>File</code>对象：</p> <pre><code>var file = $(&quot;#upload_file&quot;).files[0];
+</code></pre>
+            <p><code>File</code>实现了<code>Blob</code>这个接口，所以它能处理二进制数据。<code>File</code>对象有以下几个属性，全部都是只读的：</p>
+            <ol>
+              <li><code>lastModifiedDate</code>，表示这个文件的修改日期。</li>
+              <li><code>name</code>，表示这个文件的文件名。</li>
+            </ol>
+            <p>还有两个<code>Blob</code>接口的属性：</p>
+            <ol>
+              <li><code>size</code>，表示这个文件的大小。</li>
+              <li><code>type</code>，表示这个文件的MIME类型。</li>
+            </ol>
+            <p>使用<code>Blob</code>接口的<code>slice</code>方法可以处理文件的内容：</p> <pre><code>blob = file.slice(startPos, endPos);
+</code></pre>
+            <p>以上的例子可以获取文件中某个范围的二进制数据，达到文件分块的功能。在不同的浏览器中<code>slice</code>可能会有别名：</p> <pre><code>if (file.webkitSlice) {
+  blob = file.webkitSlice(startPos, endPos);
+} else if (file.mozSlice) {
+  blob = file.mozSlice(startPos, endPos);
+} else {
+  blob = file.slice(startPos, endPos);
+}
+</code></pre>
+            <p>获取到文件内容的二进制数据之后，就可以配合<code>FormData</code>发送<code>Content-Type</code>为<code>multipart/form-data</code>的表单数据了，而且还可以使用<code>XMLHttpRequest</code>来发送哦！这样以前只能用Flash或者浏览器插件的无刷新文件上传的功能HTML5也能做了哦！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/30/html-form-multipart.html" title="HTML Form的enctype">上一篇</a></li>
+              <li><a href="/posts/2014/01/02/html5-formdata.html" title="使用FormData">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>利用Absolute进行自适应布局</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">利用Absolute进行自适应布局</h2>
+            <p class="blog-post-meta">写于2013年08月27日 关于<a href="/tags/css">css</a></p>
+            <p>昨天做一个类似于幻灯片左右切换的功能，鼠标移动到容器的左边显示前一张的箭头，移动到右边显示后一张的箭头。最简单的实现方式是在容器上面加两个遮盖层，并在遮盖层上设置<code>cursor</code>样式，例如如下代码片段：</p> <pre><code>&lt;div id=&quot;wrapper&quot;&gt;
+  &lt;div id=&quot;left&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;right&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>CSS：</p> <pre><code>#wrapper {
+  width: 100px;
+  height: 100px;
+  background: red;
+  position: relative;
+}
+
+#wrapper div {
+  width: 33.3333%;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  background: blue;
+}
+
+#right {
+  right: 0;
+}
+</code></pre>
+            <p>实现的效果<a href="http://jsfiddle.net/KbH86/1/show/">参考这里</a>。这里利用了一个<code>absolute</code>的特性，当同时指定了<code>top</code>、<code>bottom</code>，而宽度是<code>auto</code>的话，绝对定位的元素的宽度会根据<code>top</code>和<code>bottom</code>所限定的范围内自适应容器，同样的垂直方面也是一样的。这样，很容易就能做出一个能自适应容器的元素。</p>
+            <p>现实永远是残酷的，又是IE。很遗憾，IE6的表现差强人意，上面的例子在IE6下面有很奇怪的行为，高度并没有撑开，而只有小小的一段。这个<code>absolute</code>的特性IE6并不支持。</p>
+            <p>幸好，上述的需求还能有一个权宜的解决方案。</p>
+            <ol>
+              <li>把高度设置到一个非常大的值（例如：<code>9999999px</code>），一般普通的应用是没有办法到达的高度。</li>
+              <li>把容器的<code>overflow</code>设置成<code>hidden</code>，这样，超出的部分就不会显示出来了。</li>
+            </ol>
+            <p>代码如下：</p> <pre><code>#wrapper {
+  _overflow: hidden;
+}
+
+#wrapper div {
+  _height: 999999px;
+}
+</code></pre>
+            <p>运行结果<a href="http://jsfiddle.net/2T4X4/1/show/">参考这里</a>。可以看到在IE6上面的表现也跟其他现代浏览器一致了，太happy了！</p>
+            <p>美中不足的是这个解决方案只能解决上述的场景，即<code>bottom</code>为<code>0</code>的场景，当<code>bottom</code>不为<code>0</code>的时候，就不能使用上述的方案了。这个时候只能使用CSS表达式或者求助于JavaScript了。哎，IE6啊啊啊啊啊啊啊！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/26/node-child-process-spawn-and-exec.html" title="Node中spawn和exec的区别">上一篇</a></li>
+              <li><a href="/posts/2013/08/28/css-background-about-blank.html" title="background:url(about:blank)的作用">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

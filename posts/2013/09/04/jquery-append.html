@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之jQuery.fn.append</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.fn.append</h2>
+            <p class="blog-post-meta">写于2013年09月04日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天又来扫盲啦，带来的是<code>jQuery.fn.append</code>的用法。</p>
+            <blockquote>
+              <p>Insert content, specified by the parameter, to the end of each element in the set of matched elements.</p>
+            </blockquote>
+            <p>这个方法就是用来插入DOM元素的。有两种调用的方式：</p>
+            <p>第一种方式接受不定长的参数列表，每一个参数可以是HTML字符串、DOM元素、数组或者jQuery对象。调用该方法后，会在jQuery对象中所有元素的后面插入指定的内容，如：</p> <pre><code>$( &quot;.inner&quot; ).append( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );
+$( &quot;.container&quot; ).append( $( &quot;h2&quot; ) );
+$( &quot;p&quot; ).append( document.createTextNode( &quot;Hello&quot; ) );
+$( &quot;body&quot; ).append( $newdiv1, [ newdiv2, existingdiv1 ] );
+$(&#39;body&#39;).append( $newdiv1, newdiv2, existingdiv1 );
+</code></pre>
+            <p>第二种方式接受一个函数，调用<code>jQuery.fn.append</code>之后会在jQuery对象中所有元素的后面插入该函数返回的内容。该函数有两个参数，与<code>jQuery.fn.html</code>类似，是该元素在jQuery对象中的索引以及该元素在调用<code>append</code>之前的<code>innerHTML</code>，如：</p> <pre><code>$(&quot;body&quot;).append(function (i, oldHTML) { return &quot;Hello World&quot;; });
+</code></pre>
+            <p>与<code>jQuery.fn.append</code>对应的有<code>jQuery.fn.appendTo</code>。这两个方法唯一的区别是，<code>jQuery.fn.append</code>是把<code>append</code>的参数插到jQuery对象中的每一个元素中；而<code>jQuery.fn.appendTo</code>是把该jQuery对象的元素插入到<code>appendTo</code>的每一个参数中。例子可以<a href="http://jsfiddle.net/r6Quz/">参考这里</a>。</p>
+            <p>注意哦，如以下代码：</p> <pre><code>$(&quot;.test1&quot;).append($(&quot;.test2&quot;));
+</code></pre>
+            <p>当<code>$(&quot;.test1&quot;)</code>的个数大于一个的时候，jQuery会将<code>append</code>中的参数复制<strong>多份</strong>插入到<code>$(&quot;.test1&quot;)</code>的每一个元素中去哦。例如上例中<code>$(&quot;.test1&quot;)</code>的<code>length</code>为3，则jQuery会把原来的<code>$(&quot;.test2&quot;)</code>插入到其中一个<code>class</code>为<code>test1</code>的元素中，后面会复制两份分别插入到余下的元素中。</p>
+            <p>翻译就到这里结束了。有点奇怪的是竟然没有讲到任何关于插入的HTML字符串中是否带有脚本或者样式的情况，可能要看代码方能探知究竟！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/03/css-width-max-width-min-width.html" title="CSS的width、max-width和min-width">上一篇</a></li>
+              <li><a href="/posts/2013/09/05/javascript-get-viewport-dimension.html" title="获取浏览器视口的大小">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

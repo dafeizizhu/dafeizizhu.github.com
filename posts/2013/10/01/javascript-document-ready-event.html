@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 document的ready事件</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 document的ready事件</h2>
+            <p class="blog-post-meta">写于2013年10月01日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>在没有jQuery之前，我们为了保证代码运行时文档已经加载完全，使用<code>window.onload</code>来执行我们的代码。但是，这个事件有一个十分坑爹的地方：</p>
+            <blockquote>
+              <p>The load event fires at the end of the document loading process. At this point, all of the objects in the document are in the DOM, and all the images and sub-frames have finished loading.</p>
+            </blockquote>
+            <p>要所有图片等外部资源全部加载完成之后才会触发<code>window.onload</code>。其实我们是不需要等到外部资源加载完毕的，只要DOM树构造完全即可。所以，在jQuery之后，通常会这么写：</p> <pre><code>$(function () { ... });
+</code></pre>
+            <p>这种是<code>$(document).ready(function () { ... })</code>的缩写，其中使用的就是<code>document</code>的<code>DOMContentLoaded</code>事件。在DOM树构造完成，已经可以操作的时候这个事件就会触发。标准的浏览器已经支持直接使用<code>addEventListener</code>来绑定事件处理程序。但是，IE9之前的IE是不支持这个事件的，所以必须要编写一些代码在IE上模拟这个事件。</p>
+            <p>可以通过两个途径来模拟。第一个是比较腻害的，它会把页面滚动到最左方，如果抛出异常，则说明文档没有加载完成，然后继续滚动直到没有抛出异常为止，这个时刻就十分靠近标准中的<code>DOMContentLoaded</code>事件触发的时刻。</p>
+            <p>第二个是使用IE中特有的<code>onreadystatechange</code>，来近似模拟模拟标准的实现。当<code>document.readystate</code>为<code>complete</code>的时候说明文档已经准备好了。虽然这个时刻一般会比标准的要晚，可是一定早于<code>window.onload</code>，所以可以作为<code>doScroll</code>的一个备用方案。</p>
+            <p>写了一些测试代码，测试以上的几种方法的触发顺序：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/3ZHWX/4/embedded/js/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>可以看到标准浏览器是<code>DOMContentLoaded</code>先触发，等图片加载完成后<code>onload</code>才触发。在IE6上是<code>doScroll</code>最先触发，<code>onreadystatechange</code>为<code>complete</code>虽然比<code>onload</code>要早，但是也早不了多少，所以在IE6上应该是<code>doScroll</code>最接近<code>DOMContentLoaded</code>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/30/about-yaml.html" title="简述YAML">上一篇</a></li>
+              <li><a href="/posts/2013/10/02/javascript-inject-html-to-dom.html" title="Secrets of the JavaScript Ninja 读书笔记之 插入DOM（一）">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

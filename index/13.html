@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">搬运：Alice CSS模块化规范</h2>
+            <p class="blog-post-meta">写于2013年08月22日 关于<a href="/tags/css">css</a></p>
+            <p>今天看了一下支付宝的CSS解决方案<a href="http://aliceui.org/">Alice</a>。她包括了一套通用样式模块库，一个模块化样式构建规范，一组帮助书写和组织样式的工具，以及产出更多 Alice 模块和样式库的完善方案。个人感觉它关于模块化样式构建规范比较好，在这里斗胆搬运给大家参考。</p>
+            <p>其中比较关键的就是CSS样式命名的规范。在没有规范或者规范比较弱的情况下，各种CSS的class名字都是开发人员随意取的。各种没有意义的class名称、各种重复、各种冗余，导致每次写出来的CSS代码都难以重用，尽管它们实现的效果大同小异。Alice定义了一套模块化的CSS样式命名规范，提高CSS样式的可读性以及可重用性。</p>
+            <h3 id="-">前缀</h3>
+            <p>首先样式名称以一个前缀开头，例如基础框架以及基础的样式库可以使用<code>ui-</code>，而各产品线自定义的样式可以使用别的前缀来区分。这样既可直观地区分各个级别的CSS样式，又可以减少CSS样式命名冲突。</p>
+            <h3 id="-">模块</h3>
+            <p>前缀之后就是具体CSS模块的名称，一般是有某种具体功能的区块，例如tab页签<code>ui-tab</code>或者是分页器<code>ui-page</code>等，也可以是产品线定义具体业务区块，如<code>fn-chartroom</code>等。这个样式应该被应用在这个区块的最外层元素（对应一个顶层的HTML元素作为容器）上。</p>
+            <h3 id="-">内部模块</h3>
+            <p>在容器之内的所有样式名称都要以其父元素应用的样式作为前缀，例如：</p> <pre><code>ui-tab {...}
+ui-tab-content {...}
+</code></pre>
+            <p>虽然这样会导致多级嵌套的模型CSS样式名称过长，但是可以维持CSS代码的可维护性，从名称上就能看出各个样式之间的关系。</p>
+            <h3 id="-">状态</h3>
+            <p><a href="/posts/2013/08/22/alice-css-module-guide.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">document.write</h2>
+            <p class="blog-post-meta">写于2013年08月21日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>说到<code>document.write</code>，在之前的工作中都不会使用到，有几个原因：一个是不需要，可以通过DOM原生的或者jQuery的相关方法动态增加DOM元素；第二个原因是在文档已经被加载完毕之后再调用<code>document.write</code>会导致整个文档被重写，像以下的代码：</p> <pre><code>&lt;div id=&quot;clickme&quot;&gt;Click me!&lt;/div&gt;
+&lt;script&gt;
+  document.write(&quot;&lt;div&gt;Hello World&lt;/div&gt;&quot;)
+  window.onload = function () {
+    document.getElementById(&quot;clickme&quot;).onclick = function () {
+      document.write(&quot;&lt;div&gt;I write after document.loaded!&lt;/div&gt;&quot;);
+    };
+  }
+&lt;/script&gt;
+</code></pre>
+            <p>单击按钮之后之前写入的<code>Hello World</code>会被清除，只剩下调用<code>document.write</code>输出的那一行HTML代码。</p>
+            <p>但是在展现型的页面，我发现经常都会使用这个方法来做一些输出，例如说广告、页脚等与页面内容关系不大的内容。这样做的好处可能是可以把一些与整个页面没有太大关系的内容独立到一个JavaScript文件里面去，类似于一些服务器脚本的<code>include</code>方法实现的效果。</p>
+            <p>这个方法适用于各种类型的DOM（包括XML和HTML等）。</p>
+            <blockquote>
+              <p>Writes a string of text to a document stream opened by document.open().</p>
+            </blockquote>
+            <p>这个方法接受一个参数（也可以是可变参数列表，会把所有参数都连接起来），就是要输出的字符串（可以包含标签）。</p>
+            <p><a href="/posts/2013/08/21/document-write.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery源码解析之jQuery.Callbacks</h2>
+            <p class="blog-post-meta">写于2013年08月20日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>昨天介绍了<code>jQuery.Callbacks</code>方法，今天简单看一下它的源码。github上的代码链接<a href="https://github.com/jquery/jquery/blob/master/src/callbacks.js">在这里</a>。</p>
+            <p>jQuery的主干已经是2.0版本了。几乎每个文件的开始都是按照以下的形式给出：</p> <pre><code>define([
+  &quot;./core&quot;,
+  &quot;./var/rnotwhite&quot;
+], function( jQuery, rnotwhite ) {
+</code></pre>
+            <p>通过一个全局的<code>define</code>函数，实现类似于node的依赖管理。现在还没有看<code>define</code>的源码，可以猜测第一个参数就是这个js文件（模块）的依赖，而这个模块的逻辑都被封装在第二个匿名函数的闭包里面。</p>
+            <p>首先是一个工具方法，解析<code>jQuery.Callbacks</code>方法传入的参数，即各种flag。这里有一个性能优化点，<code>Callbacks</code>方法会以每次调用的字符串参数作为key，解析的结果作为value缓存起来，下次使用同样的字符串调用<code>jQuery.Callbacks</code>就可以省去解析参数的过程了。</p>
+            <p>这个方法的核心就是返回的对象，这个对象的核心就是<code>fire</code>、<code>add</code>和<code>remove</code>等方法。</p>
+            <p>首先来看一个工具函数<code>fire</code>，<code>Callbacks</code>对象上的<code>fire</code>跟<code>fireWidth</code>这两个方法都是基于这个工具函数的。这个工具函数会递归调用自己，并每次更改<code>fire</code>的索引来遍历整个回调列表。这里关注一下递归的结束条件：</p> <pre><code>if ( stack ) {
+  if ( stack.length ) {
+    fire( stack.shift() );
+  }
+} else if ( memory ) {
+</code></pre>
+            <p><a href="/posts/2013/08/20/jquery-callbacks-source-code.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery.Callbacks</h2>
+            <p class="blog-post-meta">写于2013年08月19日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天第一天入职，就听到<code>jQuery.Callbacks</code>这个方法。使用这个方法可以实现功能强大的观察者模式。</p>
+            <blockquote>
+              <p>A multi-purpose callbacks list object that provides a powerful way to manage callback lists.</p>
+            </blockquote>
+            <p>这个方法是<code>jQuery.ajax</code>和<code>jQuery.Deffered</code>的内部实现呢。今天先不看代码，先简单看看这个方法是怎么使用的。这个方法接受一个参数<code>flag</code>，可选的值有以下几个或者这几个的组合（之间用空格隔开）：</p>
+            <ol>
+              <li><code>once</code>，保证相关的绑定的回调只会调用一次。</li>
+              <li><code>memory</code>，这个是一个相当有趣的标志。当先触发，再绑定的情况下绑定的回调照样会执行！</li>
+              <li><code>unique</code>，保证每个回调函数只能被绑定一次。</li>
+              <li><code>stopOnFalse</code>，当任何一个回调函数返回<code>false</code>的时候停止其他回调函数的执行。</li>
+            </ol>
+            <p>执行这个方法后会返回一个<code>Callbacks</code>类型的对象。该对象有几个比较重要的方法：</p>
+            <ol>
+              <li><code>add</code>，绑定回调，可以绑定单个函数或者绑定一个函数的数组。</li>
+              <li><code>remove</code>，解除绑定，接受的参数与<code>add</code>一致。</li>
+              <li><code>fire</code>，触发回调，传入的参数也会传入到每一个回调函数里面。</li>
+              <li><code>disable</code>，不接受参数，禁用该对象，<code>fire</code>、<code>remove</code>等都被禁用。</li>
+            </ol>
+            <p>使用<code>jQuery.Callbacks</code>可以实现一个观察者模式。下面是jQuery文档里面的一个例子：</p> <pre><code>var topics = {};
+</code></pre>
+            <p><a href="/posts/2013/08/19/jquery-callbacks.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 使用定时器</h2>
+            <p class="blog-post-meta">写于2013年08月18日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>继续周末读书时间。昨天讨论了定时器的基本原理，今天来看看定时器在实际使用中能做些什么有趣的事情。</p>
+            <h3 id="-">连续执行耗时任务</h3>
+            <p>在某些应用场景中，需要对一大堆数据进行处理（例如根据数据渲染表格，数据量超过1000+条）。如果仅仅用一个<code>for</code>循环对每一个数据项进行处理，由于整个处理的过程都是同步的，而JavaScript的处理线程（包括浏览器渲染、事件处理等）是单线程的，这样连续的同步操作会导致浏览器没有办法对用户的操作进行响应，某些浏览器（例如FireFox），在超过特定的时间内执行的JavaScript代码，会弹出提示框提示用户是否继续执行这些操作。这样的用户体验是相当糟糕的。那么如何在处理这一大堆数据的同时，也不让浏览器弹出类似的提示框呢？</p>
+            <p>我们可以利用定时器把这一系列的同步操作分割成多个异步操作连续执行，在每个异步操作执行的间隔，把JavaScript线程空闲出来处理浏览器另外的事务。可以抽象出这样一个方法，对大数据（一般是<code>length</code>相当长的数组）进行分段操作：</p> <pre><code>function asyncProcess(data, fn, complete, blockSize, timeout, context) {
+  data = data || [];
+  fn = fn || function () {};
+  blockSize = blockSize || data.length;
+  timeout = timeout || 200;
+  complete = complete || function () {};
+
+  var index = tId = 0;
+
+  function process() {
+    var block = data.slice(index, index + blockSize);
+    for (var i = 0; i &lt; block.length; i++) {
+      fn.call(context, block[i]);
+    }
+</code></pre>
+            <p><a href="/posts/2013/08/18/javascript-timer-usage.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 定时器是怎么运作的</h2>
+            <p class="blog-post-meta">写于2013年08月17日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>又到周末读书的时间啦！今天分享一下书中关于定时器的一些简单的原理。</p>
+            <h3 id="-">创建、撤销定时器</h3>
+            <p>在JavaScript中，定时器有两种。一种是Timeout，只会在设置的时间之后执行一次。另一种是Interval，会以设置的时间为周期反复执行。有两个创建定时器的方法与之对应：<code>setTimeout</code>和<code>setInterval</code>。这两个方法都接受两个参数：</p>
+            <ol>
+              <li>执行的代码，这个参数可以是一个匿名函数、一个函数的引用，甚至是一段以字符串形式表示的JavaScript代码。</li>
+              <li>设置的时间。</li>
+            </ol>
+            <p>这两个参数都会返回一个<code>id</code>，通过这个<code>id</code>可以调用对应的<code>clearTimeout</code>和<code>clearInterval</code>撤销对应的定时器。撤销之后（Timeout必须在设置事件之前撤销）指定的代码将不会被执行。虽然有些浏览器可以用<code>clearTimeout</code>去撤销<code>setInterval</code>或者用<code>clearInterval</code>去撤销<code>setTimeout</code>，但是<strong>强烈建议创建跟撤销的方法配对使用</strong>。</p>
+            <h3 id="-">定时器执行</h3>
+            <p>记住一点，<strong>在定时器中设置的时间并不是精确的</strong>。例如以下代码：</p> <pre><code>setTimeout(fn, 10);
+</code></pre>
+            <p><code>fn</code>并不一定在10毫秒之后被调用。这个是跟JavaScript是单线程处理有关。每一个时刻只有一段JavaScript代码被执行。在设置完定时器之后，可能有一段耗时超过10毫秒的代码一直在执行，也可能用户在这10毫秒之内频繁与浏览器进行交互，导致对应的事件处理程序不断被触发等。所以，尤其是Interval，这个时间并不是精确的。</p>
+            <h3 id="timeout-interval-">Timeout跟Interval的区别</h3>
+            <p>最大的区别肯定是Timeout只执行一次，而Interval则会周期执行，一个Interval可以看作是一个不断Timouet不断地重复。其实它们之间还有很多不一样的地方，当设置时间到达之后还有代码在执行导致定时器发生延时：</p>
+            <p><a href="/posts/2013/08/17/javascript-timer.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">响应式设计入门之media query</h2>
+            <p class="blog-post-meta">写于2013年08月16日 关于<a href="/tags/css">css</a></p>
+            <p>今天再简单介绍一下响应式设计中的另外一个比较重要的技术，媒体查询media query。</p>
+            <blockquote>
+              <p>A media query consists of a media type and at least one expression that limits the style sheets&#39; scope by using media features, such as width, height, and color. Media queries, added in CSS3, let the presentation of content be tailored
+                to a specific range of output devices without having to change the content itself.</p>
+            </blockquote>
+            <p>相比HTML4和CSS2中，只能根据特定的媒体类型（例如屏幕、打印机等）选择应用不同的样式，在CSS3中，可以利用更多的属性进行判断，例如宽度、高度还有颜色等。因此，可以根据当前设备的分辨率等要素，决定整个页面的布局以及应用特定的样式，从而让页面能够适应不同的设备以及不同的分辨率。</p>
+            <p>CSS3中的媒体查询跟CSS2中的使用方式一样，有以下两种方式：</p> <pre><code>&lt;link rel=&quot;stylesheet&quot; media=&quot;(max-width: 800px)&quot; href=&quot;example.css&quot; /&gt; // 在link标签上声明媒体查询
+</code></pre>
+            <p>或者在样式文件或者内联的style标签中声明媒体查询：</p> <pre><code>&lt;style&gt;
+@media (max-width: 600px) {
+  .facet_sidebar {
+    display: none;
+  }
+}
+&lt;/style&gt;
+</code></pre>
+            <p>媒体查询表达式由属性还有其可选的值组成，属性与值之间用<code>:</code>分隔。日常使用中常用的属性有下列几个：</p>
+            <p><a href="/posts/2013/08/16/css-media-query.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">IE条件注释</h2>
+            <p class="blog-post-meta">写于2013年08月15日 关于<a href="/tags/html">html</a></p>
+            <p>IE条件注释提供了一个浏览器端的手段，去做浏览器检测。这个手段不需要去判断<code>window.navigator</code>，所以不用担心各种<code>navigator</code>的篡改。但是这个手段目前只能用在IE上，但是，这不就已经够了吗？</p>
+            <p><strong>注意，IE10已经不支持条件注释了</strong>。但是貌似IE10已经向W3的规范靠拢了，影响应该不大。</p>
+            <p>IE的条件注释原来有两种：</p>
+            <ol>
+              <li>不支持条件注释的浏览器不显示：<code>&lt;!--[if IE 8]&gt;...&lt;![endif]--&gt;</code></li>
+              <li>不支持条件注释的浏览器显示：<code>&lt;![if IE 8]&gt;...&lt;![endif]&gt;</code></li>
+            </ol>
+            <p>原理很简单，由于前者跟HTML的注释要求的格式是一样的，所以在不支持条件注释的浏览器会认为这个是一个HTML的注释，不会解析里面的HTML片段。而后者则是被认为是一个HTML标签（虽然明显不符合XML的规范……），就会解析里面的HTML片段。</p>
+            <p>前者可以为判断IE的版本决定是否需要加入额外的HTML、CSS、JavaScript来提供完整的功能，如在IE9以下的版本使用<code>canvas</code>，增加<code>exCanvas</code>的引用：</p> <pre><code>&lt;!--[if lt IE 9]&gt;&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; src=&quot;excanvas.js&quot;&gt;&lt;/script&gt;&lt;![endif]--&gt;
+</code></pre>
+            <p>后者可以提示一些非特定版本IE的用户使用特定版本IE，如：</p> <pre><code>&lt;![if lt IE 8]&gt;
+&lt;p&gt;Please upgrade to Internet Explorer version 8.&lt;/p&gt;
+&lt;![endif]&gt;
+</code></pre>
+            <p>再来看看条件注释里面的表达式，由<code>if</code>以及后面的条件表达式组成。条件表达式有三种：</p>
+            <p><a href="/posts/2013/08/15/ie-conditional-comment.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">DOM 的removeAttribute方法</h2>
+            <p class="blog-post-meta">写于2013年08月14日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天是Attribute系列的最后一篇。前面两篇讨论了如何获取、增加、修改一个DOM元素的特性。今天轻松一下，把删除讨论完。</p>
+            <blockquote>
+              <p>removeAttribute removes an attribute from the specified element.</p>
+            </blockquote>
+            <p><code>removeAttribute</code>的功能很简单，就是删除指定名称的特性。该方法只接受一个参数，就是指定特性名称的字符串。以下是一个使用的例子：</p> <pre><code>document.getElementById(&quot;div1&quot;).removeAttribute(&quot;align&quot;);
+</code></pre>
+            <p>昨天也讨论过类似的例子，就是如果需要删除一个特性的话，使用<code>removeAttribute</code>比使用<code>setAttribute</code>把该特性置成<code>null</code>或者空字符串要好。尝试删除一个不存在的特性不会抛出任何异常。</p>
+            <p>既然用<code>setAttribute</code>可以为一个DOM元素绑定事件处理程序，那么对应使用<code>removeAttribute</code>也可以解除事件绑定，如以下代码：</p> <pre><code>&lt;div id=&quot;test&quot; onclick=&quot;alert(1);&quot;&gt;Test&lt;/div&gt;
+</code></pre>
+            <p>JavaScript：</p> <pre><code>document.getElementById(&quot;test&quot;).removeAttribute(&quot;onclick&quot;);
+</code></pre>
+            <p>单击该<code>div</code>元素不会弹出消息框。可惜IE7又再一次华丽地失败了。例子<a href="http://jsfiddle.net/PnKh6/show/">参考这里</a>。</p>
+            <p>最后一个要注意的点是，如果删除的特性有默认值，则调用<code>removeAttribute</code>删除该特性之后会把该特性重置成该特性的默认值，如以下代码：</p>
+            <p><a href="/posts/2013/08/14/dom-removeattribute.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">DOM的setAttribute方法</h2>
+            <p class="blog-post-meta">写于2013年08月13日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论了<code>getAttribute</code>，今天继续讨论<code>setAttribute</code>的使用方法。</p>
+            <h3 id="-">标准</h3>
+            <blockquote>
+              <p>Adds a new attribute or changes the value of an existing attribute on the specified element.</p>
+            </blockquote>
+            <p><code>setAttribute</code>这个方法就是用来增加或者修改一个DOM元素上的特性（Attribute）。当指定名称的特性不存在，则会新增一个该名称的特性；如果该特性已经存在，则会修改现有特性的值。这个方法接受两个参数：</p>
+            <ol>
+              <li>表示特性名称的字符串。</li>
+              <li>这个特性的新的值。当传入的参数不是字符串的时候会隐式调用参数的<code>toString</code>方法。例子<a href="http://jsfiddle.net/7Tenq/">参考这里</a>。IE7貌似有不一样的行为，下面会提到。</li>
+            </ol>
+            <p>使用的例子如下:</p> <pre><code>var d = document.getElementById(&quot;d1&quot;); 
+d.setAttribute(&quot;align&quot;, &quot;center&quot;);
+</code></pre>
+            <p>与<code>getAttribute</code>类似，在HTML DOM里面<code>setAttribute</code>也是大小写不敏感的。当需要删除一个特性的时候不应该使用<code>setAttribute(&quot;someAttr&quot;, null)</code>，而是应该使用<code>removeAttribute</code>。</p>
+            <h3 id="-ie">又是IE</h3>
+            <p>与<code>getAttribute</code>类似，IE7以及更早的版本有一套自己的实现。在比较早的IE的版本又可以传入第三个参数：<code>lflag</code>，这个标志位接受以下两个值：</p>
+            <p><a href="/posts/2013/08/13/dom-setattribute.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/12.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li class="active"><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/14.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 DOM特性跨浏览器的那些事</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 DOM特性跨浏览器的那些事</h2>
+            <p class="blog-post-meta">写于2013年09月08日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天简单地介绍了一下特性和属性的区别。今天来看看跨浏览器编程中，DOM特性和属性的一些问题，以防掉坑。</p>
+            <h3 id="id-name-in-form">id/name in form</h3>
+            <hr>
+            <p>第一个问题有关于<code>form</code>以及其中的表单域。在“Big Five”浏览器中，都会自动为<code>form</code>创建有<code>id</code>或者<code>name</code>特性的表单域同名的属性，以方便快速访问以及设置这些表单域的值。这个方便的功能有时候会造成误会，例如：</p> <pre><code>&lt;form id=&quot;testForm&quot; action=&quot;/&quot;&gt;                     
+  &lt;input type=&quot;text&quot; id=&quot;id&quot;/&gt;
+  &lt;input type=&quot;text&quot; name=&quot;action&quot;/&gt;
+&lt;/form&gt;
+</code></pre>
+            <p>以上这个<code>form</code>就有一个问题，就是其中有表单域的<code>id</code>或者<code>name</code>的值跟<code>form</code>的一些特性，例如<code>id</code>和<code>action</code>冲突，导致这样的代码：</p> <pre><code>document.getElementById(&quot;testForm&quot;).id;
+</code></pre>
+            <p>获取的不是<code>form</code>上的<code>id</code>的特性值，而是那个表单域。虽然Chrome、Firfox等标准浏览器可以通过<code>getAttribute</code>获取到特性值，可惜不是所有版本的IE都支持。还有一个办法去获取特性值：</p> <pre><code>var actionValue = element.getAttibuteNode(&quot;action&quot;).nodeValue;
+</code></pre>
+            <p>鉴于以上代码的复杂性，还是HTML书写阶段不要用<code>form</code>的一些内建特性或者是方法（例如<code>submit</code>）作为表单域的<code>id</code>或者<code>name</code>的值。</p>
+            <h3 id="url-">URL标准化</h3>
+            <hr>
+            <p>获取一个为URL的特性值，例如<code>href</code>，不同浏览器会有不同的响应。在IE8以及以下版本的IE上，调用<code>getAttribute</code>获取的<code>href</code>属性可是绝对路径哦，而其他浏览器则是返回<code>href</code>上写的字符串的值。在这些版本的IE上，我们可以在调用<code>getAttribute</code>的时候加上第二个参数：</p> <pre><code>var original = link.getAttribute(&#39;href&#39;,2);
+</code></pre>
+            <p>强迫IE返回原始的字符串值。注，在Opera上不要加第二个参数，某些版本会导致浏览器崩溃。</p>
+            <h3 id="style-">style特性</h3>
+            <hr>
+            <p>我们可以设置DOM上的<code>style</code>属性来改变元素的样式。而这个属性的值并不是一个字符串，而是浏览器生成的一个对象，里面包含这个元素的样式信息。大部分浏览器可以通过<code>getAttribute</code>去获取<code>style</code>特性上的字符串值，除了IE。</p>
+            <p>奇葩的IE使用<code>style.cssText</code>来获取<code>style</code>特性的字符串值。</p>
+            <h3 id="type-">type特性</h3>
+            <hr>
+            <p>在IE8以及之前的版本，当一个<code>input</code>被插入到文档中后，该<code>input</code>的<code>type</code>特性就不能更改，强行更改会抛出异常，而其他浏览器则可以正确处理<code>type</code>变更。</p>
+            <p>这个问题没有直接的解决方案，只有权宜的方案，例如删掉旧的<code>input</code>，再插入一个新的<code>input</code>；又或者就不让用户去修改<code>input</code>的<code>type</code>特性。在jQuery中是使用了后者，不让用户修改<code>input</code>的<code>type</code>特性。这是由于：</p>
+            <ol>
+              <li>使用场景太少。</li>
+              <li>保持API在不同浏览器上的表现一致。</li>
+            </ol>
+            <p>可以看到与事件绑定的时候采取的策略是一样的（由于IE只支持冒泡，所以放弃事件捕获阶段）。</p>
+            <h3 id="tab-index">tab index</h3>
+            <hr>
+            <p>如果一个元素的<code>tab-index</code>特性没有被设置，调用<code>getAttribute</code>去获取这个属性的值可能会返回<code>0</code>或者<code>null</code>。这意味着没有显式设置每个元素的<code>tab-index</code>特性的时候，我们没有办法知道确切的<code>tab-index</code>的值。</p>
+            <p>这个问题是有必要解决的，因为这个影响了一大部分用户的使用习惯（习惯使用<code>tab</code>在表单域中切换等场景）。只能靠行政手段约束，HTML上的元素要显式设置<code>tab-index</code>，而动态生成的HTML元素也要根据一定的规则生成<code>tab-index</code>。</p>
+            <h3 id="node-">Node名称</h3>
+            <hr>
+            <p>在HTML DOM里面，标签的名字会以全大写的形式返回，例如<code>DIV</code>， <code>SPAN</code>等。但是在XML DOM里面，<code>nodeName</code>会返回文档中一模一样的字符串，包括大小写。</p>
+            <p>解决这个问题非常简单，在比较<code>nodeName</code>的时候，把两个要比较的字符串都统一转成大写或者小写去比较，如：</p> <pre><code>var all = document.getElementsByTagName(&quot;*&quot;)[0];
+for (var i = 0; i &lt; all.length; i++) {
+  var nodeName = all[i].nodeName.toLowerCase();
+  if (nodeName === &quot;div&quot; || nodeName === &quot;ul&quot;) {
+    all[i].className = &quot;found&quot;;
+  }
+}
+</code></pre>
+            <p>在跨平台，跨浏览器的编程中，这些标准化的动作最好不要缺少哦亲！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/07/dom-attribute-and-property.html" title="Secrets of the JavaScript Ninja 读书笔记之 DOM的特性和属性">上一篇</a></li>
+              <li><a href="/posts/2013/09/09/css-expression.html" title="CSS表达式">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

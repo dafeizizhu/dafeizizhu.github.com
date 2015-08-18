@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之Ajax工具函数</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之Ajax工具函数</h2>
+            <p class="blog-post-meta">写于2013年09月12日 关于<a href="/tags/jQuery">jQuery</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>jQuery为了方便用户使用Ajax，提供了几个工具函数，提供一些有关参数传递与序列化的功能。</p>
+            <h3 id="jquery-param">jQuery.param</h3>
+            <hr>
+            <blockquote>
+              <p>Create a serialized representation of an array or object, suitable for use in a URL query string or Ajax request.</p>
+            </blockquote>
+            <p>这个方法可以提供数组或者对象的一个序列化之后的字符串，可以用作URL上的<code>query</code>，也可以作为Ajax的<code>data</code>传递。该方法接受两个参数：</p>
+            <ol>
+              <li><code>obj</code>，需要序列化的数组或者对象。</li>
+              <li><code>traditional</code>，可选的标志位，是否使用“浅层次”的序列化。默认是<code>false</code>，会递归地序列化对象的属性或者数组的元素。</li>
+            </ol>
+            <p>返回一个这个数组或者对象的一个序列化之后的字符串。</p>
+            <p>在jQuery 1.4及之前的版本，可以通过<code>jQuery.ajaxSetting.traditional = true</code>去设置全局的Ajax都使用浅层次的序列化。</p>
+            <p>在jQuery 1.8及之后的版本，这个设置对<code>jQuery.param</code>已经没有效果了。这时候要使用浅层次的序列化只能通过调用<code>jQuery.param</code>的时候传入第二个参数<code>true</code>来显式声明这次序列化是使用浅层次的序列化。</p>
+            <p>注意，如果传入的是数组，里面的元素需要是以下这种格式的才可以（是调用<code>jQuery.fn.serializeArray</code>返回的数组元素的格式）：</p> <pre><code>[{name:&quot;first&quot;,value:&quot;Rick&quot;},
+ {name:&quot;last&quot;,value:&quot;Astley&quot;},
+ {name:&quot;job&quot;,value:&quot;Rock Star&quot;}]
+</code></pre>
+            <p>返回的字符串中，每一项的键和值都经过HTML编码了，省去了一大部分编码的工作量。</p>
+            <p>由于<code>jQuery.param</code>是按照特定的格式去序列化，不一定能满足所有使用场景。当序列化的对象或者数组的数据结构比价复杂（例如嵌套层级比较深），这种情况下不适宜使用这个方法进行序列化。</p>
+            <h3 id="jquery-fn-serialize">jQuery.fn.serialize</h3>
+            <hr>
+            <blockquote>
+              <p>Encode a set of form elements as a string for submission.</p>
+            </blockquote>
+            <p>当jQuery对象里面选择了表单元素（<code>input</code>、<code>textarea</code>、<code>select</code>等），或者是表单，可以调用<code>jQuery.fn.serialize</code>去序列化表单元素的值或者整个表单的数据。</p>
+            <p>最佳实践，选择<code>form</code>去序列化，而不是选择<code>form</code>里面的表单元素进行序列化。</p>
+            <p>注意哦，表单元素要有<code>name</code>特性且<code>disable</code>为<code>false</code>才能被序列化。而<code>type=&quot;file&quot;</code>的表单元素中的数据不会被序列化。如果表单提交的时候不是通过<code>type=submit</code>的按钮触发，则这个按钮也不会被序列化。</p>
+            <h3 id="jquery-fn-serializearray">jQuery.fn.serializeArray</h3>
+            <hr>
+            <blockquote>
+              <p>Encode a set of form elements as an array of names and values.</p>
+            </blockquote>
+            <p>提取表单元素的键和值，返回一个包含表单数据的数组。表单元素是否被提取的规则跟<code>jQuery.fn.serialize</code>的规则是一样的。简单地说，<code>jQuery.fn.serialize</code>就是：</p>
+            <ol>
+              <li>调用<code>jQuery.fn.serializeArray</code>把表单提取成一个数组。</li>
+              <li>把数组传递到<code>jQuery.param</code>里面返回一个序列化后的对象。</li>
+            </ol>
+            <h3 id="-">总结</h3>
+            <hr>
+            <p>虽然这个方法能减少前端对表单数据的编码工作，但是在使用的时候一定要注意跟后台的接口要求的数据格式要能对得上（根据经验，很难很难……—），所以一定要多加小心地使用哦亲！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/11/html5-history-api.html" title="HTML5 history API">上一篇</a></li>
+              <li><a href="/posts/2013/09/13/jquery-ajax.html" title="jQuery扫盲之jQuery.ajax">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash的“cookie” ShareObject</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash的“cookie” ShareObject</h2>
+            <p class="blog-post-meta">写于2014年01月13日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>ShareObject</code>类用于在用户计算机或者服务器上读取和存储有限的数据。在用户计算机上的存储类似于浏览器的cookie，远程共享对象类似于实时数据传输设备，需要Adobe Flash Media Server，这边就简单带过远程共享对象，主要讨论类似cookie的使用方式。</p>
+            <p>使用共享对象可以执行以下操作：</p>
+            <ol>
+              <li>本地持久化，类似于浏览器cookie。在用户计算机上存储数据可以减少服务器的负担。</li>
+              <li>在Flash Media Server上存储并共享数据。通过远程共享对象可以让多个客户端共享数据。</li>
+            </ol>
+            <p>当应用程序关闭的时候，会刷新共享对象或者写入磁盘。使用本地磁盘空间会受到一些限制，用户可以通过设置界面管理每个域可用的磁盘空间。在调用<code>getLocal</code>和<code>flush</code>这两个方法的时候需要执行检查是否能操作成功。</p>
+            <p>注意，为了使设置界面的对话框显示完全，<code>swf</code>文件的宽度至少为215像素，高度至少为138像素。</p>
+            <p>像浏览器cookie一样使用共享对象，例如：</p> <pre><code>var so:SharedObject = SharedObject.getLocal(&quot;savedData&quot;);
+</code></pre>
+            <p>以上的代码会返回一个共享对象的实例，包含以下几个属性：</p>
+            <ol>
+              <li><code>client</code>，表示对其调用回调方法的对象。</li>
+              <li><code>data</code>，只读，表示这个共享对象的数据，可以视为一个键值对。</li>
+              <li><code>defaultObjectEncodeing</code>，表示共享对象的默认对象编码。</li>
+              <li><code>fps</code>，只写，指定每秒种客户端对共享对象所做的更改被发送到服务器的次数。</li>
+              <li><code>objectEncodeing</code>，表示这个共享对象的对象编码。</li>
+              <li><code>size</code>，只读，共享对象的大小，单位是字节。</li>
+            </ol>
+            <p>通过<code>getLocal</code>返回一个共享对象之后，我们可以使用它的<code>data</code>属性存储或者访问一些数据：</p> <pre><code>so.data.someKey = &quot;someValue&quot;;
+trace(so.data.someKey); // &quot;someValue&quot;
+</code></pre>
+            <p>本地共享通向可以通过共享对象实例上面的<code>clear</code>方法清除。通过调用<code>flush</code>方法可以将本地共享对象立即写入到本地文件中。</p>
+            <p>与浏览器cookie可以设置超时时间、域和路径等参数，<code>getLocal</code>方法接受三个参数：</p>
+            <ol>
+              <li><code>name</code>，表示共享对象的名称。</li>
+              <li><code>localPath</code>，可选，创建共享对象的<code>swf</code>文件的完整路径或者部分路径，这个确定共享对象的本地存储路径。</li>
+              <li><code>secure</code>，可选，确定是否只限于使用<code>HTTPS</code>连接传递的<code>swf</code>文件。</li>
+            </ol>
+            <p>可以看到这上面是没有超时这个配置的，所以除非用户或者程序主动删除共享对象的本地存储的文件，不然这个共享对象是一直有效的。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/08/flash-security-domain.html" title="使用安全域">上一篇</a></li>
+              <li><a href="/posts/2014/01/14/flash-share-object-data.html" title="使用ShareObject中的data">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

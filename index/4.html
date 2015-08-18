@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 访问和修改DOM（一）</h2>
+            <p class="blog-post-meta">写于2013年11月23日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>之前已经讨论过为什么访问和修改DOM会带来额外的性能消耗，这种消耗会在循环的内部被加剧地放大。参考下面的代码：</p> <pre><code>function innerHTMLLoop() {
+  for (var count = 0; count &lt; 15000; count++) {
+    document.getElementById(&#39;here&#39;).innerHTML += &#39;a&#39;;
+  }
+}
+</code></pre>
+            <p>以上就是一个在循环中访问以及修改DOM的例子，它在循环的内部进行了两个DOM操作：</p>
+            <ol>
+              <li>访问DOM的<code>innerHTML</code>属性。</li>
+              <li>修改DOM的<code>innerHTML</code>属性。</li>
+            </ol>
+            <p>根据之前讨论过的结果，我们要尽量减少DOM操作的次数，可以这么修改：</p> <pre><code>function innerHTMLLoop2() {
+  var content = &#39;&#39;;
+  for (var count = 0; count &lt; 15000; count++) {
+    content += &#39;a&#39;;
+  }
+  document.getElementById(&#39;here&#39;).innerHTML += content;
+}
+</code></pre>
+            <p><a href="/posts/2013/11/23/hp-innerhtml-versus-dom-methods.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之cssHooks</h2>
+            <p class="blog-post-meta">写于2013年11月22日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>在DOM的<code>style</code>属性中，不同浏览器对于一些CSS属性名称的处理是不一样的，例如<code>float</code>，在IE里面是<code>styleFloat</code>，而在Chrome则是<code>cssFloat</code>等。jQuery为我们处理了这些不一致，我们可以直接使用<code>css</code>去获取或者设置<code>float</code>的属性值。jQuery还提供了<code>cssHooks</code>这个对外的属性让我们可以自定义某些CSS属性的<code>getter</code>和<code>setter</code>：</p>
+            <blockquote>
+              <p>Hook directly into jQuery to override how particular CSS properties are retrieved or set, normalize CSS property naming, or create custom properties.</p>
+            </blockquote>
+            <p>对于<code>float</code>等常用的CSS属性，jQuery已经为我们处理了这些浏览器的不一致，但是对于一些属性，例如<code>border-radius</code>（要加上浏览器特定的前缀）等，jQuery是没有处理的。对于这种场景，其中一种比较笨的方法是我们把所有浏览器的实现都写一遍：</p> <pre><code>$(elem).css({
+  &quot;border-radius&quot;: &quot;2px&quot;,
+  &quot;-ms-border-radius&quot;: &quot;2px&quot;,
+  &quot;-webkit-border-radius&quot;: &quot;2px&quot;,
+  &quot;-moz-border-radius&quot;: &quot;2px&quot;,
+});
+</code></pre>
+            <p>这时候更聪明的方式是，我们可以使用<code>cssHooks</code>去处理这些前缀：</p> <pre><code>(function( $ ) {
+
+  if ( !$.cssHooks ) {
+    throw( new Error( &quot;jQuery 1.4.3+ is needed for this plugin to work&quot; ) );
+  }
+
+  function styleSupport( prop ) {
+</code></pre>
+            <p><a href="/posts/2013/11/22/jquery-csshooks.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.getComputedStyle</h2>
+            <p class="blog-post-meta">写于2013年11月20日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/css">css</a></p>
+            <p>使用DOM的<code>style</code>属性只能获取<code>style</code>特性指定的CSS属性，而外部样式表（<code>link</code>）或者内联样式表（<code>style</code>）中对这个元素生效的CSS属性是不能通过<code>style</code>获取的。这时，调用<code>getComputedStyle</code>可以返回一个DOM元素当前的CSS属性，即经过层叠之后的CSS属性（包括外部样式表、内联样式表还有<code>style</code>）。</p>
+            <p>这个方法可以接受两个参数：</p>
+            <ol>
+              <li><code>element</code>，要获取CSS属性的DOM元素。</li>
+              <li><code>pseudoElt</code>，可选，一个伪类，可以获取到这个DOM元素的某个伪类的CSS属性，如<code>:hover</code>、<code>:active</code>，甚至是<code>:before</code>。IE和Opera不支持这个参数。</li>
+            </ol>
+            <p>返回的对象可以像<code>style</code>属性一样的使用，不过只能读，写是无效的：</p> <pre><code>var result = getComputedStyle(elem);
+alert(result.height);
+</code></pre>
+            <p>也可以调用元素上的<code>getPropertyValue</code>去获取对应的CSS属性：</p> <pre><code>alert(result.getPropertyValue(&quot;height&quot;);
+</code></pre>
+            <p>这个方法IE9才支持。我们可以利用这个方法在脚本中准确判断现在是哪个响应式的样式表在生效。以前我们判断现在是哪个生效，可能会写这么一些代码：</p> <pre><code>if ($(window).width() &gt; 1024) {
+  // min-width: 1024px
+} else if ($(window).width() &gt; 768) {
+  // max-width: 1024px and  min-width: 768px
+</code></pre>
+            <p><a href="/posts/2013/11/20/get-computed-style.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">判断一个元素是否在视口之中</h2>
+            <p class="blog-post-meta">写于2013年11月19日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>之前讨论过如何获取视口大小，用jQuery就最简单了：</p> <pre><code>$(window).width();
+$(window).height();
+</code></pre>
+            <p>今天来讨论一下如何判断一个元素是否在视口之中。首先来介绍一下<code>elem.getBoundingClientRect</code>方法。这个方法可以获取到一个元素在文档中的位置，例如：</p> <pre><code>document.getElementById(&quot;id&quot;).getBoundingClientRect();
+</code></pre>
+            <p>返回的对象有六个属性，包括<code>width</code>、<code>height</code>、<code>top</code>、<code>left</code>、<code>bottom</code>、<code>right</code>。通过这个对象我们就可以得到一个元素在文档中的位置。只需要减去<code>scrollY</code>和<code>scrollX</code>就可以得到相对于视口的位置：</p> <pre><code>top = rect.top - window.scrollY;
+left = rect.left - window.scrollX;
+</code></pre>
+            <p>根据这些信息，以及视口的大小就可以判断元素是否在视口中了。以下是一个使用jQuery的判断方法，记在这里以便不时之需，嘿嘿：</p> <pre><code>$.fn.isOnScreen = function(){     
+  var win = $(window);   
+  var viewport = {
+    top : win.scrollTop(),
+    left : win.scrollLeft()
+  };
+</code></pre>
+            <p><a href="/posts/2013/11/19/elem-in-viewport.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之css</h2>
+            <p class="blog-post-meta">写于2013年11月18日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>这个也是我们日常使用频率比较高的jQuery方法了。这个方法跟<code>attr</code>类似，也是<code>geter</code>和<code>setter</code>一体的方法。</p>
+            <h3 id="getter">getter</h3>
+            <blockquote>
+              <p>Get the value of style properties for the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>如果只传入一个参数（不是对象），则视为是<code>getter</code>调用。只会获取jQuery对象中第一个元素的CSS属性值。有两种传参的形式：</p>
+            <ol>
+              <li><code>propertyName</code>，表示要获取CSS属性名称的字符串。</li>
+              <li><code>propertyNames</code>，表示获取多个CSS属性名称的一个数组。</li>
+            </ol>
+            <p><code>css</code>方法是一个十分方便的方法，它封装了不同浏览器对于获取元素当前样式所提供的API，例如IE的<code>elem.currentStyle</code>和标准的<code>getComputedStyle</code>等。它还统一了不同浏览器对于某些CSS属性名，例如<code>float</code>，在IE里面是<code>styleFloat</code>，而标准则是<code>cssFloat</code>，现在我们可以这么获取<code>float</code>的值：</p>
+            <pre><code>$(elem).css(&quot;float&quot;);
+</code></pre>
+            <p>这个方法还提供了驼峰大小写和<code>-</code>连接两种形式去写我们的CSS属性，例如以下两个语句返回的结果是一样的：</p> <pre><code>$(elem).css(&quot;backgroundColor&quot;);
+$(elem).css(&quot;background-color&quot;);
+</code></pre>
+            <p>值得注意的是，jQuery不支持获取复合属性，例如<code>border</code>、<code>background</code>等，需要获取这些属性要提供他们所有属性的完整的名称：</p>
+            <p><a href="/posts/2013/11/18/jquery-css.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 浏览器中的DOM</h2>
+            <p class="blog-post-meta">写于2013年11月17日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>操作DOM是十分耗时的，至少在老版本的IE上是如此。为什么DOM操作就那么耗时呢？</p>
+            <p>DOM是一个语言无关的接口，它定义了我们的程序如何跟HTML或者XML文档进行交互。在浏览器中，我们通常都是跟HTML DOM打交道，也不排除作为数据传输格式的时候操作XML DOM。</p>
+            <p>尽管DOM是语言无关的，我们在浏览器中使用的是它的JavaScript的实现。由于前端的工作大部分都是跟界面有关，所以DOM操作在前端的工作中占的比例是相当大的。</p>
+            <p>浏览器通常会把DOM接口的实现跟JavaScript引擎分开。举个例子，在某个版本的IE中，JavaScript引擎的实现是放在<code>jscript.dll</code>的动态库中，而DOM的实现则在<code>mshtml.dll</code>中。之所以把这两个实现分开，是因为微软可以方便地为其他脚本（例如<code>VBScript</code>）调用同一套DOM的实现。Safari、Chrome等都是把渲染引擎跟JavaScript引擎分开的。</p>
+            <p>那为什么DOM操作会慢呢？简单地说，就是这种两种实现的分开造成的。当某一方需要调用另一方的时候会产生额外的消耗。举个例子，想象一下DOM的实现和JavaScript的实现是两个小岛，中间有一条桥连接，所以他们能通过这条桥进行交互。但是过桥必须交过路费。每次它们之间相互调用的时候都要产生“过路费”的消耗，调用得越多消耗的越多。</p>
+            <p>所以，尽可能地减少DOM操作，包括访问、修改DOM等操作，能有效地减少这种“过路费”的消耗，也更容易地在代码的逻辑上分开展现和逻辑两个部分，提高代码的可读性与重用性。</p>
+            <p><a href="/posts/2013/11/17/hp-dom-in-browser.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 从下到上的CSS选择器引擎</h2>
+            <p class="blog-post-meta">写于2013年11月16日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>如果不想做之前的唯一性的过滤，那么从下到上的CSS选择器实现应该是一个比较好的替换方式。这种实现跟之前的实现最大的不同就是它是从最右边开始解析CSS选择器。举个例子，假如有这么一个CSS选择器<code>div span</code>，从下到上的实现会先查找出文档中所有的<code>span</code>，然后在这些<code>span</code>中过滤出祖先节点有<code>div</code>的一个集合，就是最后的结果。</p>
+            <p>这种先查出一个大集合再过滤的方式，优点就是代码实现起来比较简单，最明显的就是不用之前的唯一性判断。但是，代码简单带来的缺点就是扩展性比较差，而且当选择器比较复杂的时候局限性比较大。</p>
+            <p>这个实现首先根据选择器的最右的部分查出所有元素。然后的操作就是从右到左，根据每一个选择器在这个集合中过滤掉合适的部分即可：</p> <pre><code>function find(selector, root){
+  root = root || document;
+  var parts = selector.split(&quot; &quot;),
+  query = parts[parts.length - 1],
+  rest = parts.slice(0,-1).join(&quot;&quot;),
+  elems = root.getElementsByTagName(query),
+  results = [];
+  for (var i = 0; i &lt; elems.length; i++) {
+    if (rest) {
+      var parent = elems[i].parentNode;
+      while (parent &amp;&amp; parent.nodeName != rest) {
+        parent = parent.parentNode;
+      }
+      if (parent) {
+        results.push(elems[i]);
+      }
+</code></pre>
+            <p><a href="/posts/2013/11/16/bottom-up-selector-engine.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.when</h2>
+            <p class="blog-post-meta">写于2013年11月15日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>现实工作中我们经常会遇见一个场景，需要多次调用Ajax，在所有请求都完成的时候再执行一个回调函数。我们可以自己做一个计数器，每次Ajax执行完计数器加一，这样就可以知道是不是所有Ajax都调用完成了。其实jQuery已经提供了这么一个功能，就是<code>jQuery.when</code>：</p>
+            <blockquote>
+              <p>Provides a way to execute callback functions based on one or more objects, usually Deferred objects that represent asynchronous events.</p>
+            </blockquote>
+            <p>这个方法接受一个或者多个<code>Deffered</code>对象，例如<code>jQuery.ajax</code>返回的东东。如果只传入一个<code>Deffered</code>对象，这个方法会简单地返回这个<code>Deffered</code>对象，例如：</p> <pre><code>$.when($.ajax());
+$.ajax(); // equals
+</code></pre>
+            <p>如果传入一个不是<code>Deffered</code>对象的参数，这相当于<code>Deffered</code>对象已经resolve了，所有注册的回调都会立刻执行，例如：</p> <pre><code>$.when( { testing: 123 } ).done(function( x ) {
+  alert( x.testing ); // Alerts &quot;123&quot;
+});
+</code></pre>
+            <p>这个方法最有用的用法还是传入多个<code>Deffered</code>对象的时候。这时，返回的对象要在所有参数都被<code>resolve</code>的时候才会被<code>resolve</code>，而当有一个参数被<code>reject</code>的时候就会被<code>reject</code>。当这个对象被<code>resolve</code>的时候，会回传各个单独<code>resolve</code>时返回的结果（就是每个回调函数中的参数），顺序就是参数传入的顺序，例如：</p>
+            <pre><code>$.when( $.ajax( &quot;/page1.php&quot; ), $.ajax( &quot;/page2.php&quot; ) ).done(function( a1, a2 ) {
+  // a1 and a2 are arguments resolved for the page1 and page2 ajax requests, respectively.
+  // Each argument is an array with the following structure: [ data, statusText, jqXHR ]
+  var data = a1[ 0 ] + a2[ 0 ]; // a1[ 0 ] = &quot;Whip&quot;, a2[ 0 ] = &quot; It&quot;
+  if ( /Whip It/.test( data ) ) {
+</code></pre>
+            <p><a href="/posts/2013/11/15/jquery-when.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在canvas中使用图片</h2>
+            <p class="blog-post-meta">写于2013年11月14日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/html5">html5</a></p>
+            <p>在canvas中可以使用浏览器支持的所有图片格式，甚至是另一个canvas上面的图像。要在canvas上使用图片，可以分成两个步骤：</p>
+            <ol>
+              <li>获取图像的引用。</li>
+              <li>使用<code>drawImage</code>在canvas上画出对应的图像。</li>
+            </ol>
+            <p>图像的引用可以通过以下几种方式获取：</p>
+            <ol>
+              <li><code>Image</code>对象，例如<code>var img = new Image()</code>或者<code>document.getElementById(&quot;img&quot;)</code>。</li>
+              <li><code>Video</code>对象，canvas可以把这个视频对象当成图片使用。</li>
+              <li>另外一个canvas。</li>
+            </ol>
+            <p>如果图像跟canvas在同一个文档，就可以使用各种DOM API直接获取图像的引用，例如<code>getElementById</code>、<code>getElementsByTagName</code>等。值得注意是，使用<code>Image</code>等构造函数动态创建的图像，需要等该图像完全加载完毕之后才能使用，不然画出来的图像就有可能不正确：</p> <pre><code>var img = new Image();   // Create new img element
+img.addEventListener(&quot;load&quot;, function() {
+  // execute drawImage statements here
+}, false);
+img.src = &#39;myImage.png&#39;; // Set source path
+</code></pre>
+            <p>获取到图像的引用之后就可以使用<code>drawImage</code>在canvas上画图了。该方法是在canvas的上下文中：</p> <pre><code>var canvas = document.getElementById(&quot;canvas&quot;);
+</code></pre>
+            <p><a href="/posts/2013/11/14/canvas-draw-image.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.noConflict</h2>
+            <p class="blog-post-meta">写于2013年11月13日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>这个方法通常在<code>$</code>这个变量已经被占用的情况下调用，例如我们的页面已经引用了Prototype等类库（Prototype使用<code>$</code>作为<code>document.getElementById</code>的快捷方式）：</p>
+            <blockquote>
+              <p>Relinquish jQuery&#39;s control of the $ variable.</p>
+            </blockquote>
+            <p>这个方法接受一个参数<code>removeAll</code>，默认是<code>false</code>，表示只释放<code>$</code>这个全局变量。如果这个参数是<code>true</code>，则表示释放所有全局变量，包括<code>jQuery</code>：</p> <pre><code>$.noConflict();
+alert($); // undefined
+jQuery.noConflict(true);
+alert(jQuery); // undefined
+</code></pre>
+            <p>这样就可以释放jQuery占用的所有全局变量了。那么要怎么用jQuery的方法呢？调用这个方法会返回一个函数，其实就是jQuery本身：</p> <pre><code>var myJQ = $.noConflict(true);
+alert(myJQ(&quot;body&quot;).length);
+</code></pre>
+            <p>还有一个方法获取jQuery的引用，就是在<code>jQuery.ready</code>的回调里面的参数：</p> <pre><code>$.noConflict();
+jQuery( document ).ready(function( $ ) {
+  // Code that uses jQuery&#39;s $ can follow here.
+});
+</code></pre>
+            <p><a href="/posts/2013/11/13/jquery-no-conflict.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/3.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li class="active"><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/5.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

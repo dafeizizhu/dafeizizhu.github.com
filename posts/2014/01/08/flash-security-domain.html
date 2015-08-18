@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用安全域</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用安全域</h2>
+            <p class="blog-post-meta">写于2014年01月08日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>SecurityDomain</code>类代表当前安全性“沙箱”，也称为“安全域”。通过此类的一个实例传递给<code>Loader</code>的<code>load</code>方法，可以请求将所加载的媒体防止到特殊的沙箱中。</p>
+            <p>这个类只有一个静态属性<code>currentDomain</code>，只读，用来获取当前的安全域。通过在<code>load</code>方法的第二个参数<code>context</code>中设置<code>securityDomain</code>这个属性，当前<code>swf</code>文件可以授信给所加载的<code>swf</code>文件，而所加载的<code>swf</code>文件的授信则需要通过URL策略文件：</p> <pre><code>var context:LoaderContext = new LoaderContext(true); 
+context.securityDomain = SecurityDomain.currentDomain; 
+</code></pre>
+            <p>用这种方式加载的<code>swf</code>文件的权力比用<code>allowDomain</code>授权的更大。把<code>swf</code>加载到同一个安全域中，等同于能做任何事，这些<code>swf</code>文件可以在当前域下面做任意操作，例如：</p>
+            <ol>
+              <li>获取当前<code>swf</code>中的任意引用。</li>
+              <li>读取当前<code>swf</code>所在域的文件。</li>
+              <li>读取主域上的共享对象。</li>
+              <li>获取通过当前<code>swf</code>所在域建立的共享连接通讯。</li>
+            </ol>
+            <p>所以在引入跨域<code>swf</code>文件到当前的安全域下面千万要注意，不要引入恶意的<code>swf</code>文件。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/07/flash-application-domain.html" title="使用应用程序域">上一篇</a></li>
+              <li><a href="/posts/2014/01/13/flash-share-object.html" title="Flash的“cookie” ShareObject">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

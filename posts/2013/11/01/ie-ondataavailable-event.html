@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>IE的dataavailable事件</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">IE的dataavailable事件</h2>
+            <p class="blog-post-meta">写于2013年11月01日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>虽然<code>postMessage</code>已经是跨<code>iframe</code>通讯的一个比较完善的解决方案了，但是，如果，要IE8及以上的版本才支持这个方法。如果这两个<code>iframe</code>是同域的话，其实是可以直接通过脚本操作两个<code>window</code>，直接调用其内部方法就行通讯：</p> <pre><code>// outer
+var innerWin = document.getElemenetById(&quot;iframe&quot;).contentWindow;
+innerWin.doSomething();
+// inner
+function doSomething() {
+  alert(&quot;outer message!&quot;);
+}
+</code></pre>
+            <p>其实还有一个方法，就是<code>dataavailable</code>事件。这个事件是IE特有的事件，当数据源对象的数据准备好之后，可以触发这个事件来通知其他对象。</p>
+            <p>这个事件像其他标准事件一样，可以使用以下几个方式来绑定：</p>
+            <ol>
+              <li>在HTML里面：<code>&lt;element ondataavailable=&quot;handler&quot;&gt;&lt;/element&gt;</code>。</li>
+              <li>作为属性：<code>object.ondataavailable = handler;</code>。</li>
+              <li>使用<code>attachEvent</code>：<code>object.attachEvent(&quot;ondataavailible&quot;, handler);</code>。</li>
+              <li>在IE9还可以使用<code>addEventListener</code>：<code>object.addEventListener(&quot;dataavailible&quot;, handler, useCapture);</code>。</li>
+            </ol>
+            <p>由于这个事件不是用户触发的，我们需要使用脚本在特定的对象上触发这个事件：</p> <pre><code>var event = document.createEventObject();
+object.fireEvent(&quot;ondataavailable&quot;, event);
+</code></pre>
+            <p>值得开心的是，连IE6都支持这个事件。通过这个事件，我们可以做一个跨<code>iframe</code>通讯的函数：</p> <pre><code>var Messenger = function (targetWin) {
+  var me = this;
+  document.attachEvent(&quot;ondataavailable&quot;, function (event) {
+    if (!event.eventType ||
+        event.eventType !== &quot;message&quot; ||
+        event.eventSource != targetWin)
+      return;
+    $(me).trigger(&quot;onmessage&quot;, event.eventData);
+  };
+  this.send = function (msg) {
+    var event = targetWin.document.createEventObject();
+    event.eventType = &quot;message&quot;;
+    event.eventSource = window;
+    event.eventData = msg;
+    targetWind.document.fireEvent(&quot;ondataavailible&quot;, event);
+  }
+};
+</code></pre>
+            <p>以上代码构造了一个双向通讯的一对一的管道，我们可以透过这个管道在两个<code>iframe</code>之间交换信息。</p>
+            <p>既然是同域的，为什么不直接互相调用两个<code>window</code>里面的方法，而要使用这个事件呢？我自己觉得最主要的一点是不需要在两个<code>window</code>附加额外的全局函数（例如最上面的<code>doSomething</code>）。而且IE6都支持，何乐而不为呢？</p>
+            <p>如果跨域<code>iframe</code>之间的通讯，就不能用这个事件了，因为<code>targetWin.document</code>是不让访问的，这时候就要求助于<code>window.name</code>了。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/31/window-postmessage.html" title="window.postMessage">上一篇</a></li>
+              <li><a href="/posts/2013/11/02/javascript-parsing-selector.html" title="Secrets of the JavaScript Ninja 读书笔记之 解析选择器">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

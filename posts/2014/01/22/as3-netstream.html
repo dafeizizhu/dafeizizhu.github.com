@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Flash中播放视频之NetStream</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中播放视频之NetStream</h2>
+            <p class="blog-post-meta">写于2014年01月22日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>昨天讨论的<code>Video</code>只是视频的一个容器，真正拉取视频内容，控制视频播放的是<code>NetStream</code>类。使用<code>NetStream</code>可以从本地或者Web服务器播放媒体文件，也可以将视频、音频、数据流发布到远程服务器。今天主要讨论的是如何从一个本地路径或者Web路径播放媒体文件。</p>
+            <p>要创建一个<code>NetStream</code>，先要构造一个<code>NetConnection</code>对象。由于是播放本地或者Web上的视频文件，所以在构造<code>NetConnection</code>的时候，需要调用<code>connect</code>方法的时候传入一个<code>null</code>：</p> <pre><code>var nc:NetConnection = new NetConnection(); 
+nc.connect(null);
+</code></pre>
+            <p>当需要连接到Media Server的时候才需要传入一个服务器的地址。然后我们就可以用这个<code>NetConnection</code>对象构造一个<code>NetStream</code>：</p> <pre><code>var ns:NetStream = new NetStream(nc); 
+</code></pre>
+            <p>然后就可以把这个<code>NetStream</code>附加到<code>Video</code>上：</p> <pre><code>vid.attachNetStream(ns);
+</code></pre>
+            <p>最后调用<code>NetStream</code>的<code>play</code>方法就可以播放视频了：</p> <pre><code>ns.play(&quot;video.mp4&quot;);
+</code></pre>
+            <p>其中的参数就是视频的地址，可以是一个本地路径或者是一个Web路径，要注意安全策略的限制。</p>
+            <p>在<code>play</code>之后，会触发多次<code>NetStatusEvent.NET_STATUS</code>事件，其中<code>info</code>属性声明了这次是什么状态，常用的状态有：</p>
+            <ol>
+              <li><code>NetConnection.Connect.Success</code>，尝试连接成功，表示这个视频正常。</li>
+              <li><code>NetStream.Play.StreamNotFound</code>，无法找到指定路径的视频文件。</li>
+              <li><code>NetStream.Buffer.Full</code>，缓冲区已满，流开始播放。</li>
+              <li><code>NetStream.Play.Stop</code>，播放已结束。</li>
+            </ol>
+            <p>实在有太多的状态了，包括了视频从加载到播放的几乎所有场景。通过这些状态，我们可以知道当前视频的播放状态，也可以实现一些类似于自动重播的功能：</p> <pre><code>switch (event.info.code) 
+{  
+  case &quot;NetConnection.Connect.Success&quot; :   
+    // play   
+    break;
+  case  &quot;NetStream.Play.Stop&quot; :
+    // play
+    break; 
+ }
+</code></pre>
+            <p><code>NetStream</code>还提供了几个方法供我们控制视频的播放：</p>
+            <ol>
+              <li><code>pause</code>，暂停播放视频流，如果已经暂停则什么都不干。</li>
+              <li><code>resume</code>，回复播放已暂停的视频流，如果正在播放则什么都不干。</li>
+              <li><code>seek</code>，搜索到指定位置最靠近的关键帧，接受一个参数，就是偏移的秒数。</li>
+              <li><code>togglePause</code>，暂停或者回复播放视频流。</li>
+            </ol>
+            <p>注意，没有<code>stop</code>方法，如果想要停止播放视频流，则必须怎听播放并搜索到开始位置：</p> <pre><code>ns.pause();
+ns.seek(0);
+</code></pre>
+            <p>而<code>play</code>方法则不会恢复播放，之用于加载视频流。</p>
+            <p>结合<code>NetStream</code>和<code>Video</code>就可以实现在Flash中播放常见的视频了，包括<code>flv</code>和<code>mp4</code>,现在就来做一个简单的播放器吧！</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/21/as3-video.html" title="在Flash中播放视频之Video">上一篇</a></li>
+              <li><a href="/posts/2014/01/23/as3-netstream-play.html" title="用NetStream播放视频，包括二进制数据哦！">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

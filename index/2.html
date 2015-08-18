@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之访问加载媒体中的数据</h2>
+            <p class="blog-post-meta">写于2013年12月23日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>默认情况下，无法从其他沙箱中加载的媒体（如图形、音频、视频等）获取像素数据或者音频、视频数据。可以通过以下方式授予对应的权限：</p>
+            <ol>
+              <li>在目标媒体的内容中调用<code>Security.allowDomain</code>。</li>
+              <li>在目标媒体的服务器上添加策略文件（<code>crossdomain.xml</code>）。</li>
+            </ol>
+            <h3 id="-">访问位图数据</h3>
+            <p><code>BitmapData</code>对象的<code>draw</code>和<code>drawWithQuality</code>方法，可以将任何显示对象的当前显示像素绘制到<code>BitmapData</code>对象，包括<code>MovieClip</code>、<code>Bitmap</code>等。需要满足以下条件：</p>
+            <ol>
+              <li>源对象和目标对象需要在同一个域，或者目标对象调用<code>Security.allowDomain</code>授权的域。</li>
+              <li>源对象和调用<code>draw</code>方法的对象在同一个域，或者源服务器包含一个授予调用域权限的策略文件。</li>
+            </ol>
+            <p>如果使用<code>Loader</code>去加载图像，则可以指定第二个参数<code>context</code>，配置<code>checkPolicyFile</code>为<code>true</code>，则Flash Player会在加载图像的服务器上面查找策略文件。同理，文本对象的<code>img</code>标签也可以配置<code>checkPolicyFile</code>特性来检查策略文件。</p>
+            <h3 id="-">访问声音数据</h3>
+            <p>以下是一些跟声音相关的安全限制：</p>
+            <ol>
+              <li><code>SoundMixer.computeSpectrum</code>。</li>
+              <li><code>SoundMixer.stopAll</code>。</li>
+              <li><code>Sound.id3</code>。</li>
+            </ol>
+            <p><a href="/posts/2013/12/23/flash-security-accessing-loaded-media-as-data.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之跨脚本访问</h2>
+            <p class="blog-post-meta">写于2013年12月18日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>如果使用AS3.0编写的两个<code>swf</code>文件来自同一个域，那么它们是可以互相访问和修改另一个文件的变量、对象、属性和方法。反之则视为是跨脚本访问。</p>
+            <p>在默认情况下，Flash Player不允许这种跨域的脚本访问。通过调用<code>Security.allowDomain</code>，可以授予其他域的<code>swf</code>文件编写其脚本的权限。例如：</p> <pre><code>Security.allowDomain(&quot;siteA.com&quot;);
+</code></pre>
+            <p>这样，这个<code>swf</code>文件就可以被<code>siteA.com</code>中的<code>swf</code>访问其变量、对象、属性和方法。</p>
+            <p>注意，调用<code>Security.allowDomain</code>是不对称的，这个<code>swf</code>文件想要访问<code>siteA.com</code>中的<code>swf</code>文件需要在<code>siteA.com</code>的<code>swf</code>文件中也调用<code>allowDomain</code>。</p>
+            <h3 id="stage-">Stage安全性</h3>
+            <p><code>stage</code>对象的所有者是地一个加载的<code>swf</code>文件。<code>stage</code>对象的一些属性和方法只能用于在所有者同一安全沙箱中的<code>swf</code>文件，例如<code>stage.align</code>或者<code>stage.addChild</code>等。</p>
+            <p>在所这者的<code>swf</code>文件中调用<code>allowDomain</code>可以授予其他安全沙箱中的<code>swf</code>访问<code>stage</code>的这些属性和方法。</p>
+            <h3 id="-">遍历显示列表</h3>
+            <p>一个<code>swf</code>文件能够访问从其他沙箱中加载的显示对象也受到一定的限制。如果需要能访问到其他沙箱中的<code>swf</code>文件，需要在目标文件中调用<code>allowDomain</code>授予相应的权限。</p>
+            <h3 id="-">事件安全性</h3>
+            <p><a href="/posts/2013/12/18/flash-security-cross-scripting.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之加载内容</h2>
+            <p class="blog-post-meta">写于2013年12月17日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>Flash可以加载多种类型的内容，作为显示对象显示在舞台上，包括<code>swf</code>影片、图像、声音、视频等。</p>
+            <h3 id="-swf-">加载SWF和图像</h3>
+            <p>使用<code>Loader</code>可以加载<code>swf</code>文件或者图像。可以加载属于自己沙箱权限范围之内的资源，例如受信任的<code>swf</code>可以加载本地或者网络的资源等。下面是使用<code>Loader</code>的一个例子：</p> <pre><code>var ldr:Loader = new Loader(); 
+var url:String = &quot;http://www.unknown.example.com/content.swf&quot;; 
+var urlReq:URLRequest = new URLRequest(url); 
+ldr.load(urlReq); 
+addChild(ldr);
+</code></pre>
+            <p><code>load</code>方法可以传入第二个参数<code>context</code>，定义如何使用加载的上下文。这个参数有以下几个比较重要的属性：</p>
+            <ol>
+              <li><code>checkPolicyFile</code>，当加载图片的时候使用该属性。如果图像文件所在的域与包含<code>Loader</code>对象的文件所在的域不同，则指定此属性。当设置成<code>true</code>的时候，会检查远程服务器上面的策略文件。如果授予了适当的权限，<code>swf</code>文件就可以访问加载图像中的数据（例如调用<code>BitmapData.draw</code>等操作图像的像素等）。</li>
+              <li><code>securityDomain</code>，当加载<code>swf</code>的时候使用该属性。有两个可选的取值：<code>null</code>或者<code>SecurityDomain.currentDomain</code>。如果指定为后者，则视为远程<code>swf</code>文件在本地服务器加载一样，可以自由访问本地<code>swf</code>文件的属性和方法。请注意，多数情况可以通过执行普通加载操作然后让加载的<code>swf</code>文件调用<code>Security.allowDomain</code>方法来取代沙箱导入。由于加载的<code>swf</code>文件将位于自己的原始沙箱中，并因而能够访问自己实际服务器上的资源，因此后一种方法会更易于使用。</li>
+              <li><code>applicationDomain</code>，当加载ActionScript 3.0编写的<code>swf</code>才会使用这个属性。当加载文件时，可以指定文件应放置在特定的应用程序域中，而不是默认放置在一个新的应用程序域中。</li>
+            </ol>
+            <h3 id="-">加载声音和视频</h3>
+            <p>允许任何内容使用<code>Sound.load</code>、<code>NetConnection.connect</code>和<code>NetStream.play</code>方法从网络源加载声音和视频，只能与本地文件系统内容交互的沙箱中的内容除外。</p>
+            <p><a href="/posts/2013/12/17/flash-security-loading-content.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之全屏交互模式安全性</h2>
+            <p class="blog-post-meta">写于2013年12月16日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>Flash Player 11.3和更高版本支持全屏交互模式，即昨天讨论的全屏模式下，在Flash Player 11.3之前是不支持文本输入的。而在11.3之后的版本则可以通过配置参数让浏览器中的Flash Player在全屏模式下也能支持文本输入。</p>
+            <p>若要进入全屏交互模式，首先需要把<code>stage</code>的<code>displayState</code>属性设置为<code>StageDisplayState.FULL_SCREEN_INTERACTIVE</code>常量。</p>
+            <p>对于运行在远程沙箱中的<code>swf</code>文件，需要额外配置参数，允许<code>swf</code>进入全屏交互模式。在<code>object</code>或者<code>embed</code>标签中配置<code>allowFullScreenInteractive</code>参数，并将其配置成<code>true</code>：</p> <pre><code>&lt;object&gt;
+  &lt;param name=&quot;allowFullScreenInteractive&quot; value=&quot;true&quot; /&gt;
+&lt;/object&gt;
+</code></pre>
+            <p>或者：</p> <pre><code>&lt;embed allowFullScreenInteractive=&quot;true&quot; /&gt;
+</code></pre>
+            <p>与一般的全屏模式相同，仅当在响应鼠标事件和键盘事件时，才能调用启动全屏交互模式的ActionScript。也会显示如何退出全屏模式的提示信息。</p>
+            <p>管理员可以通过在<code>mms.cfg</code>中设置<code>FullScreenInteractiveDisable = 1</code>对浏览器中运行的<code>swf</code>文件禁用全屏交互模式。</p>
+            <p><a href="/posts/2013/12/16/flash-security-full-screen-interactive-mode-security.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之全屏模式安全性</h2>
+            <p class="blog-post-meta">写于2013年12月13日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>要进入全屏模式，要将<code>stage</code>的<code>displayState</code>属性设置为<code>StageDisplayState.FULL_STAGE</code>常量。</p>
+            <p>对于在远程沙箱中运行的<code>swf</code>文件，有一些安全注意事项。第一个就是要在<code>object</code>或者<code>embed</code>标签中添加<code>allowFullScreen</code>参数，设置成<code>true</code>：</p> <pre><code>&lt;object&gt;
+  &lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot; /&gt;
+&lt;/object&gt;
+</code></pre>
+            <p>或者：</p> <pre><code>&lt;embed allowFullScreen=&quot;true&quot; /&gt;
+</code></pre>
+            <p>仅当在响应鼠标事件或者键盘事件时才会调用启动全屏模式的ActionScript。当内容进入全屏模式时，程序会显示一条信息，例如<code>按ESC退出全屏模式</code>。</p>
+            <p>在全屏模式下会限制使用键盘，禁止文本输入。</p>
+            <p>在独立的播放器，例如计算机上的Flash Player上播放的<code>swf</code>文件，始终允许进入全屏模式，而且也完全支持键盘。</p>
+            <p>如果修改<code>stage.displayState</code>的<code>swf</code>文件跟<code>stage</code>所有者不是位于同一个安全沙箱，会引发异常。管理员也可以通过在<code>mms.cfg</code>文件中设置<code>FullScreenDisable = 1</code>对浏览器中运行的<code>swf</code>文件禁用全屏模式。</p>
+            <p><a href="/posts/2013/12/13/flash-security-full-screen-mode-security.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之限制网络API</h2>
+            <p class="blog-post-meta">写于2013年12月12日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>可以使用两种方式限制网络API。这些限制不能通过代码覆盖。</p>
+            <h3 id="-">阻止的端口</h3>
+            <p>Flash Player和Adobe AIR对某些端口的HTTP访问设有限制。通常用于非HTTP类型服务器的某些标准端口上不允许使用HTTP请求。</p>
+            <p>适用于端口阻止的API包括：</p>
+            <ol>
+              <li><code>FileReference</code>的<code>download</code>、<code>upload</code>方法。</li>
+              <li><code>Loader</code>的<code>load</code>、<code>loadBytes</code>方法。</li>
+              <li><code>navigateToURL</code>方法。</li>
+              <li><code>NetConnection</code>的<code>call</code>、<code>connect</code>方法。</li>
+              <li><code>NetStream</code>的<code>play</code>方法。</li>
+              <li><code>Security.loadPolicyFile</code>。</li>
+              <li><code>sendToURL</code>。</li>
+              <li><code>Sound</code>、<code>URLLoader</code>和<code>URLStream</code>的<code>load</code>方法。</li>
+            </ol>
+            <p>端口阻止也适用于文本字段中有关<code>url</code>的字段，例如<code>img</code>、<code>object</code>或者<code>embed</code>等。</p>
+            <h3 id="-allownetworking-">使用allowNetworking参数</h3>
+            <p>可以在<code>object</code>或者<code>embed</code>标签中设置<code>allowNetworking</code>参数来控制<code>swf</code>文件访问网络功能。它可以有以下的取值：</p>
+            <p><a href="/posts/2013/12/12/flash-security-restricting-networking-apis.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之权限控制</h2>
+            <p class="blog-post-meta">写于2013年12月11日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>Flash对控制严格采用一种权力层次，依次是管理员设置、用户设置、网站设置和作者设置。前者拥有比后者更高的优先级，后者不能覆盖前者的限制。</p>
+            <h3 id="-">管理员控制</h3>
+            <p>这里的管理员指的是计算机的管理用户。管理员控制有两种形式。第一种是<code>mms.cfg</code>文件。该文件包含管理员用于管理隐私控制、本地文件安全性、套接字连接等功能。该文件的大部分功能不能被ActionScript访问，并且只能由计算机管理员进行修改。该文件的路径是：</p> <pre><code>Windows：system\Macromed\Flash\mms.cfg
+Mac：app support/Macromedia/mms.cfg
+</code></pre>
+            <p>第二种形式是全局 Flash Player 信任目录。这个目录中指定的<code>swf</code>文件分配到受信任的沙箱，不仅可以访问本地文件，也可以使用网络。该目录通常的位置是：</p> <pre><code>Windows：system\Macromed\Flash\FlashPlayerTrust
+app support/Macromedia/FlashPlayerTrust
+</code></pre>
+            <p>这个目录可以存放若干个文本文件，标识出哪些路径下面的文件视为受信任的文件，例如：</p> <pre><code># Trust files in the following directories: 
+C:\Documents and Settings\All Users\Documents\SampleApp
+</code></pre>
+            <h3 id="-">用户控制</h3>
+            <p>用户控制可以从这几个方面指定。第一个是设置UI和设置管理器，就是上下文菜单中的Flash设置。里面可以设置包括摄像头、麦克风、本地存储等设置。在<code>mms.cfg</code>文件中的设置在这里并不可见。</p>
+            <p><a href="/posts/2013/12/11/flash-security-permission-controls.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之安全沙箱</h2>
+            <p class="blog-post-meta">写于2013年12月10日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>在HTML中，传统Ajax的限制就是跨域。在Flash中，安全性比较复杂，因为<code>swf</code>文件可以在本地通过Flash Player直接播放，也可以嵌入HTML页面中播放。在不同的环境中的<code>swf</code>文件的安全策略是不一样的。我们可以通过访问<code>Security</code>的只读静态属性<code>sandboxType</code>来确定<code>swf</code>文件当前是处于那种沙箱当中。</p>
+            <h3 id="-">远程沙箱</h3>
+            <p>第一种情况是来自Internet的资源，例如在页面播放的<code>swf</code>文件等。这时候，Flash Player会根据资源所在的域把它们分到不同的安全沙箱中。默认情况下，这些资源只能访问自身所在的安全沙箱中的内容。这个策略是基于域控制的，可以通过Web站点许可（通过昨天介绍的<code>crossdomain.xml</code>来配置）或者作者许可（调用<code>Security.allowDomain</code>方法），可以允许远程的<code>swf</code>文件访问其他安全沙箱中的资源。</p>
+            <p>当<code>swf</code>文件处于远程沙箱中，<code>Security.sandboxType</code>为<code>Security.REMOTE</code>。来自Internet的资源无法加载任何本地文件和资源。</p>
+            <h3 id="-">本地沙箱</h3>
+            <p>本地文件的意思是通过<code>file</code>协议或者统一命名约定（UNC）路径引用的任何文件，例如一个本地HTML文件嵌入的<code>swf</code>或者直接在本地Flash Player播放的<code>swf</code>。本地<code>swf</code>文件有四种安全沙箱的类型，映射到<code>Security.sandboxType</code>这个静态只读属性：</p>
+            <ol>
+              <li><code>Security.LOCAL_WITH_FILE</code>，表示<code>swf</code>文件是本地文件，但是未受信任，且没有使用网络名称发布。此<code>swf</code>文件可以从本地读取数据，但无法与Internet进行通讯。</li>
+              <li><code>Security.LOCAL_WITH_NETWORK</code>，表示<code>swf</code>文件是本地文件，但是未受信任，但已使用网络名称进行发布。此<code>swf</code>文件可以与Internet通讯，但是无法读取本地数据。</li>
+              <li><code>Security.LOCAL_TRUSTED</code>，表示<code>swf</code>已受信任。此<code>swf</code>文件既可以读取本地数据，也可以访问Internet。</li>
+              <li><code>Security.APPLICATION</code>，表示<code>swf</code>文件在AIR应用程序中运行，并随AIR文件一起安装。此<code>swf</code>文件可以访问AIR应用程序沙箱的任何文件。</li>
+            </ol>
+            <p>其中<code>Security.LOCAL_WITH_FILE</code>跟<code>Security.LOCAL_WITH_NETWORK</code>这两类安全沙箱中的内容是无法互相访问的。</p>
+            <p>经过实验观察，直接从本地Flash Player播放的<code>swf</code>文件显示的是<code>Security.LOCAL_TRUSTED</code>，表示这个<code>swf</code>文件既可以访问本地数据也可以访问Internet，不受基于域的沙箱规则控制。而嵌入在远程HTML页面中的<code>swf</code>文件显示的是<code>Security.REMOTE</code>，这种情况下要进行跨域访问需要在远程服务器中配置We站点许可，也就是<code>crossdomain.xml</code>。</p>
+            <p><a href="/posts/2013/12/10/flash-security-sandboxes.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">crossdomain.xml</h2>
+            <p class="blog-post-meta">写于2013年12月09日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>crossdomain.xml</code>是Flash授权一个客户端（Flash Player等）跨域访问数据的一个策略文件。当一个客户端请求不属于其所在域的资源时，远程服务器需要有一个<code>crossdomain.xml</code>文件去判断这个客户端所在的域是否有权限去访问这个资源。</p>
+            <p>一个简单的<code>crossdomain.xml</code>的例子如下：</p> <pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;    
+&lt;!DOCTYPE cross-domain-policy SYSTEM &quot;http://www.adobe.com/xml/dtds/cross-domain-policy.dtd&quot;&gt;
+&lt;cross-domain-policy&gt;
+  &lt;site-control permitted-cross-domain-policies=&quot;master-only&quot;/&gt;
+  &lt;allow-access-from domain=&quot;*.example.com&quot;/&gt;
+  &lt;allow-access-from domain=&quot;www.example.com&quot;/&gt;
+  &lt;allow-http-request-headers-from domain=&quot;*.adobe.com&quot; headers=&quot;SOAPAction&quot;/&gt;
+&lt;/cross-domain-policy&gt;
+</code></pre>
+            <p>其根元素是<code>cross-domain-policy</code>，它可以包含以下几个子元素：</p>
+            <ol>
+              <li><code>site-control</code>，声明该域接受哪些策略文件。该元素只有一个特性，就是<code>permitted-cross-domain-policies</code>，它可以接受以下几个取值：
+                <ol>
+                  <li><code>none</code>，不接受任何策略文件，包括自己。</li>
+                  <li><code>master-only</code>，只接受主策略文件，即定位在<code>http://your.domain/</code>的根下面的<code>crossdomain.xml</code>。</li>
+                  <li><code>by-content-type</code>，所有<code>Content-Type</code>为<code>text/x-cross-domain-policy</code>都视为可接受的策略文件。</li>
+                  <li><code>by-ftp-filename</code>，所有文件名为<code>crossdomain.xml</code>的都视为可接受的策略文件。</li>
+                  <li><code>all</code>，所有策略文件都可以被接受。</li>
+                </ol>
+              </li>
+              <li><code>allow-access-from</code>，声明这个域能被访问的策略。这个元素有以下几个特性：</li>
+            </ol>
+            <p><a href="/posts/2013/12/09/flash-crossdomain-xml.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 还有一些关于Repaint和Reflow</h2>
+            <p class="blog-post-meta">写于2013年12月08日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <h3 id="-">缓存关于布局的信息</h3>
+            <p>之前已经讨论过了，虽然浏览器会把触发Repaint和Reflow的DOM操作用一个队列缓存起来，但是只要我们去访问有关布局的属性（例如各种<code>offset</code>），这时候浏览器为了保证返回的值是正确的，只能把操作队列清空，把之前的DOM操作应用到页面中去。例如以下的代码是非常低效的：</p> <pre><code>myElement.style.left = 1 + myElement.offsetLeft + &#39;px&#39;;
+myElement.style.top = 1 + myElement.offsetTop + &#39;px&#39;;
+if (myElement.offsetLeft &gt;= 500) {
+  stopAnimation();
+}
+</code></pre>
+            <p>由于在设置DOM的位置的时候访问了<code>offsettLeft</code>和<code>offsetTop</code>两个有关布局的属性，导致第一行代码和第二行代码分别触发了Reflow。比较好的方式是使用一个局部变量把当前位置相关的值记录下来，而不是使用<code>offset</code>这样的属性：</p> <pre><code>currentLeft++;
+myElement.style.left = currentLeft + &quot;px&quot;;
+</code></pre>
+            <h3 id="-dom-">在动画的过程中把DOM从文档流中移除</h3>
+            <p>举个例子，像jQuery的<code>slideDown</code>和<code>slideUp</code>这样的效果在日常的页面中出现的次数非常多，例如各种手风琴菜单、下拉菜单等。像手风琴菜单那样的效果，当菜单展开的时候，会把它之后的菜单往后挤。由于位置不断发生变化，会频繁地触发Reflow。后面的内容越多，对性能的影响就越大。</p>
+            <p>为了减少动画造成的Reflow次数，我们可以这么修改一下这个效果：</p>
+            <ol>
+              <li>把展开的菜单项的<code>position</code>设置成<code>absolute</code>。（注：这样可能会导致页面在展开的过程中样式发生错误。）</li>
+            </ol>
+            <p><a href="/posts/2013/12/08/hp-other-about-repaints-and-reflows.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/1.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li class="active"><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/3.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

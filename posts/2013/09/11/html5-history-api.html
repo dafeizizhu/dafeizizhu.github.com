@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML5 history API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML5 history API</h2>
+            <p class="blog-post-meta">写于2013年09月11日 关于<a href="/tags/html5">html5</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天偶然发现有一个需求，单击某个链接的时候，浏览器显示的URL要变化，而页面又不要跳转。这个时候可以使用HTML5的history API。</p>
+            <h3 id="-html-history-api">老的HTML history API</h3>
+            <hr>
+            <p>在HTML4中，浏览器已经提供了一些关于历史记录的API，都在<code>window.history</code>里面：</p>
+            <ol>
+              <li><code>back</code>，相当于单击浏览器的后退按钮。</li>
+              <li><code>forward</code>，相当于单击浏览器的前进按钮。</li>
+              <li><code>go</code>，前进或者后退若干个历史记录。接受一个整数作为参数，正数为前进，负数为后退，<code>0</code>为刷新本页面。</li>
+            </ol>
+            <h3 id="-html-hisotry-api">新的HTML hisotry API</h3>
+            <hr>
+            <p>HTML5提供了新的两个API，为了使一些SPA应用也能使用前进后退的功能。</p>
+            <p>第一个是<code>window.history.pushState</code>，往历史记录栈中压入一个记录。第二个是<code>window.history.replaceState</code>，替换掉历史记录栈中的栈顶的记录。这两个方法都接受三个参数：</p>
+            <ol>
+              <li><code>stateObject</code>，关于这个历史记录的数据。当<code>popstate</code>触发的时候，对应记录的这个数据会作为事件对象的<code>state</code>属性回传给事件处理程序。<strong>注意，这个对象有大小限制，当对象序列化后的大小超过这个限制的时候某些浏览器会抛出异常。</strong></li>
+              <li><code>title</code>，理论上应该是对应历史记录中浏览器应该显示的标题，但是绝大部分浏览器没有实现这个功能，而这个参数也会被忽略。</li>
+              <li><code>URL</code>，浏览器显示的地址。虽然不会跳转到该地址上面，但是应该保证这个地址是可以访问的，因为当用户刷新这个页面的时候应该能正常到达当前这个状态。</li>
+            </ol>
+            <p>对比修改<code>window.location.search</code>去更改浏览器的地址，<code>pushState</code>有以下几个优点：</p>
+            <ol>
+              <li>不仅仅可以修改<code>search</code>，<code>URL</code>还可以指定为同域中任何一个地址。</li>
+              <li>不一定要去修改浏览器的地址，可以仅仅创建一个历史记录。</li>
+              <li>附加数据更加简单，不需要显式写到浏览器的地址中。</li>
+            </ol>
+            <p><code>replaceState</code>与<code>pushState</code>的功能类似，只是不是增加，而是修改栈顶的历史记录。</p>
+            <h3 id="-html-history-">新的HTML history事件</h3>
+            <hr>
+            <p>在用户单击前进后退按钮时，<code>popState</code>事件会在<code>window</code>上触发。我们可以绑定这个事件，监听历史记录的变化，根据事件对象的<code>state</code>属性判断用户现在跳转到哪个历史记录，使用相关的数据去更改我们的页面。</p>
+            <h3 id="-">兼容性</h3>
+            <hr>
+            <p>虽然这个是HTML5的API，但是现在已经有很多库实现了跨浏览器的HTML5 history API。例如在支持HTML5的浏览器中，URL看上去是这样的：</p> <pre><code>http://host/a.html
+http://host/b.html
+</code></pre>
+            <p>在不支持HTML5的浏览器中，对应的URL可能是这样的：</p> <pre><code>http://host/#/a.html
+http://host/#/b.html
+</code></pre>
+            <p>这里是使用了老技术，更改<code>search</code>去做到更改URL而不刷新页面的功能。<a href="https://github.com/browserstate/history.js/">这里</a>是其中一个history API库。使用这些库可以大大方便单页面应用的路由功能的实现难度哦亲！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/10/jquery-ajax-event.html" title="jQuery扫盲之全局Ajax事件">上一篇</a></li>
+              <li><a href="/posts/2013/09/12/jquery-ajax-help-function.html" title="jQuery扫盲之Ajax工具函数">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

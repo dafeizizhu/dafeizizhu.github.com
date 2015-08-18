@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>消除display: inline-block引起的元素之间的缝隙</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">消除display: inline-block引起的元素之间的缝隙</h2>
+            <p class="blog-post-meta">写于2013年09月27日 关于<a href="/tags/css">css</a></p>
+            <p>记得以前在看bootstrap的例子的时候，发现它的按钮之间都是有空隙的。检查元素的样式，发现并没有任何<code>margin</code>被设置了，那为什么会出现空隙呢？</p>
+            <p>先来看看<code>display: inline-block</code>干了些什么。</p>
+            <blockquote>
+              <p>The element generates a block element box that will be flowed with surrounding content as if it were a single inline box (behaving much like a replaced element would).</p>
+            </blockquote>
+            <p>简单地说就是一个行级的块元素，即像行内元素一样排版，但又可以像块元素一样设置元素的大小。我们可以尝试用<code>inline-block</code>去模拟一个浮动的效果：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/embedded/result,html,css/" frameborder="0"> </iframe>
+            <p>惊讶地发现，元素之间竟然出现了缝隙！查看代码并没有任何<code>margin</code>被设置了，跟bootstrap中的情况一样。其实非常简单，就是元素被当成行内元素排版的时候，元素之间的空白符（空格、回车换行等）都会被浏览器处理，根据<code>white-space</code>的处理方式（默认是<code>normal</code>，合并多余空白），原来HTML代码中的回车换行被转成一个空白符，所以元素之间就出现了空隙。</p>
+            <p>有时候加入这些空隙是好事，例如并排显示多个按钮，按钮之间留有一定空隙是比较好看的。但是，有时候为了完美地实现设计搞，元素之间的空隙都要精确限制。由于这个空隙是一个空白符，占用的空间跟父元素的<code>font-size</code>有之间关系，所以这个空隙的大小是不可控的。这时候，要先消除这些空隙，再根据设计搞设置精确的<code>margin</code>。</p>
+            <p>上网查了一下，最有效的办法就是在父元素中设置<code>font-size: 0</code>，然后在子元素上重置正确的<code>font-size</code>：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/1/embedded/result,html,css/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>又到了我们可爱的IE出场的时间了。很遗憾，虽然IE从5.5就开始支持<code>display: inline-block</code>，但是它的实现跟标准实现的表现是不一致的。我们需要以下的代码让IE的表现跟标准趋于一致：</p> <pre><code>display:inline-block; /* 现代浏览器 +IE6、7 inline 元素 */
+*display:inline; /* IE6、7 block 元素 */
+*zoom:1;
+</code></pre>
+            <p>其中<code>zoom</code>就是为了触发IE的<code>hasLayout</code>。以下这个例子能在IE6上实现类似的效果：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/2/embedded/result,html,css/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>其实要消除这个空隙还有一个非常简单的方法，就是<strong>把所有回车换行都删掉</strong>！这样意味着这些代码都要写成一行！哎呀，这样牺牲可读性貌似有点大，所以可以这样：</p>
+            <ol>
+              <li>使用以上的方法去消除元素之间的空隙。</li>
+              <li>在发布的时候用工具除去HTML的所有空白。这个方案意味着需要有一个类似watcher的东西，在开发的时候实时地进行预处理去查看效果。</li>
+            </ol>
+            <p>参考资料：</p>
+            <ol>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display">display</a></li>
+              <li><a href="http://www.iyunlu.com/view/css-xhtml/64.html">inline-block 前世今生</a></li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/26/jquery-ajax-short-cut.html" title="jQuery扫盲之Ajax常用方法">上一篇</a></li>
+              <li><a href="/posts/2013/09/28/javascript-bubbling-and-delegating.html" title="Secrets of the JavaScript Ninja 读书笔记之 冒泡与代理">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用JavaScript在页面中嵌入Flash</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用JavaScript在页面中嵌入Flash</h2>
+            <p class="blog-post-meta">写于2013年11月26日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/Flash">Flash</a></p>
+            <p>今天讨论的是使用<code>swfobject</code>在页面中嵌入一个Flash影片。对于不熟悉Flash的前端来说，<code>swfobject</code>提供了完整的JavaScript API来插入Flash影片，封装了很多内部的实现细节。使用<code>swfobject</code>还能做一些例如版本检测、提示下载Flash Player等操作。</p>
+            <p>这个库的使用方法很简单，首先肯定是在页面中引入这个库的脚本文件：</p> <pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;swfobject.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+            <p>HTML片段：</p> <pre><code>&lt;div id=&quot;myContent&quot;&gt;
+  &lt;p&gt;Alternative content&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>假设我们需要在<code>#myContent</code>中插入一个Flash影片，只需要调用<code>swfobject.embedSWF</code>就可以了，这个方法接受如下几个参数：</p>
+            <ol>
+              <li><code>swfUrl</code>，影片的地址。</li>
+              <li><code>id</code>，影片容器的ID，如上例的<code>myContent</code>。</li>
+              <li><code>width</code>，影片的宽度。</li>
+              <li><code>height</code>，影片的高度。</li>
+              <li><code>version</code>，目标Flash Player的版本。</li>
+              <li><code>expressInstallSwfurl</code>，可选，利用这个flash跳转到官方下载最新版本的flash插件。</li>
+              <li><code>flashvars</code>，可选，一个JavaScript对象，传递给Flash影片的变量。</li>
+              <li><code>params</code>，可选，<code>object</code>内部的<code>param</code>标签。</li>
+              <li><code>attributes</code>，可选，<code>object</code>标签的特性。</li>
+              <li><code>callbackFn</code>，可选，Flash影片加载完成之后的回调函数。</li>
+            </ol>
+            <p>调用的例子如下：</p> <pre><code>swfobject.embedSWF(&quot;myContent.swf&quot;, &quot;myContent&quot;, &quot;300&quot;, &quot;120&quot;, &quot;9.0.0&quot;);
+</code></pre>
+            <p>在SWFObject 2.3中建议用这种形式嵌入一个Flash影片：</p> <pre><code>var el = document.getElementById(&quot;my-target-element&quot;);
+swfobject.embedSWF(&quot;myContent.swf&quot;, el, 300, 120, 10);
+</code></pre>
+            <p>主要是显式指定了参数的类型，例如容器是使用DOM，宽高使用数字等。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/25/onload-vs-onreadystatechange.html" title="Script标签上的onload和onreadystatechange">上一篇</a></li>
+              <li><a href="/posts/2013/11/30/hp-walking-the-dom.html" title="High Performance JavaScript 读书笔记之 遍历DOM">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

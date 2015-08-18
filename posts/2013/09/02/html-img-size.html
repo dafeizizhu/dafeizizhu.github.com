@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>img的大小问题</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">img的大小问题</h2>
+            <p class="blog-post-meta">写于2013年09月02日 关于<a href="/tags/html">html</a></p>
+            <p>说到HTML元素的大小，都是使用CSS类去控制，而尽量避免内联的<code>style</code>，更是尽量不要使用<code>width</code>和<code>height</code>特性。可是在<code>img</code>元素上，可能有点不一样。今天针对<code>width</code>和<code>height</code>特性讨论一下这两个大小属性对于HTML页面的影响。</p>
+            <h3 id="-">显式指定图片大小</h3>
+            <hr>
+            <p>与普通的行内元素元素不一样，图片是可以设置宽度和高度的，可以通过CSS样式去控制，也可以通过<code>width</code>和<code>height</code>特性控制（高级浏览器都会把特性映射到对应的CSS样式中去），例如：</p> <pre><code>&lt;img src=&quot;path/to/image.png&quot; alt=&quot;a pic&quot; width=&quot;400&quot; height=&quot;300&quot; /&gt;
+</code></pre>
+            <p>在特性上面的值的单位是像素。上面的代码声明了一个宽400像素，高300像素的图片。当声明的大小跟图片实际的大小不一致的时候，浏览器会自动缩放该图片以匹配声明的大小。</p>
+            <p>这两个特性可以只设置一个。当只有一个值被设置之后，另一个值会自动变化，以保证图片的宽高比保持不变。</p>
+            <p>但是这两个属性不是必须的。如果忽略了对图片大小描述的代码，图片的显示大小跟实际大小是一致的。这样就有一个问题，在图片没有加载完成之前，浏览器并不知道图片的大小是多少（或者不用等待加载完成，但也必须等一定的事件确定图片的大小）。浏览器通常会使用一个默认大小的占位符先把图片的位置占上，当图片的大小确定之后对这个区域重新进行布局。我们知道，重新布局是有额外的开销的，频繁地重置图片的大小可能会造成性能瓶颈（尤其是那些以图片展示为目的的页面，例如图库等）。</p>
+            <p>可以在图片加载的时候，显式指定图片的大小。那样浏览器再图片加载完毕之后就不需要重新布局了，可以省下这些开销。</p>
+            <p>一个比较有意思的小点：当没有显式指定大小的时候，而图片却加载不上（404等），这个图片的大小会被重置成<code>alt</code>声明的字符串所占的大小。</p>
+            <h3 id="-">指定的大小要跟原图大小一致</h3>
+            <hr>
+            <p>如果指定的大小跟原图不一致，也会产生一些问题。例如像微博那样的应用，需要先提供一个预览图，单击它才出现完整大小的大图。这样的功能其实是为了节省带宽，还有提高加载的效率。</p>
+            <p>实现的方式有两种，其中一种是通过显式设置图片的宽度和高度，让浏览器缩放原图提供一个简单的缩略图功能。这样做也有一个好处，就是点开大图的时候，由于图片已经被加载过了，这个过程不会有一丝的延迟，主要是网络的延迟，在不限制带宽流量的场景下比较适合（桌面应用、桌面Web应用等）。但是这个实现方法有以下两个问题：</p>
+            <ol>
+              <li>在全部都是小图的应用场景下面带宽流量被大量浪费。</li>
+              <li>由于依靠浏览器的缩放，不同浏览器的效果参差不齐（例如Chrome和IE6，前者明显效果要好很多）。</li>
+            </ol>
+            <p>所以，只有指定的大小跟原图一致，才能完美解决第二个问题。而第一个问题，则需要提供另外一组缩略图的图片，先加载缩略图的图片，当点开大图的时候才加载完整的大图。虽然这样在点开大图的时候会有一定的网络延迟，但是却可以大大减少需要的流量，特别适合移动终端上的应用。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/01/javascript-cross-browser-strategies.html" title="Secrets of the JavaScript Ninja 读书笔记之 跨浏览器编程策略">上一篇</a></li>
+              <li><a href="/posts/2013/09/03/css-width-max-width-min-width.html" title="CSS的width、max-width和min-width">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

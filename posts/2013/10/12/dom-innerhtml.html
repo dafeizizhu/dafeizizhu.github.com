@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>DOM的innerHTML属性</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">DOM的innerHTML属性</h2>
+            <p class="blog-post-meta">写于2013年10月12日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p><code>innerHTML</code>可以访问一个DOM对象的子孙节点的HTML字符串，也可以设置该DOM元素内部的HTML字符串，浏览器会自动把这些字符串转成DOM结构并塞到该DOM元素内，例如：</p> <pre><code>var content = element.innerHTML;
+element.innerHTML = content;
+</code></pre>
+            <p>访问<code>innerHTML</code>属性的时候，该元素内部的文本节点如果有<code>&amp;</code>、<code>&lt;</code>或者<code>&gt;</code>，则会转成对应的XML实体，需要注意。</p>
+            <p><code>innerHTML</code>简化了DOM操作，多层嵌套的DOM结构如果用<code>document.createElement</code>等DOM API生成的话需要非常多的代码，而使用<code>innerHTML</code>则只需要编写一段HTML字符串即可，简单高效。</p>
+            <p><code>innerHTML</code>的作用有很多，可以清空一个元素内部的所有DOM节点：</p> <pre><code>element.innerHTML = &quot;&quot;;
+</code></pre>
+            <p>也可以查看页面的DOM结构：</p> <pre><code>javascript:&quot;&lt;pre&gt;&quot;+document.documentElement.innerHTML.replace(/&lt;/g,&quot;&amp;lt;&quot;) + &quot;&lt;/pre&gt;&quot;;
+</code></pre>
+            <p>注意哦，由于安全问题，通过<code>innerHTML</code>设置的<code>script</code>标签是不会被执行的哦。但是，还是可以通过某种手段执行一些代码：</p> <pre><code>var name = &quot;&lt;img src=x onerror=alert(1)&gt;&quot;;
+el.innerHTML = name; // shows the alert
+</code></pre>
+            <p>所以需要用户输入HTML的场景要格外小心，可以使用一些手段去校验用户输入的HTML，例如<a href="https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet">XSS Filter</a>等。</p>
+            <p><code>innerHTML</code>还有一些坑，第一个就是浏览器会自动校正错误格式的HTML字符串，例如：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/tSH6a/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>可以看到<code>a</code>标签被补全了。这很多时候都是一个非常棒的事情，但是也有可能导致上述的mXSS攻击校验手段失效，例如：</p> <pre><code>// in
+&lt;img src=&quot;foo&quot; alt=&quot;``onerror=alert(1)&quot; /&gt;
+// out in IE8 or older
+&lt;IMG alt=``onerror=alert(1) src=&quot;x&quot;&gt;
+</code></pre>
+            <p>还有很多关于<code>innerHTML</code>的攻击方式，有兴趣的童鞋可以<a href="http://www.slideshare.net/x00mario/the-innerhtml-apocalypse">参考这里</a>（需要翻墙）。</p>
+            <p>还有一个设置的<code>innerHTML</code>，再访问，就算不校正，也有可能不一样。例如上例在IE8或者IE7，<code>a</code>标签的标签名变成大写。还有一个更坑的：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/tSH6a/1/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0">
+            </iframe>
+            <p>在IE7里面，<code>href</code>被补全成绝对路径了！这样会导致以下的代码失效：</p> <pre><code>$(&quot;a[href=&#39;#&#39;]&quot;).length;  // in IE7, is 0
+</code></pre>
+            <p>太坑爹了！只能把属性选择器改成<code>a[href$=&#39;#&#39;]</code>才能规避这个问题。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/11/assertion-expect-js.html" title="一个断言：expect.js">上一篇</a></li>
+              <li><a href="/posts/2013/10/13/javascript-css-selector-engine.html" title="Secrets of the JavaScript Ninja 读书笔记之 简述CSS选择器引擎">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

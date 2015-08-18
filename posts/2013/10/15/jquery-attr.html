@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之attr</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之attr</h2>
+            <p class="blog-post-meta">写于2013年10月15日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p><code>jQuery.fn.attr</code>是一个根据传入参数的个数判断是setter还是getter的一个方法。</p>
+            <h3 id="getter">getter</h3>
+            <hr>
+            <blockquote>
+              <p>Get the value of an attribute for the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>作为getter的<code>attr</code>方法只接受一个参数：<code>attrName</code>，指定需要获取的特性的名字。如果该jQuery对象包含多个元素，则只会返回第一个元素的特性值。如果需要获取所有元素的值，需要遍历这个jQuery对象，再逐个调用<code>attr</code>方法。</p>
+            <p>调用这个方法获取特性值有两个好处：</p>
+            <ol>
+              <li>方便，直接通过jQuery对象就可以调用。</li>
+              <li>跨浏览器兼容。有一些特性在不同的浏览器中表现是不一致的，<code>attr</code>方法封装了这些不一致，提供统一的API以及结果。</li>
+            </ol>
+            <p>有两个值得注意的地方：</p>
+            <ol>
+              <li>返回的值一般都是字符串，而一些<code>value</code>和<code>tabindex</code>除外。</li>
+              <li>修改一个已经存在在文档中的<code>input</code>的<code>type</code>特性，在IE6、7、8会抛出异常。</li>
+            </ol>
+            <p>如果指定的特性不存在，则<code>attr</code>返回<code>undefined</code>。诸如<code>checked</code>、<code>disabled</code>或者<code>selected</code>等特性，最好使用<code>prop</code>来获取。再介绍完<code>prop</code>之后会为两者进行一个对比。</p>
+            <h3 id="setter">setter</h3>
+            <hr>
+            <blockquote>
+              <p>Set one or more attributes for the set of matched elements.</p>
+            </blockquote>
+            <p>作为setter的<code>attr</code>方法有几种传输参数的形式：</p>
+            <ol>
+              <li><code>attributeName</code>和<code>value</code>，为指定的特性名称设置指定的值。</li>
+              <li><code>attributes</code>，是一个键值对，键为特性名称，值为特性的值。</li>
+              <li><code>attributeName</code>和<code>function(index, attr)</code>，第二个参数是一个回调函数，接收当前元素在jQuery对象中的索引和当前的特性值，该函数的返回值将作为特性的新值。如果没有返回值（或者返回<code>undefined</code>），特性值将不会发生任何改变。</li>
+            </ol>
+            <p>与getter不同，它会设置jQuery对象中所有元素的特性值。如果指定的特性名称不存在，jQuery会在这个元素上增加这个特性。</p>
+            <h3 id="removeattr">removeAttr</h3>
+            <hr>
+            <blockquote>
+              <p>Remove an attribute from each element in the set of matched elements.</p>
+            </blockquote>
+            <p>这个方法可以删除指定的特性。这个方法只接受一个参数<code>attributeName</code>，就是要删除的特性的名字。其内部实现是使用JavaScript内建的<code>removeAttribute</code>。</p>
+            <p>其中有一个坑，就是在IE6、7、8中使用<code>removeAttr</code>去删除指定在DOM中的事件处理程序（例如<code>onclick</code>等）是没有效果的，要使用<code>prop</code>：</p> <pre><code>$element.prop( &quot;onclick&quot;, null );
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/14/jquery-manipulate-class.html" title="jQuery扫盲之处理class">上一篇</a></li>
+              <li><a href="/posts/2013/10/16/jquery-prop.html" title="jQuery扫盲之prop">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

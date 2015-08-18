@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">as3 TextField htmlText</h2>
+            <p class="blog-post-meta">写于2014年02月24日 关于
+              <a href="/tags/"></a>
+            </p>
+            <p><a href="/posts/2014/02/24/as3-textfield-htmltext.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在JavaScript中调用AS3的代码</h2>
+            <p class="blog-post-meta">写于2014年02月17日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>在信任的容器中，也可以通过JavaScript调用ActionScript的代码。通过<code>ExternalInterface.addCallback</code>这个方法，可以将ActionScript方法注册为容器可用。</p>
+            <p>这个方法接受两个参数：</p>
+            <ol>
+              <li><code>functionName</code>，在容器中注册的方法名。调用这个方法之后，会在Flash的DOM对象中生成一个同样名称的方法，外部容器通过这个方法来访问ActionScript中对应的方法。</li>
+              <li><code>closure</code>，注册的方法。</li>
+            </ol>
+            <p>当成功调用<code>addCallback</code>之后，容器中的JavaScript就可以调用对应的ActionScript的代码：</p> <pre><code>var swf = document.getElementById(&quot;id&quot;);
+swf.functionName(...);
+</code></pre>
+            <p>跟<code>call</code>一样，调用之前要检查<code>availible</code>属性的值。如果不支持传入调用，会引发<code>Error</code>。</p>
+            <p>同样，也要通过代码给对应的<code>swf</code>文件和容器赋予权限：在容器中设置<code>allowScriptAccess</code>参数的值为<code>always</code>；在<code>swf</code>内部调用<code>allowDomain</code>赋予对应域中的容器权限。</p>
+            <p>通过<code>allCallback</code>和<code>call</code>，我们可以在ActionScript和外部容器（例如HTML中的JavaScript）进行交互，例如读取页面的URL、读取cookie、调用容器对应功能，如调用<code>alert</code>等方法，非常方便。</p>
+            <p>其中要注意的是，在IE6上有部分关键字，例如<code>stop</code>，不能用在<code>functionName</code>，考虑这种情况的话<code>functionName</code>最好是一些比较特别一点的名字，如<code>stopMe</code>（囧）。</p>
+            <p><a href="/posts/2014/02/17/as3-externalinterface-addcallback.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash调用外部JavaScript</h2>
+            <p class="blog-post-meta">写于2014年02月11日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>ExternalInterface</code>是用来支持ActionScript和<code>swf</code>容器（例如<code>HTML</code>页面）之间进行交互的接口。通过<code>ExternalInterface</code>，可以在<code>swf</code>文件内部的ActionScript代码调用外部HTML页面的JavaScript代码，反之亦然。</p>
+            <p>今天先来讨论下<code>swf</code>文件内部是如何访问外部HTML页面的JavaScript代码。在获得授权的情况下，ActionScript可以调用JavaScript的任何全局函数、可以传递任意数量的基本类型的参数、可以接收JavaScript函数的返回值。</p>
+            <p>在使用<code>ExternalInterface</code>之前，我们都必须检查这个类的静态属性<code>available</code>的值。这个属性表示外部容器（例如HTML页面）是否支持提供外部接口。当这个属性的值为<code>true</code>的时候，我们可以使用静态方法<code>call</code>来调用HTML的JavaScript函数。</p>
+            <p><code>call</code>方法接受可变长度的参数，其中第一个参数是执行的JavaScript函数的名称。注意的是，不仅仅可以传递函数名称，也可以传递一个匿名函数：</p> <pre><code>ExternalInterface.call(&quot;function(){alert(1);}&quot;);
+</code></pre>
+            <p>这样十分方便，再也不需要担心要在HTML页面暴露出几个全局函数让ActionScript执行了。</p>
+            <p>后面可以传递多个参数，这些参数也会传递到JavaScript函数中，会自动把ActionScript的类型转化成JavaScript的类型。</p>
+            <p>调用这个方法后，如果调用成功，则返回JavaScript函数的返回值，否则返回<code>null</code>表示调用失败。有很多种场景都会使调用失败，例如该JavaScript函数不可用、在Netscape或者Opera发生递归等。</p>
+            <p>这个方法会引发两个异常：</p>
+            <ol>
+              <li>容器不支持调用，引发<code>Error</code>。</li>
+              <li>包含环境属于调用代码无权访问的安全沙箱，引入<code>SecurityError</code>。</li>
+            </ol>
+            <p>要解决安全问题，需要以下两个步骤：</p>
+            <p><a href="/posts/2014/02/11/as3-externalinterface-call.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">全局声音控制：SoundMixer</h2>
+            <p class="blog-post-meta">写于2014年01月26日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>之前讨论的<code>MovieClip</code>实例中的<code>soundTransform</code>可以控制这个视频剪辑的声音播放以及声音大小的控制。但不是所有从<code>Loader</code>中加载的<code>swf</code>都是<code>MovieClip</code>实例，例如使用早期Flash创作工具创作的<code>swf</code>文件，它并没有<code>soundTransform</code>这个属性。这时候，我们只能通过全局声音来控制这个视频剪辑的声音播放。</p>
+            <p>在AS3中，全局声音控制是通过<code>SoundMixer</code>类提供的静态属性和方法来控制的。这个类有两个静态属性：</p>
+            <ol>
+              <li><code>bufferTime</code>，表示预加载到缓冲区中所用的秒数。</li>
+              <li><code>soundTransform</code>，是<code>SoundTransform</code>的实例，通过控制这个属性的<code>volumn</code>方法就可以控制声音播放的大小。</li>
+            </ol>
+            <p>这个类还提供了几个静态工具方法：</p>
+            <ol>
+              <li><code>areSoundsInaccessible</code>，确定是否因安全限制而无法访问任何声音，例如播放的声音所在的服务器没有授权所在域访问的URL策略文件等。</li>
+              <li><code>computeSpectrum</code>，用来获取当前声音波形的快照。使用获取到的数据可以绘制出当前声音播放的波形。</li>
+              <li><code>stopAll</code>，停止当前正在播放的声音。默认情况下，只会停止与调用此方法的对象在相同安全沙箱中的声音。注，没有恢复功能，只能调用<code>Sound</code>实例的<code>play</code>方法恢复声音播放。</li>
+            </ol>
+            <p>由于普通的应用不会出现同时播放两种声音的情况，所以大多数情况下我们可以使用这个全局的声音控制方法为我们的<code>swf</code>应用提供静音功能：</p> <pre><code>var soundtrans:SoundTransform = new SoundTransform(0, 0);
+SoundMixer.soundTransform = soundtrans;
+</code></pre>
+            <p><a href="/posts/2014/01/26/as3-soundmixer.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中控制声音之SoundTransform</h2>
+            <p class="blog-post-meta">写于2014年01月24日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>Sprite</code>中有一个属性，<code>soundTransform</code>，就是用于控制这个<code>Sprite</code>的声音播放，包括音量大小和声道等。这个属性是<code>SoundTransform</code>类的一个实例，通过调整<code>soundTransform</code>的对应属性，就可以控制这个<code>Sprite</code>的声音播放。</p>
+            <p><code>SoundTransform</code>有以下几个属性可以供我们调整：</p>
+            <ol>
+              <li><code>leftToLeft</code>，指定左输入在左扬声器播放的量。</li>
+              <li><code>leftToRight</code>，指定左输入在右扬声器播放的量。</li>
+              <li><code>pan</code>，声音从左到右的平移。</li>
+              <li><code>rightToLeft</code>，指定右输入在右扬声器的量。</li>
+              <li><code>rightToRight</code>，指定右输入在右扬声器的量。</li>
+              <li><code>volume</code>，指定音量范围。</li>
+            </ol>
+            <p>其实上面的属性，平常只会使用到<code>volume</code>。这个属性的取值范围是<code>0</code>到<code>1</code>,分别表示静音和最大音量。</p>
+            <p>这个类只有构造函数一个公共方法，接受两个参数，分别是<code>volume</code>和<code>pan</code>两个属性的值。</p>
+            <p>下面的代码演示了如何控制一个<code>Sound</code>实例的声音播放：</p> <pre><code>var mySound:Sound = new Sound();
+var url:URLRequest = new URLRequest(&quot;mySound.mp3&quot;);
+var channel:SoundChannel;
+var transform:SoundTransform = new SoundTransform(0.5, 1.0);
+</code></pre>
+            <p><a href="/posts/2014/01/24/as3-sound-transform.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">用NetStream播放视频，包括二进制数据哦！</h2>
+            <p class="blog-post-meta">写于2014年01月23日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>昨天只是简单地将在Flash中播放视频的最基本的方法介绍了一遍。其实我们可以自己去下载视频的数据，然后通过<code>NetStream</code>的<code>appendBytes</code>方法把获取到的数据添加到流里面。这样，我们可以对数据的传输进行更精确的控制。</p>
+            <p><code>play</code>方法最简单的用法就是传入一个本地或者Web URL，后面的数据加载就交给<code>NetStream</code>的内部实现了。我们也可以传入一个<code>null</code>，这时<code>NetStream</code>就启动“数据生成模式”。在这个模式下面，调用<code>appendBytes</code>方法就可以把二进制数据添加到流中。</p>
+            <p>要注意的是，在构造<code>NetStream</code>对象的时候需要在调用<code>NetConnection</code>的<code>connect</code>方法传入一个<code>null</code>。</p>
+            <p>然后我们就可以从网络或者其他任意地方读取二进制数据，调用<code>appendBytes</code>把它们加入到这个流中播放：</p> <pre><code>var MyNC:NetConnection = new NetConnection();
+MyNC.connect(null);
+
+var MyNS:NetStream = new NetStream(MyNC);
+MyVideo.attachNetStream(MyNS);
+MyNS.play(null);
+MyNS.appendBytes(ba);
+</code></pre>
+            <p>注意，在<code>appendBytes</code>执行后续调用之前，字节分析程序可能无法完整地解码对<code>appendBytes</code>的调用。</p>
+            <p>通过这种播放方式，我们可以先把视频加载到内从，校验视频内容（MD5等），然后直接把这些二进制数据加载到流中播放，这样播放的时候就不需要再从网络或者本地文件系统中加载数据了。</p>
+            <p><a href="/posts/2014/01/23/as3-netstream-play.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中播放视频之NetStream</h2>
+            <p class="blog-post-meta">写于2014年01月22日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>昨天讨论的<code>Video</code>只是视频的一个容器，真正拉取视频内容，控制视频播放的是<code>NetStream</code>类。使用<code>NetStream</code>可以从本地或者Web服务器播放媒体文件，也可以将视频、音频、数据流发布到远程服务器。今天主要讨论的是如何从一个本地路径或者Web路径播放媒体文件。</p>
+            <p>要创建一个<code>NetStream</code>，先要构造一个<code>NetConnection</code>对象。由于是播放本地或者Web上的视频文件，所以在构造<code>NetConnection</code>的时候，需要调用<code>connect</code>方法的时候传入一个<code>null</code>：</p> <pre><code>var nc:NetConnection = new NetConnection(); 
+nc.connect(null);
+</code></pre>
+            <p>当需要连接到Media Server的时候才需要传入一个服务器的地址。然后我们就可以用这个<code>NetConnection</code>对象构造一个<code>NetStream</code>：</p> <pre><code>var ns:NetStream = new NetStream(nc); 
+</code></pre>
+            <p>然后就可以把这个<code>NetStream</code>附加到<code>Video</code>上：</p> <pre><code>vid.attachNetStream(ns);
+</code></pre>
+            <p>最后调用<code>NetStream</code>的<code>play</code>方法就可以播放视频了：</p> <pre><code>ns.play(&quot;video.mp4&quot;);
+</code></pre>
+            <p>其中的参数就是视频的地址，可以是一个本地路径或者是一个Web路径，要注意安全策略的限制。</p>
+            <p>在<code>play</code>之后，会触发多次<code>NetStatusEvent.NET_STATUS</code>事件，其中<code>info</code>属性声明了这次是什么状态，常用的状态有：</p>
+            <p><a href="/posts/2014/01/22/as3-netstream.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中播放视频之Video</h2>
+            <p class="blog-post-meta">写于2014年01月21日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>视频广告要播视频了。之前做的是使用<code>Loader</code>去加载<code>swf</code>和图片，播放视频则需要使用另一个类：<code>Video</code>。<code>Video</code>类可以显示实时视频和录制视频，这个视频不需要嵌入到<code>swf</code>文件当中。今天主要讨论的是播放一个已经录制好的视频。</p>
+            <p><code>Video</code>类支持<code>flv</code>、<code>mp4</code>等视频文件，它是<code>DisplayObject</code>的子类，所以可以控制各种属性，例如<code>x</code>、<code>y</code>控制<code>Video</code>的位置等。通常要播放一个视频，需要以下几个步骤：</p>
+            <ol>
+              <li>将视频附加到一个视频流上。视频流是<code>NetStream</code>类的实例。</li>
+              <li>调用<code>addChild</code>把<code>Video</code>实例放到舞台上。</li>
+            </ol>
+            <p>除了从<code>DisplayObject</code>继承来的属性外，还有以下几个属性：</p>
+            <ol>
+              <li><code>deblocking</code>，表示作为后处理的一部分应用于已解码视频的滤镜类型。</li>
+              <li><code>smoothing</code>，指定在缩放视频时是否进行平滑处理。</li>
+              <li><code>videoHeight</code>，只读，视频流的高度，单位是像素。</li>
+              <li><code>videoWidth</code>，只读，视频流的宽度，单位是像素。</li>
+            </ol>
+            <p>方法：</p>
+            <ol>
+              <li><code>attachCamera</code>，附加来自摄像头的视频流。</li>
+              <li><code>attachNetStream</code>，附加一个来自网络的视频流，这个也是我们比较常用的方法，播放外部视频。</li>
+              <li><code>clear</code>，清除<code>Video</code>对象中当前显示的图像，但不会停止播放。视频流对象才能控制播放和停止。</li>
+            </ol>
+            <p>构造方法接受两个参数，就是<code>Video</code>的默认宽和高。这两个参数是可选的，如果不指定，默认的宽度是<code>320</code>像素，默认的高度是<code>240</code>像素。</p>
+            <p><a href="/posts/2014/01/21/as3-video.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">内容不要超过容器！</h2>
+            <p class="blog-post-meta">写于2014年01月20日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>在HTML中，我当元素的内容超过容器的大小时，我们需要使用css中的<code>overflow</code>来指定该如何显示。在Flash中，一般当元素的内容超过容器的大小时，超出容器的部分还是会显示出来的，如果要达到设置<code>overflow: hidden</code>的效果，我们需要设置显示对象的<code>mask</code>属性，指定对象的遮罩，这样超出遮罩的部分就不会显示了。</p>
+            <p>通常我们会指定一个<code>DisplayObject</code>的实例作为遮罩，例如<code>Sprite</code>、<code>Shape</code>等都可以作为遮罩：</p> <pre><code>var mask:Shape = new Shape();
+mask.graphics.beginDraw(0, 0);
+mask.drawRect(0, 0, 200, 200);
+displayObject.mask = mask;
+</code></pre>
+            <p>被遮罩的显示对象显示在用作遮罩的显示对象的全部不透明区域内。如上例中，<code>displayObject</code>这个显示对象就只会显示一个200 × 200的矩形区域，超过该矩形区域的部分就不会显示出来了。</p>
+            <p>要取消遮罩的话只要把<code>mask</code>对象设置成<code>null</code>就可以了。要注意的是：</p>
+            <ol>
+              <li>不能使用一个遮罩对象来遮罩另一个遮罩对象。</li>
+              <li>单个遮罩对象不能用于多个执行调用的显示对象。在将遮罩对象分配给第二个显示对象时，会撤销第一个显示对象的遮罩，第一个显示对象的遮罩会被置为<code>null</code>。</li>
+              <li>只有填充可用于作为遮罩的显示对象中，笔触都会被忽略。</li>
+            </ol>
+            <p>在使用Flash创作工作制作Flash影片的时候，经常会有内容超出场景<code>Stage</code>的场景，例如做一些飞出飞入的动画。当我们需要加载这些影片的时候要注意加上遮罩，不然超出影片<code>Stage</code>大小的部分也会显示出来，这一般不是我们想要看到的。</p>
+            <p><a href="/posts/2014/01/20/as3-displayobject-mask.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中使用计时器</h2>
+            <p class="blog-post-meta">写于2014年01月15日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>如同在JavaScript中使用<code>setTimeout</code>和<code>setInterval</code>中使用计时器，在ActionScript中也能使用计时器达到同样的目的，例如定时、超时等功能。</p>
+            <p>虽然在ActionScript里面也有<code>setTimeout</code>和<code>setInterval</code>两个工具函数，但是ActionScript封装了一个工具类<code>Timer</code>，让我们能更灵活地使用定时器，以上两个工具函数也是<code>Timer</code>的一个封装。</p>
+            <p><code>Timer</code>类的构造函数接受两个参数：</p>
+            <ol>
+              <li><code>delay</code>，声明计时器事件间的延迟，以毫秒为单位。当指定的时间经过之后，<code>Timer</code>实例会触发事件，我们可以为这个事件注册事件处理程序在指定的时间延迟之后执行一段代码。建议这个值不要低于<code>20</code>毫秒，因为计时器的频率不得超过<code>60</code>帧每秒，而计时器事件执行的频率必须是帧率的整数倍，所以少于<code>16.6</code>毫秒的延迟可能会导致延迟不准确。</li>
+              <li><code>repeatCount</code>，可选，声明重复次数。默认是<code>0</code>，计时器会不断地重复执行，最长可以执行<code>int.MAX_VALUE + 1</code>（大概24天）。如果不为<code>0</code>,则计时器执行到指定的次数之后会自动停止。</li>
+            </ol>
+            <p>注意，与JavaScript中的计时器一样，指定的延迟会根据<code>swf</code>文件的帧速率或者其他因素，运行时调度事件的间隔可能会有偏差。例如某个<code>swf</code>文件以每秒<code>10</code>帧，也就是每帧间隔<code>100</code>毫秒的速度播放，但延迟设置为<code>80</code>毫秒，则将会在接近于<code>100</code>毫秒的间隔触发事件。大量耗费内从的脚本也可能使事件发生偏差。</p>
+            <p><code>Timer</code>类的实例还有以下几个属性：</p>
+            <ol>
+              <li><code>currentCount</code>，只读，当前触发的总次数。</li>
+              <li><code>delay</code>，计时器时间的延迟，单位是毫秒。</li>
+              <li><code>repeatCount</code>，计时器运行的总次数。</li>
+              <li><code>running</code>，只读，计时器的当前状态，如果正在运行则为<code>true</code>，否则为<code>false</code>。</li>
+            </ol>
+            <p><code>Timer</code>类的实例还有以下几个公共方法：</p>
+            <ol>
+              <li><code>reset</code>，如果计时器正在运行，则停止计时器，并且将<code>currentCount</code>设为<code>0</code>，类似于秒表的重置按钮。</li>
+              <li><code>start</code>，如果计时器还没启动，启动计时器。</li>
+            </ol>
+            <p><a href="/posts/2014/01/15/as3-timer.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li class="disabled"><a href="/index/-1.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li class="active"><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/1.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

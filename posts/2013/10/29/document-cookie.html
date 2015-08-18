@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>document.cookie</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">document.cookie</h2>
+            <p class="blog-post-meta">写于2013年10月29日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>什么是cookie？</p>
+            <blockquote>
+              <p>cookie 是存储于访问者的计算机中的变量。每当同一台计算机通过浏览器请求某个页面时，就会发送这个 cookie。你可以使用 JavaScript 来创建和取回 cookie 的值。</p>
+            </blockquote>
+            <p>对应的JavaScript API就是<code>document.cookie</code>。这是一个非常奇怪的属性，我们可以通过访问这个属性得到当前页面的所有cookie：</p> <pre><code>allCookies = document.cookie;
+</code></pre>
+            <p>返回的字符串是一系列的键值对，用<code>;</code>隔开，键值用<code>=</code>连接：</p> <pre><code>key1=value1;key2=value2
+</code></pre>
+            <p>我们需要使用一个正则表达式去把这个字符串转成JavaScript对象（摘自<a href="https://github.com/aralejs/cookie/blob/master/src/cookie.js">arale/cookie</a>）：</p> <pre><code>var cookieParts = document.cookie.split(/;\s/g);
+for (var i = 0, len = cookieParts.length; i &lt; len; i++) {
+  var cookieNameValue = cookieParts[i].match(/([^=]+)=/i);
+  if (cookieNameValue) {
+    var cookieName = decodeURIComponent(cookieNameValue[1]);
+    var cookieValue = decodeURIComponent(cookieParts[i]
+      .substring(cookieNameValue[1].length + 1));
+    result[cookieName] = cookieValue;
+  }
+}
+</code></pre>
+            <p>设置的话我们可以直接设置一个新的键值对，浏览器会自动判断是增加还是更新一个cookie的值：</p> <pre><code>document.cookie = &quot;key1=value1&quot;; // insert
+document.cookie = &quot;key1=value2&quot;; // update
+</code></pre>
+            <p>在设置cookie的时候可以在字符串后附加一些信息，例如：</p>
+            <ol>
+              <li><code>;path=path</code>，声明这个cookie的路径，默认是当前页面的路径。</li>
+              <li><code>;domain=domain</code>，声明这个cookie适用的域，默认是当前页面的域（<code>window.location.host</code>）。</li>
+              <li><code>;max-age=max-age-in-seconds</code>，声明cookie的最长有效时间。</li>
+              <li><code>;expires=date-in-GMTString-format</code>，声明cookie的过期时间，默认是在这个session失效之后失效，例如<code>;expires=Mon, 03 Jul 2006 21:44:38 GMT</code>。</li>
+              <li><code>secure</code>，声明这个cookie只有在安全的通道（例如<code>https</code>）才会被传输。</li>
+            </ol>
+            <p>由于cookie是使用以上的格式存储在一个字符串中，所以当cookie的值包含了<code>;</code>或者<code>=</code>的时候可能会扰乱整个解码过程，所以在设置的时候最好调用<code>encodeURIComponent</code>进行URL编码：</p> <pre><code>document.cookie = encodeURIComponent(key) + &quot;=&quot; + 
+  encodeURIComponent(value);
+</code></pre>
+            <p>最后要注意的是：</p>
+            <ol>
+              <li>现在有比cookie更好的客户端存储方案（<code>LocalStorage</code>等），如果这些信息不需要与服务端交互请尽量使用新的存储方案。</li>
+              <li>如果要删除一个cookie可以简单把过期时间设置为<code>0</code>。</li>
+              <li>由于cookie会随着请求发送到服务器，请时刻留意cookie的大小以免请求过大。</li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/28/jquery-callbacks-add.html" title="jQuery扫盲之Callbacks">上一篇</a></li>
+              <li><a href="/posts/2013/10/30/javascript-same-origin-policy.html" title="JavaScript同源策略">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

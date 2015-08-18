@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">DOM的innerHTML属性</h2>
+            <p class="blog-post-meta">写于2013年10月12日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p><code>innerHTML</code>可以访问一个DOM对象的子孙节点的HTML字符串，也可以设置该DOM元素内部的HTML字符串，浏览器会自动把这些字符串转成DOM结构并塞到该DOM元素内，例如：</p> <pre><code>var content = element.innerHTML;
+element.innerHTML = content;
+</code></pre>
+            <p>访问<code>innerHTML</code>属性的时候，该元素内部的文本节点如果有<code>&amp;</code>、<code>&lt;</code>或者<code>&gt;</code>，则会转成对应的XML实体，需要注意。</p>
+            <p><code>innerHTML</code>简化了DOM操作，多层嵌套的DOM结构如果用<code>document.createElement</code>等DOM API生成的话需要非常多的代码，而使用<code>innerHTML</code>则只需要编写一段HTML字符串即可，简单高效。</p>
+            <p><code>innerHTML</code>的作用有很多，可以清空一个元素内部的所有DOM节点：</p> <pre><code>element.innerHTML = &quot;&quot;;
+</code></pre>
+            <p>也可以查看页面的DOM结构：</p> <pre><code>javascript:&quot;&lt;pre&gt;&quot;+document.documentElement.innerHTML.replace(/&lt;/g,&quot;&amp;lt;&quot;) + &quot;&lt;/pre&gt;&quot;;
+</code></pre>
+            <p>注意哦，由于安全问题，通过<code>innerHTML</code>设置的<code>script</code>标签是不会被执行的哦。但是，还是可以通过某种手段执行一些代码：</p> <pre><code>var name = &quot;&lt;img src=x onerror=alert(1)&gt;&quot;;
+el.innerHTML = name; // shows the alert
+</code></pre>
+            <p><a href="/posts/2013/10/12/dom-innerhtml.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">一个断言：expect.js</h2>
+            <p class="blog-post-meta">写于2013年10月11日 关于<a href="/tags/前端">前端</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>讲了测试驱动和测试框架，最后再来讲一下断言。断言的风格其实有很多，而Mocha这个测试框架则允许我们使用自己喜欢的断言来写测试代码。今天简单了解一下其中一个断言：expect.js（我不会告诉你为什么选择这个断言是因为Arale也用了这个）。</p>
+            <p>expect.js是基于<code>should.js</code>的一个断言工具，比<code>should</code>要清爽一些。支持所有主流的浏览器和测试框架，并兼容Node的模块格式，所以在Node中可以这样使用expect.js：</p> <pre><code>require(&quot;path/to/expect.js&quot;);
+</code></pre>
+            <p>为了在浏览器也使用这个断言，SPM封装了其CMD的模块，使用以下命令就可以安装了：</p> <pre><code>spm install gallery/expect -d path/to/seajs-base-path
+</code></pre>
+            <p>因为昨天编写的测试用例也是一个CMD模块，所以在浏览器也可以使用expect.js来断言啦！</p>
+            <p>也可以通过<code>script</code>标签直接引入脚本文件来使用，不过这个时候<code>expect</code>就是一个全局变量了：</p> <pre><code>&lt;script src=&quot;expect.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+            <p>它的断言很有意思，符合英文语法，例如：</p> <pre><code>expect(1).to.be.ok();
+</code></pre>
+            <p>这个断言判断<code>expect</code>中的参数是否一个在JavaScript中代表<code>true</code>的变量，例如非0数字和非空字符串等。是不是跟写英文句子有点像？</p>
+            <p><a href="/posts/2013/10/11/assertion-expect-js.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用Mocha测试SeaJs模块</h2>
+            <p class="blog-post-meta">写于2013年10月10日 关于<a href="/tags/前端">前端</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天介绍了测试驱动，Karma的作用只是拉起浏览器，加载需要的脚本，例如测试框架、源码还有测试代码，执行加载的代码。测试代码怎么写，用什么测试框架，它是不关心的。今天继续昨天的单元测试问题，讨论的是使用Mocha这个单元测试框架去编写我们的测试用例。</p>
+            <p>由于是使用Karma拉起的，所以只使用Karma里面的Mocha适配器即可，即在Karma配置文件中配置<code>framework</code>：</p> <pre><code>`framework`: [&quot;mocha&quot;],
+</code></pre>
+            <p>然后参考昨天讨论过的结果，在测试入口文件调用：</p> <pre><code>mocha.run();
+</code></pre>
+            <p>即可拉起之前通过<code>seajs.use</code>加载的测试代码。</p>
+            <p>我们的测试代码也是以一个CMD模块加载进来的，所以测试代码看上去应该是这样的：</p> <pre><code>define(function (require) {
+  var expect = require(&quot;path/to/expect.js&quot;);
+  describe(&quot;Some subject&quot;, function () {
+    it(&quot;Some case&quot;, function () {
+      expect(true).to.be(true);
+    });
+  });
+});
+</code></pre>
+            <p><a href="/posts/2013/10/10/use-mocha-to-test-seajs-modules.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用Karma测试Seajs模块</h2>
+            <p class="blog-post-meta">写于2013年10月09日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/node">node</a>,<a href="/tags/前端">前端</a></p>
+            <p><a href="http://karma-runner.github.io/0.10/index.html">Karma</a>是一个使用Node作为平台的单元测试驱动。通过Karma，可以实现基于命令行的自动化测试，十分方便。而且Karma只是一个底层的测试驱动，帮助我们去启动浏览器、编写测试页面、加载源码以及测试套件等功能。在Karma之上，可以使用现在各种各样流行的单元测试框架，例如Jasmine、Mocha、QUnit等，在编写测试用例的时候可以根据自己的习惯灵活地选择需要的单元测试框架，赞！</p>
+            <p>首先需要安装Node。然后就可以通过npm安装Karma了：</p> <pre><code>npm install -g karma
+</code></pre>
+            <p>关键的是Karma的配置文件，可以通过以下命令，用交互式的方法生成一个Karma的配置文件：</p> <pre><code>karma init karma.conf.js
+</code></pre>
+            <p>只需要回答问题就可以生成配置了，主要是关于使用的测试框架、是否需要RequireJs的支持、需要启动哪些浏览器、引入或者排除的文件、是否需要监视文件变化进行自动测试等。</p>
+            <p>生成的配置文件有以下几个比较重要的配置：</p>
+            <ol>
+              <li><code>basePath</code>，所有文件路径都以这个路径为根路径。</li>
+              <li><code>frameworks</code>，使用的测试框架，可以是多个，例如<code>[&quot;mocha&quot;, &quot;jasmine&quot;]</code>。</li>
+              <li><code>files</code>，需要引入的文件数组，数组的元素可以是字符串，声明直接引入到runner.html里面；也可以是一个对象，其中<code>pattern</code>是文件路径，<code>included</code>声明是否需要引入到runner.html里面。</li>
+              <li><code>exclude</code>，需要排除的文件数组，内容格式跟<code>file</code>一致。</li>
+              <li><code>port</code>，测试服务器的端口号。</li>
+              <li><code>autoWatch</code>，是否自动监听文件变化进行测试。</li>
+              <li><code>browser</code>，需要启动的浏览器。</li>
+            </ol>
+            <p><a href="/posts/2013/10/09/use-karma-to-test-seajs-module.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用fontface</h2>
+            <p class="blog-post-meta">写于2013年10月08日 关于<a href="/tags/css">css</a></p>
+            <p>以前我们需要引入一些自定义字体的时候，都只能在本地使用Photoshop等绘图软件写好这些字之后，做成图片放到页面上去。现在，有了<code>@font-face</code>这个工具，终于可以像本地一样使用自定义的各种各样字体了！</p>
+            <p>首先看一下<code>@font-face</code>的语法：</p> <pre><code>@font-face {
+  font-family: &#39;Bigelow Rules&#39;;
+  font-style: normal;
+  font-weight: 400;
+  src: local(&#39;Bigelow Rules&#39;), 
+       local(&#39;BigelowRules-Regular&#39;), 
+       url(path/to/font.woff) format(&#39;woff&#39;);
+}
+</code></pre>
+            <ol>
+              <li><code>font-family</code>，声明这个字体的名称。</li>
+              <li><code>font-style</code>，声明这个字体的样式，可以是<code>normal</code>、<code>italic</code>或者是<code>oblique</code>。</li>
+              <li><code>font-weight</code>，声明这个字体的加粗度，可以是<code>normal</code>、<code>bold</code>、<code>bolder</code>、<code>lighter</code>或者是100、200到900之间的数字。</li>
+              <li><code>font-stretch</code>，声明这个字体是否横向的拉伸变形。</li>
+              <li><code>font-variant</code>，声明这个字体是否大写，可以是<code>normal</code>或者是<code>small-cap</code>。</li>
+              <li><code>src</code>，声明这个字体文件的路径，可以是本地路径<code>local</code>（字体文件从浏览器所在的机器上），或者是一个网络路径<code>url</code>。</li>
+            </ol>
+            <p>其中<code>src</code>要注意的是除了路径之外还有一个<code>format</code>配置，声明这个字体文件的格式。虽然主流的浏览器都支持<code>@font-face</code>，但是支持的字体文件格式是不一样的：</p>
+            <p><a href="/posts/2013/10/08/css-font-face.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 文本内容</h2>
+            <p class="blog-post-meta">写于2013年10月07日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>处理文本内容看起来要比处理DOM元素要简单得多，特别是浏览器已经提供了通用的API让我们去处理文本内容。但是，API的行为在不同的浏览器中也有一些小区别需要注意。</p>
+            <p>最常用的操作就是获取和设置DOM的文本内容。标准浏览器提供了一个<code>textContent</code>的属性，可以通过这个属性访问DOM对象中的文本内容，包括其子孙元素的文本内容，如：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/8hUR5/embedded/html,js,result/" allowfullscreen="allowfullscreen" frameborder="0">
+            </iframe>
+            <p>老版本的IE提供了另外一个属性<code>innerText</code>，跟标准的<code>textContent</code>的行为是一致的，Webkit核心的浏览器也支持<code>innerText</code>。</p>
+            <p>注意，当设置了<code>textContent</code>或者<code>innerText</code>之后，DOM对象里面的HTML结构也会被清除哦，只剩下设置的文本内容。这样会导致一些问题。</p>
+            <p>第一个问题就是内存泄漏。因为直接设置文本内容后，该DOM对象的子孙元素会被删除，但是这些元素上面可能会有绑定的事件处理程序等数据，这些数据占用的内容有可能不能释放。</p>
+            <p>还有一个问题就是各种浏览器对于空白的处理都不一致，这样导致直接使用浏览器提供的操作文本内容的属性不能产生一致的效果。</p>
+            <p>所以我们需要额外地编写一些代码以提供跨浏览器表现一致的API。</p>
+            <h3 id="-">设置文本内容</h3>
+            <hr>
+            <p>由于要避免子孙元素的事件处理程序等数据的内存泄漏，需要分成两个步骤去设置文本内容：</p>
+            <ol>
+              <li>删掉该元素所有子孙DOM对象，清除所有附加的数据。</li>
+            </ol>
+            <p><a href="/posts/2013/10/07/javascript-text-content.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 删除DOM</h2>
+            <p class="blog-post-meta">写于2013年10月06日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>要讨论的最后的操作就是删除了。DOM对象已经提供了<code>removeChild</code>，让我们能方便地删除元素。但是，在删除元素之前，还要做一些清理工作。通常分成两个步骤。</p>
+            <p>第一个步骤就是把该元素上绑定的事件处理程序都删除掉。这个步骤十分重要，因为在老的IE上如果只把DOM对象删除，而事件处理程序没有被正确删除，会发生循环引用，导致内存不能正确回收。所以jQuery才不直接把事件处理程序绑定到元素上，而是使用一个唯一的key关联DOM对象及其事件处理程序等附加数据。所以，使用jQuery绑定的事件处理程序的删除非常方便，只需要把对应key的所有事件处理程序一并删除即可。</p>
+            <p>第二个步骤就是把我们自定义在DOM上的特性删除掉。同上，在jQuery中，只要把该元素对应key值的所有数据都删除即可。</p>
+            <p>还需要注意的是，这两个步骤必须在该元素的所有子元素上都执行一遍才行。以下是jQuery的一段代码示例：</p> <pre><code>function remove() {
+  jQuery(&quot;*&quot;, this).add([this]).each(function () {  
+    jQuery.event.remove(this);                   
+    jQuery.removeData(this);                 
+  });
+  if (this.parentNode)               
+    this.parentNode.removeChild(this);
+}
+</code></pre>
+            <p>先取出元素中的所有子孙元素，然后加上该元素本身，执行以上两个步骤。最后调用<code>removeChild</code>去删除DOM对象。</p>
+            <p>在IE中，除非页面跳转或者刷新，单纯删除一个DOM对象，内存可能不会回收。这意味这那些单页面应用（通常在一个页面会停留很久），随着使用时间的增大，在IE中消耗的内存会比较多。</p>
+            <p>针对IE的内存占用，有一个解决方案，就是把<code>outerHTML</code>属性置成空字符串。这会触发IE进行垃圾回收，虽然内存也不会被完全回收，但是比单纯调用<code>removeChild</code>的效果要好：</p>
+            <p><a href="/posts/2013/10/06/javascript-remove-elements.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 复制DOM</h2>
+            <p class="blog-post-meta">写于2013年10月05日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>复制一个DOM对象，只需要直接调用其<code>cloneNode</code>方法即可。但是，现实永远是那么的骨感，古老版本的IE又有一些问题，为了支持它们，我们又要写出一些额外丑陋的代码去封装这些差异。</p>
+            <p>首先，它会把DOM对象的事件处理程序复制到新元素中，例如：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/KaY7s/embedded/js,html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>在Chrome等标准浏览器中，单击克隆出来的<code>div</code>是不会触发事件处理程序的。但是在IE6中，单击克隆出来的<code>div</code>则触发了事件处理程序。</p>
+            <p>避免这个问题的最简单的方法就是删除克隆元素的事件处理程序。悲剧的是，在IE上，如果删除了克隆元素的事件处理程序，连原来元素上面的处理程序也会被删除！（注，这是书中所写的，在IE6、7上测试是不会删除原来元素上的事件处理程序的。）</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/HRwHE/2/embedded/js,html,result/" allowfullscreen="allowfullscreen"
+            frameborder="0"> </iframe>
+            <p>最后的解决方案只能是，先调用<code>cloneNode</code>克隆出一个DOM对象，然后把它放入到一个容器中，再读出其<code>innerHTML</code>的值，最后把该值转成新的DOM对象。这个时候，IE又来了。有一些特性的值，例如书中提到的<code>name</code>，在<code>innerHTML</code>中是不正确的，哎！而且这个方案不能用于XML DOM，因为XML的DOM对象是没有<code>innerHTML</code>这个属性的。由于XML
+              DOM中极少存在事件处理程序这一事物，所以XML DOM的复制可以直接使用<code>cloneNode</code>即可。</p>
+            <p>所以，需要为上述的方案进行优化，先区分是XML DOM还是HTML DOM，为HTML DOM作特殊处理。当所有步骤都结束之后，我们还需要在克隆出来的DOM对象中为重新那些丢失了的特性重新赋值。</p>
+            <p>由于jQuery不是直接把事件处理程序绑定到元素中，所以它做了一个非常有意思的事情：</p> <pre><code>var clone = ret.find(&quot;*&quot;).andSelf().each(function () {
+  if (this[ expando ] !== undefined)
+    this[ expando ] = null;
+});
+</code></pre>
+            <p><a href="/posts/2013/10/05/javascript-clone-elements.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 执行内联脚本</h2>
+            <p class="blog-post-meta">写于2013年10月04日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>执行HTML字符串中的内联脚本也是一个非常常见的需求，特别是服务器返回的HTML字符串，其中包括一些有关于这段HTML字符串的行为，需要内联在这些HTML字符串中一并传到前端。执行这些内联的脚本大概可以分成两个步骤。</p>
+            <h3 id="-">收集内联脚本</h3>
+            <hr>
+            <p>无论是直接内联的脚本，还是外部引入的脚本，都是用<code>script</code>标签的形式引入到HTML中。所以，假设现在已经从HTML字符串中生成了一个DOM的集合<code>ret</code>，从该集合收集内联脚本可以分成以下几个步骤：</p>
+            <ol>
+              <li>a遍历这个集合。</li>
+              <li>a如果是<code>script</code>，而且<code>type=&quot;text/javascript&quot;</code>，则认为这个是内联脚本，放入到结果集中。</li>
+              <li>a如果是普通的DOM，则调用该DOM对象的<code>getElementsByTagName</code>就可以获取到这个对象中的<code>script</code>标签。</li>
+            </ol>
+            <p>当收集完所有内联的脚本之后，并且DOM已经被插入到文档中，就可以执行这些内联的脚本了。</p>
+            <h3 id="-">执行内联脚本</h3>
+            <hr>
+            <p>这些内联的脚本要在全局中执行，即所有在最外边定义的变量和方法都是全局的。这里使用动态插入<code>script</code>的方式来执行这些代码：</p> <pre><code>function globalEval(data) {
+  data = data.replace(/^\s+|\s+$/g, &quot;&quot;);
+  if (data) {
+    var head = document.getElementsByTagName(&quot;head&quot;)[0] ||
+</code></pre>
+            <p><a href="/posts/2013/10/04/javascript-inject-html-to-dom-3.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 插入DOM（二）</h2>
+            <p class="blog-post-meta">写于2013年10月03日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论如何把HTML字符串转成DOM，今天就要把生成的DOM插入到文档中去。这里使用DOM fragments去保证插入操作的最小化。DOM fragments可以作为容器存放多个DOM元素，而又不影响页面的显示。当操作完成之后再把fragments里面的DOM一把插入到文档中，这样浏览器就只需要渲染一次。如果不使用这种方式，每插入一个DOM都会渲染一次，这样效率比较低。</p>
+            <p>有些时候我们需要在文档中的多个位置插入生成的DOM，所以如果位置是大于一的时候，我们需要使用<code>cloneNode</code>，去复制fragments里面的内容，然后插入到多个位置中。</p>
+            <p>首先，在获取DOM的方法中加入第三个参数<code>fragments</code>，如果有这个参数就把生成的DOM塞到这个fragments里面：</p> <pre><code>if (fragment) {
+  while (div.firstChild) {
+    fragment.appendChild(div.firstChild);
+  }
+}
+</code></pre>
+            <p>这样，我们可以通过<code>fragments</code>的引用获得里面的DOM。然后插入的动作就变成在特定的位置插入这个<code>fragments</code>：</p> <pre><code>function insert(elems, args, callback) {
+  if (elems.length) {
+    var doc = elems[0].ownerDocument || elems[0],
+        fragment = doc.createDocumentFragment(),
+        scripts = getNodes(args, doc, fragment),
+        first = fragment.firstChild;
+    if (first) {
+      for (var i = 0; elems[i]; i++) {
+</code></pre>
+            <p><a href="/posts/2013/10/03/javascript-inject-html-to-dom-2.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/7.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li class="active"><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/9.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用HTML5的audio和video（一）</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用HTML5的audio和video（一）</h2>
+            <p class="blog-post-meta">写于2013年10月21日 关于<a href="/tags/html5">html5</a></p>
+            <p>HTML5提供了内建<code>audio</code>和<code>video</code>，使用它们可以简单地在我们的页面中插入一些媒体：</p> <pre><code>&lt;video src=&quot;http://v2v.cc/~j/theora_testsuite/320x240.ogg&quot; controls&gt;
+  Your browser does not support the &lt;code&gt;video&lt;/code&gt; element.
+&lt;/video&gt;
+</code></pre>
+            <p>以下是一个真实的例子：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/BzGex/embedded/html,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>以<code>video</code>为例：</p>
+            <ol>
+              <li><code>src</code>，声明这个媒体文件的路径，可以是一个URL或者是一个本地路径。</li>
+              <li><code>controls</code>，声明是否显示控件。</li>
+              <li><code>autoplay</code>，声明是否自动开始播放。</li>
+              <li><code>loop</code>，声明是否自动循环播放。</li>
+              <li><code>preload</code>，声明缓存的方式：
+                <ol>
+                  <li><code>none</code>表示不缓存文件。</li>
+                  <li><code>auto</code>表示缓存文件。</li>
+                  <li><code>metadata</code>表示只缓存文件的元数据。</li>
+                </ol>
+              </li>
+            </ol>
+            <p>其中<code>src</code>可以通过<code>sorce</code>子标签声明多个：</p> <pre><code>&lt;video controls&gt;
+  &lt;source src=&quot;foo.ogg&quot; type=&quot;video/ogg&quot;&gt;
+  &lt;source src=&quot;foo.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the &lt;code&gt;video&lt;/code&gt; element.
+&lt;/video&gt;
+</code></pre>
+            <p>这样浏览器就可以选择自己能播放的媒体进行播放。如果全部<code>srouce</code>都没法播放，则浏览器会抛出一个异常。如果没有显式声明<code>type</code>，则<code>type</code>由相应头中的<code>Content-Type</code>指定。</p>
+            <p>我们还可以通过<code>video</code>的DOM元素去控制媒体的播放：</p> <pre><code>var v = document.getElementsByTagName(&quot;video&quot;)[0];
+v.play();
+</code></pre>
+            <p>只能简单的控制播放（<code>play</code>）和暂停（<code>pause</code>），而声音的大小是通过设置<code>volumn</code>属性来实现。通过这些方法我们可以自定义控制器。</p>
+            <p>当我们暂停了媒体的播放，浏览器还是会一直下载这个媒体。我们可以通过以下的代码停止下载：</p> <pre><code>var mediaElement = document.getElementById(&quot;myMediaElementID&quot;);
+mediaElement.pause();
+mediaElement.src=&#39;&#39;;
+//or
+mediaElement.removeAttribute(&quot;src&quot;);
+</code></pre>
+            <p>就是把DOM的<code>src</code>特性置空或者删除掉即可。因为删除了<code>src</code>特性，就会销毁DOM内部的解码器，它也负责下载这个媒体文件，销毁它即可停止下载。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/20/javascript-xpath-css-selector.html" title="Secrets of the JavaScript Ninja 读书笔记之 使用XPath">上一篇</a></li>
+              <li><a href="/posts/2013/10/22/using-html5-audio-and-video-2.html" title="使用HTML5的audio和video（二）">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

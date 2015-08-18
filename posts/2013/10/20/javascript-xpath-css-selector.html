@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 使用XPath</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 使用XPath</h2>
+            <p class="blog-post-meta">写于2013年10月20日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>当浏览器不支持W3C标准的CSS选择器API，我们可以使用XPath作为替代的实现。XPath是一个用来在DOM文档中选择元素的一门语言，比CSS选择器功能更为强大。在大部分的现代浏览器中也实现了XPath，我们可以使用相关的API在HTML文档中去获取元素。可惜IE6以及之前的版本只支持在XML DOM中使用XPath（囧）。</p>
+            <p>其中一个使用XPath的原因是，当选择器比较复杂的时候XPath的效率要比纯JavaScript实现的选择器引擎高。相反的，当选择器比较简单（例如Id选择器或者是标签等）XPath的效率就比较低了。</p>
+            <p>浏览器实现了一个<code>evaluate</code>方法去使用XPath选择DOM元素，下面是书中的一个例子：</p> <pre><code>if (typeof document.evaluate === &quot;funtion&quot;) {
+  function getElementByXPath(expression, parentElement) {
+    var results = [];
+    var query = document.evaluate(expression,
+        parentElement || document,
+        null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    for (var i = 0, length = query.snapshotLength; i &lt;length; i++) {
+      results.push(query.snapshotItem(i));
+    }
+    return results;
+  }
+}
+</code></pre>
+            <p>但是如果直接使用XPath的表达式的话，对于用户来说是比较复杂的。我们可以把CSS选择器映射到特定的XPath表达式，用户就可以通过CSS选择器来使用我们提供的API了，例如：</p> <pre><code>$(&quot;#foo&quot;); // XPath: *[@id=&#39;foo&#39;]
+</code></pre>
+            <p>如果我们要支持IE6，那么还是要实现一个纯JavaScript的CSS选择器引擎，这时候引入XPath的效益就比较低了。第一，引入XPath之后选择器引擎的代码复杂度会提高；第二，由于日常使用的选择器一般不会太复杂，那么XPath带来的性能提升会比较少。所以在使用XPath的时候要考虑性能提升和代码复杂度提升的平衡。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/19/javascript-w3c-css-selector-api.html" title="Secrets of the JavaScript Ninja 读书笔记之 W3C CSS选择器API">上一篇</a></li>
+              <li><a href="/posts/2013/10/21/using-html5-audio-and-video-1.html" title="使用HTML5的audio和video（一）">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

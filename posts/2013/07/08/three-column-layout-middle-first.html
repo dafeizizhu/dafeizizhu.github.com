@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>经典三列布局之如何让中间的列先显示出来</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">经典三列布局之如何让中间的列先显示出来</h2>
+            <p class="blog-post-meta">写于2013年07月08日 关于<a href="/tags/html">html</a>,<a href="/tags/css">css</a></p>
+            <p>在某些并发访问非常高的页面，由于服务器压力过大，导致页面的内容要很久才能加载完。这个时候，我们应该尽可能把用户觉得重要的信息（大多数情况放在中栏）先显示出来。</p>
+            <p>首先是原始的HTML：</p> <pre><code>&lt;div id=&quot;container&quot;&gt;
+    &lt;div id=&quot;left&quot;&gt;This is left!&lt;/div&gt;
+    &lt;div id=&quot;middle&quot;&gt;This is middle!&lt;/div&gt;
+    &lt;div id=&quot;right&quot;&gt;This is right!&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>按照HTML解析顺序，上面的HTML片段应该是先显示left，再显示middle，最后显示right。</p>
+            <h3 id="-">第一步</h3>
+            <p>先调整HTML的顺序，让middle先行。</p> <pre><code>&lt;div id=&quot;container&quot;&gt;
+    &lt;div id=&quot;middle&quot;&gt;This is middle!&lt;/div&gt;
+    &lt;div id=&quot;left&quot;&gt;This is left!&lt;/div&gt;
+    &lt;div id=&quot;right&quot;&gt;This is right!&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <h3 id="-">第二步</h3>
+            <p>为<code>div</code>加上底色，比较好看（(╯‵□′)╯︵┻━┻）。然后设置每个栏的宽度，中间的自适应。</p> <pre><code>#left { width: 100px; background: red;}
+#right { width: 100px; background: blue;}
+#middle { width: 100%; background: green;}
+</code></pre>
+            <p>运行结果<a href="http://jsfiddle.net/zBXbp/5/">参考这里</a>。</p>
+            <h3 id="-">第三步</h3>
+            <p>让左栏弄到middle左边去。</p> <pre><code>#container { 
+    position: relative;
+    padding: 0 100px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#middle {
+    float: left;
+}
+
+#left {
+    position: relative;
+    left: -100px;
+    float: left;
+    margin-left: -100%;   
+}
+</code></pre>
+            <p>运行结果<a href="http://jsfiddle.net/zBXbp/6/">参考这里</a>。</p>
+            <h3 id="-">第四步</h3>
+            <p>让右栏弄到middle右边去。</p> <pre><code>#right {
+    float: left;
+    margin-right: -100%;
+}
+</code></pre>
+            <p>运行结果<a href="http://jsfiddle.net/zBXbp/7/">参考这里</a>。</p>
+            <p>由于时间的问题，这个问题的解决方案到这里就先暂告一段落（还有IE hack、header、footer、三栏高度统一等问题）。这里简单地描述了解决这个问题的思路，这个方案使用了HTML的负边距，在以后的博文里面会重点对负边距进行解析。</p>
+            <p>题外话：今天在我司跟了1年半的老大要惯例了，有点唏嘘，祝一路走好，前程似锦！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/07/window-location.html" title="window.location 浅析">上一篇</a></li>
+              <li><a href="/posts/2013/07/10/jquery-bind-live-on-delegate.html" title="简析jQuery几个绑定事件方法的优劣异同">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

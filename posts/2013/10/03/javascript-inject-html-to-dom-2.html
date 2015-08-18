@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 插入DOM（二）</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 插入DOM（二）</h2>
+            <p class="blog-post-meta">写于2013年10月03日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论如何把HTML字符串转成DOM，今天就要把生成的DOM插入到文档中去。这里使用DOM fragments去保证插入操作的最小化。DOM fragments可以作为容器存放多个DOM元素，而又不影响页面的显示。当操作完成之后再把fragments里面的DOM一把插入到文档中，这样浏览器就只需要渲染一次。如果不使用这种方式，每插入一个DOM都会渲染一次，这样效率比较低。</p>
+            <p>有些时候我们需要在文档中的多个位置插入生成的DOM，所以如果位置是大于一的时候，我们需要使用<code>cloneNode</code>，去复制fragments里面的内容，然后插入到多个位置中。</p>
+            <p>首先，在获取DOM的方法中加入第三个参数<code>fragments</code>，如果有这个参数就把生成的DOM塞到这个fragments里面：</p> <pre><code>if (fragment) {
+  while (div.firstChild) {
+    fragment.appendChild(div.firstChild);
+  }
+}
+</code></pre>
+            <p>这样，我们可以通过<code>fragments</code>的引用获得里面的DOM。然后插入的动作就变成在特定的位置插入这个<code>fragments</code>：</p> <pre><code>function insert(elems, args, callback) {
+  if (elems.length) {
+    var doc = elems[0].ownerDocument || elems[0],
+        fragment = doc.createDocumentFragment(),
+        scripts = getNodes(args, doc, fragment),
+        first = fragment.firstChild;
+    if (first) {
+      for (var i = 0; elems[i]; i++) {
+        callback.call(root(elems[i], first),
+            i &gt; 0 ? fragment.cloneNode(true) : fragment);
+      }
+    }
+  }
+}
+</code></pre>
+            <p>其中的<code>for</code>循环就是当位置大于一的时候需要复制多个<code>fragments</code>来插入到特定的位置中。</p>
+            <p>最后要注意的就是如果要把一些<code>tr</code>直接插入到<code>table</code>中，为了保持浏览器之间的一致性，我们需要手动加入一个<code>tbody</code>：</p> <pre><code>function root(elem, cur) {
+  return elem.nodeName.toLowerCase() === &quot;table&quot; &amp;&amp;
+    cur.nodeName.toLowerCase() === &quot;tr&quot; ?
+      (elem.getElementsByTagName(&quot;tbody&quot;)[0] ||
+         elem.appendChild(elem.ownerDocument.createElement(&quot;tbody&quot;))) :
+      elem;
+}
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/02/javascript-inject-html-to-dom.html" title="Secrets of the JavaScript Ninja 读书笔记之 插入DOM（一）">上一篇</a></li>
+              <li><a href="/posts/2013/10/04/javascript-inject-html-to-dom-3.html" title="Secrets of the JavaScript Ninja 读书笔记之 执行内联脚本">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

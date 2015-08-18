@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 获取层叠后的style</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 获取层叠后的style</h2>
+            <p class="blog-post-meta">写于2013年09月15日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论过，简单通过<code>elem.style</code>只能获取到内联在HTML标签的样式值，而不能获取到<code>style</code>标签的样式和<code>link</code>标签的外部样式表的样式。需要获取经过浏览器计算后的元素“真正的”样式，要调用浏览器特定的API。很遗憾，又是IE。</p>
+            <h3 id="-">标准</h3>
+            <hr>
+            <p>这里的标准浏览器是所有现代浏览器加上IE9及其以上的版本。标准的浏览器提供<code>window.getComputedStyle</code>这个API去获取经过层叠计算后的样式。这个方法接受一个参数，就是要计算样式的DOM元素。该方法返回一个接口，通过调用其上面的<code>getPropertyValue</code>去获取特定名称的CSS样式的值，如：</p> <pre><code>var computedStyle = window.getComputedStyle(elem);
+var fontSize = computedStyle.getPropertyValue(&quot;font-size&quot;);
+</code></pre>
+            <p>注意哦，<code>getPropertyValue</code>接受的是CSS样式真正的名字，不需要转化成驼峰大小写的形式。</p>
+            <h3 id="-ie">老IE</h3>
+            <hr>
+            <p>在IE9之前的版本，需要通过DOM上面的<code>currentStyle</code>来获取经过层叠后的样式。这个属性跟<code>style</code>属性的使用方式相同，唯一的区别就是前者可以获取到<code>style</code>标签或者外部样式表中的CSS样式的值。</p>
+            <p>由于是使用属性，<code>currentStyle</code>上的CSS样式的名字跟<code>style</code>一样，也要使用驼峰大小写的形式。</p>
+            <h3 id="-">坑</h3>
+            <hr>
+            <p>要注意的坑是例如<code>border</code>、<code>background</code>等复合的CSS样式。以<code>border</code>为例，以下这个CSS样式：</p> <pre><code>border: 1px solid black;
+</code></pre>
+            <p>其实包含了12个独立的CSS样式：</p> <pre><code>border-top-width: 1px;
+border-top-style: solid;
+border-top-color: black;
+border-right-width: 1px;
+...
+</code></pre>
+            <p>上下左右与边框的宽度、样式、颜色都是独立的CSS样式，而<code>border</code>只是它们的一个“shortcut”而已。所以，使用以上的API获取<code>border</code>样式，是获取不到我们需要的值的。这意味着我们需要使用最原子的CSS样式去获取边框的属性，例如：</p> <pre><code>computedStyle.getPropertyValue(&quot;border-top-width&quot;); // 1px
+computedStyle.getPropertyValue(&quot;border-top-style&quot;); // solid
+computedStyle.getPropertyValue(&quot;border-top-color&quot;); // rgb(255, 255, 255)
+</code></pre>
+            <p>虽然这比较麻烦，但是可以确保当边框的上下左右不一致的时候可以正确获取到我们需要获取的值。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/14/javascript-style-attribute-issue.html" title="Secrets of the JavaScript Ninja 读书笔记之 style的那些事">上一篇</a></li>
+              <li><a href="/posts/2013/09/16/javascript-document-fragment.html" title="Document Fragment">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

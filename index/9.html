@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 插入DOM（一）</h2>
+            <p class="blog-post-meta">写于2013年10月02日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>DOM的插入操作应该是最日常的行为了。我们会插入DOM来显示提示信息、把服务器返回的数据转成HTML字符串再插入到文档中显示出来等。一般来说，插入DOM可以按照以下几个步骤：</p>
+            <ol>
+              <li>把合法的HTML或者XML字符串转成DOM。</li>
+              <li>把生成的DOM插入到文档中。</li>
+              <li>执行字符串中内联的脚本。</li>
+            </ol>
+            <p>今天先来看步骤一，把字符串转成DOM。这里使用了DOM元素中的<code>innerHTML</code>属性。步骤是：</p>
+            <h3 id="-html-">确保传入的字符串是合法的HTML字符串</h3>
+            <hr>
+            <p>首先是要兼容XML的自关闭的标签。在HTML里面，也有一些自关闭的标签，例如<code>img</code>、<code>br</code>等。但是，像<code>div</code>这种标签如果写成自关闭的形式，HTML解析器没有办法解析。所以，我们要把传入字符串中的自关闭标签，而在HTML里面又不是自关闭的这些标签转一下形式，例如：</p> <pre><code>$(&quot;&lt;div /&gt;&quot;); // $(&quot;&lt;div&gt;&lt;/div&gt;&quot;);
+</code></pre>
+            <h3 id="-">根据浏览器的规则修改传入的字符串</h3>
+            <hr>
+            <p>有一些标签必须是某个标签的自标签，例如<code>option</code>一定要在<code>select</code>里面。如果发现传入字符串中的第一个标签有这些特殊的规则，则需要修改传入的HTML字符串，为其加上必须的父元素标签。下面是除了<code>option</code>之外有一些特殊父元素要求的标签：</p>
+            <ol>
+              <li><code>legend</code>必须在<code>fieldset</code>中。</li>
+              <li><code>thead</code>、<code>tbody</code>、<code>tfoot</code>、<code>colgroup</code>、<code>caption</code>必须在<code>table</code>中。</li>
+            </ol>
+            <p><a href="/posts/2013/10/02/javascript-inject-html-to-dom.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 document的ready事件</h2>
+            <p class="blog-post-meta">写于2013年10月01日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>在没有jQuery之前，我们为了保证代码运行时文档已经加载完全，使用<code>window.onload</code>来执行我们的代码。但是，这个事件有一个十分坑爹的地方：</p>
+            <blockquote>
+              <p>The load event fires at the end of the document loading process. At this point, all of the objects in the document are in the DOM, and all the images and sub-frames have finished loading.</p>
+            </blockquote>
+            <p>要所有图片等外部资源全部加载完成之后才会触发<code>window.onload</code>。其实我们是不需要等到外部资源加载完毕的，只要DOM树构造完全即可。所以，在jQuery之后，通常会这么写：</p> <pre><code>$(function () { ... });
+</code></pre>
+            <p>这种是<code>$(document).ready(function () { ... })</code>的缩写，其中使用的就是<code>document</code>的<code>DOMContentLoaded</code>事件。在DOM树构造完成，已经可以操作的时候这个事件就会触发。标准的浏览器已经支持直接使用<code>addEventListener</code>来绑定事件处理程序。但是，IE9之前的IE是不支持这个事件的，所以必须要编写一些代码在IE上模拟这个事件。</p>
+            <p>可以通过两个途径来模拟。第一个是比较腻害的，它会把页面滚动到最左方，如果抛出异常，则说明文档没有加载完成，然后继续滚动直到没有抛出异常为止，这个时刻就十分靠近标准中的<code>DOMContentLoaded</code>事件触发的时刻。</p>
+            <p>第二个是使用IE中特有的<code>onreadystatechange</code>，来近似模拟模拟标准的实现。当<code>document.readystate</code>为<code>complete</code>的时候说明文档已经准备好了。虽然这个时刻一般会比标准的要晚，可是一定早于<code>window.onload</code>，所以可以作为<code>doScroll</code>的一个备用方案。</p>
+            <p>写了一些测试代码，测试以上的几种方法的触发顺序：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/3ZHWX/4/embedded/js/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>可以看到标准浏览器是<code>DOMContentLoaded</code>先触发，等图片加载完成后<code>onload</code>才触发。在IE6上是<code>doScroll</code>最先触发，<code>onreadystatechange</code>为<code>complete</code>虽然比<code>onload</code>要早，但是也早不了多少，所以在IE6上应该是<code>doScroll</code>最接近<code>DOMContentLoaded</code>。</p>
+            <p><a href="/posts/2013/10/01/javascript-document-ready-event.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">简述YAML</h2>
+            <p class="blog-post-meta">写于2013年09月30日 关于<a href="/tags/前端">前端</a></p>
+            <p>这个博客是使用Jekyll在Github上搭建的。而Jekyll使用了YAML作为其配置文件的格式。什么是YAML？它跟XML和JSON有什么不同？今天来简单介绍一下。</p>
+            <p>YAML，有一个有意思的递归命名：</p> <pre><code>YAML isn&#39;t A Markup Language.
+</code></pre>
+            <p>这句话的意思是，YAML不是一个标记语言，它着重于数据而不是存储数据的格式。以下是Jekyll配置文件<code>_config.yml</code>的一个例子：</p> <pre><code>permalink: /:categories/:year/:month/:day/:title 
+exclude: [&quot;.rvmrc&quot;, &quot;.rbenv-version&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;changelog.md&quot;]
+pygments: true
+baseurl: 
+</code></pre>
+            <p>是不是非常简单，而且可读性非常强。跟XML和JSON一样，YAML也需要表示数组（Array）和对象（Object）两种形式。在YAML中的语法大概是这样的：</p>
+            <p>数组使用<code>-</code>去标识每一个元素，例如：</p> <pre><code>- Mark McGwire
+- Sammy Sosa
+- Ken Griffey
+</code></pre>
+            <p>对象使用<code>:</code>去划分键和值，例如：</p>
+            <p><a href="/posts/2013/09/30/about-yaml.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">一个用JavaScript写的分页器算法</h2>
+            <p class="blog-post-meta">写于2013年09月29日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天简单实现了一个分页器组件。感觉要用点脑子的是如何去显示页数十分大的分页器。记得以前有各种规范，规定一个分页器最多能显示多少个按钮，其他的用<code>...</code>来替代，例如：</p> <pre><code>1 ... 10 11 12 13 14 ... 100
+</code></pre>
+            <p>而且还要选中的在显示出来的按钮的中间（例如上例选中的应该是12）。</p>
+            <p>想了好久，写了这么一个算法：</p>
+            <ol>
+              <li>首先不考虑边界，先计算如果选中的按钮要出现在中间，开始和结束的索引是多少。</li>
+              <li>如果计算出来的索引不合法，例如小于零或者大于最大页数，则在保证显示页码个数的前提下重新计算索引。</li>
+              <li>最后计算出正确的开始和结束的索引，还要判断页码是否连续，是否需要加入<code>...</code>。</li>
+              <li>注意加上开始和结束的两个页码。</li>
+              <li>返回计算后的所有页码信息。</li>
+            </ol>
+            <p>这个算法接受三个参数：</p>
+            <ol>
+              <li><code>current</code>，当前页码，计算出来的页码尽可能将这个页码放到中间。</li>
+              <li><code>length</code>，页码的长度，总共有多少个页码。</li>
+              <li><code>displayLength</code>，要显示多少个页码，包括固定的第一个和最后一个。</li>
+            </ol>
+            <p>例子参考这里：</p>
+            <p><a href="/posts/2013/09/29/javascript-pagination.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 冒泡与代理</h2>
+            <p class="blog-post-meta">写于2013年09月28日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>通过事件冒泡机制，我们可以把特定元素上的事件处理程序代理到其祖先元素上面。这样不仅可以统一在祖先元素上处理事件绑定，还能实现动态插入的元素的“自动绑定事件”，例如<code>jQuery.fn.on</code>等。</p>
+            <h3 id="-">把事件代理到祖先元素</h3>
+            <hr>
+            <p>事件代理的其中一个比较有用的场景就是绑定子孙元素的事件处理程序。如果子孙元素的个数非常多，在每一个子孙元素上绑定会生成很多个一模一样的事件处理程序，浪费内存。如果把事件绑定到祖先元素上，根据<code>event.target</code>来判断是哪个子孙元素触发了这个事件，则只绑定了一个事件处理程序而逻辑也能保持一致，例如：</p> <pre><code>var table = document.getElementById(&quot;someTable&quot;);
+addEvent(table, &quot;click&quot;, function (event) {
+  if (event.target.tagName.toLowerCase() == &#39;td&#39;) {
+    event.target.style.backgroundColor = &#39;yellow&#39;;
+});
+</code></pre>
+            <p>浏览器的事件冒泡机制保证了以上的代码是可行的。所以要注意，代理只能代理到元素的祖先元素上，而且要保证事件能够顺利冒泡到该祖先元素。</p>
+            <h3 id="-">处理浏览器差异</h3>
+            <hr>
+            <p>有四个特殊的事件，<code>submit</code>、<code>change</code>、<code>focus</code>、<code>blur</code>，它们的事件冒的实现在不同的浏览器中有一些差异。简单来说，在W3规范中，<code>submit</code>和<code>change</code>是可以冒泡的，但是低版本的IE浏览器这两个事件是不能冒泡的；而<code>focus</code>和<code>blur</code>则都不支持冒泡，但是为了能实现事件代理，我们又需要它们能冒泡。</p>
+            <p><strong>检测是否支持特定事件冒泡</strong></p>
+            <p><a href="/posts/2013/09/28/javascript-bubbling-and-delegating.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">消除display: inline-block引起的元素之间的缝隙</h2>
+            <p class="blog-post-meta">写于2013年09月27日 关于<a href="/tags/css">css</a></p>
+            <p>记得以前在看bootstrap的例子的时候，发现它的按钮之间都是有空隙的。检查元素的样式，发现并没有任何<code>margin</code>被设置了，那为什么会出现空隙呢？</p>
+            <p>先来看看<code>display: inline-block</code>干了些什么。</p>
+            <blockquote>
+              <p>The element generates a block element box that will be flowed with surrounding content as if it were a single inline box (behaving much like a replaced element would).</p>
+            </blockquote>
+            <p>简单地说就是一个行级的块元素，即像行内元素一样排版，但又可以像块元素一样设置元素的大小。我们可以尝试用<code>inline-block</code>去模拟一个浮动的效果：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/embedded/result,html,css/" frameborder="0"> </iframe>
+            <p>惊讶地发现，元素之间竟然出现了缝隙！查看代码并没有任何<code>margin</code>被设置了，跟bootstrap中的情况一样。其实非常简单，就是元素被当成行内元素排版的时候，元素之间的空白符（空格、回车换行等）都会被浏览器处理，根据<code>white-space</code>的处理方式（默认是<code>normal</code>，合并多余空白），原来HTML代码中的回车换行被转成一个空白符，所以元素之间就出现了空隙。</p>
+            <p>有时候加入这些空隙是好事，例如并排显示多个按钮，按钮之间留有一定空隙是比较好看的。但是，有时候为了完美地实现设计搞，元素之间的空隙都要精确限制。由于这个空隙是一个空白符，占用的空间跟父元素的<code>font-size</code>有之间关系，所以这个空隙的大小是不可控的。这时候，要先消除这些空隙，再根据设计搞设置精确的<code>margin</code>。</p>
+            <p>上网查了一下，最有效的办法就是在父元素中设置<code>font-size: 0</code>，然后在子元素上重置正确的<code>font-size</code>：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/e6EQ9/1/embedded/result,html,css/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>又到了我们可爱的IE出场的时间了。很遗憾，虽然IE从5.5就开始支持<code>display: inline-block</code>，但是它的实现跟标准实现的表现是不一致的。我们需要以下的代码让IE的表现跟标准趋于一致：</p> <pre><code>display:inline-block; /* 现代浏览器 +IE6、7 inline 元素 */
+*display:inline; /* IE6、7 block 元素 */
+</code></pre>
+            <p><a href="/posts/2013/09/27/css-display-inline-block.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之Ajax常用方法</h2>
+            <p class="blog-post-meta">写于2013年09月26日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>由于<code>jQuery.ajax</code>参数配置太多，日常应该也用不到所有参数配置，所以jQuery声明了一些比较符合日常使用场景的方法，例如<code>jQuery.get</code>和<code>jQuery.post</code>等，让我们方便地发送Ajax请求。</p>
+            <h3 id="jquery-get">jQuery.get</h3>
+            <hr>
+            <blockquote>
+              <p>Load data from the server using a HTTP GET request.</p>
+            </blockquote>
+            <p>这个方法封装了使用GET方法发送Ajax请求，接受四个参数：</p>
+            <ol>
+              <li><code>url</code>，发送请求的URL。</li>
+              <li><code>data</code>，可选，发送的数据。由于使用的是GET方法，所以数据默认是使用<code>jQuery.params</code>序列化之后的字符串。</li>
+              <li><code>success</code>，可选，请求成功后的回调，跟<code>ajaxSetting</code>的一致。</li>
+              <li><code>dataType</code>，可选，指定返回数据的数据类型。</li>
+            </ol>
+            <p>由于没有设置<code>ajaxSetting.error</code>，请求失败的时候只能通过Promise接口或者<code>jQuery.document.ajaxError</code>来处理错误。</p>
+            <p>这个方法等同于：</p> <pre><code>$.ajax({
+  url: url,
+  data: data,
+  success: success,
+</code></pre>
+            <p><a href="/posts/2013/09/26/jquery-ajax-short-cut.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之ajaxSetup和ajaxTransport</h2>
+            <p class="blog-post-meta">写于2013年09月25日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>Ajax系列的最后一篇文档翻译。今天讨论的是Ajax的全局配置<code>jQuery.ajaxSetup</code>和配置真正传输对象<code>jQuery.ajaxTransport</code>。</p>
+            <h3 id="jquery-ajaxsetup">jQuery.ajaxSetup</h3>
+            <hr>
+            <blockquote>
+              <p>Set default values for future Ajax requests. Its use is not recommended.</p>
+            </blockquote>
+            <p>这个方法十分简单，就是配置Ajax默认的参数。这个方法接受一个参数，跟<code>jQuery.ajax</code>的配置参数一模一样。调用<code>jQuery.ajax</code>的时候，会合并传入的参数和默认的参数，传入的参数优先级较高。其他所有的快捷方式，例如<code>jQuery.get</code>，都会使用这些默认的参数。</p>
+            <p>jQuery文档强烈建议我们不要使用这个方法配置默认参数，以防发生难以预料的错误，例如改变了一个快捷方式的默认行为。</p>
+            <h3 id="jquery-ajaxtransport">jQuery.ajaxTransport</h3>
+            <hr>
+            <blockquote>
+              <p>Creates an object that handles the actual transmission of Ajax data.</p>
+            </blockquote>
+            <p>这个方法比较有趣，可以更改Ajax数据真正的传输方式。我们知道，默认的Ajax是使用XMLHttpRequest去把数据发送到服务器。jQuery提供了这个方法，供我们改变数据传输的方式。</p>
+            <p>这个方法接受两个参数：</p>
+            <ol>
+              <li><code>dataType</code>，声明该传输对象只对特定的数据类型生效。</li>
+              <li><code>handler</code>，一个回调函数，接受三个参数，与<code>jQuery.ajaxPrefilter</code>一致。该回调函数返回的对象就是作为数据的传输对象。</li>
+            </ol>
+            <p><a href="/posts/2013/09/25/jquery-ajax-setup-ajax-transport.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">再谈for-in循环的顺序</h2>
+            <p class="blog-post-meta">写于2013年09月24日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天终于重现了两年前出现过的<code>for...in</code>循环的顺序问题，多谢永胜哥给出的例子。原来是当键值是整数的时候，使用<code>for...in</code>循环去遍历一个对象，不同浏览器的顺序是不一样的。</p>
+            <p>ECMA-262标准中有这么一句说明：</p>
+            <blockquote>
+              <p>The mechanics and order of enumerating the properties (step 6.a in the first algorithm, step 7.a in the second) is not specified.</p>
+            </blockquote>
+            <p>关于<code>for...in</code>的具体顺序在最新的标准中是没有说明的。这也意味着每一个浏览器都可以有其特定的实现。之前的文章也强调过，<strong>不要依赖<code>for...in</code>遍历一个对象的顺序</strong>。为了彻底搞清楚不同浏览器的实现，蛋疼的我写了个测试，代码<a href="http://jsfiddle.net/k5DBh/18/">参考这里</a>。</p>
+            <p>比较有规律的IE6的实现，全部都跟定义时的顺序一致。IE7、8、9跟Chrome的最新版本的实现是一样的：</p>
+            <ol>
+              <li>a把key中是整数的先抽取出来。注意一定要是整数，像<code>3a</code>、<code>1.1</code>等不在范围之内哦。</li>
+              <li>a抽取出来的按数字大小正序排列，放到最前面。</li>
+              <li>a其他key则按照定义的顺序放到整数key的后面。</li>
+            </ol>
+            <p>有趣的是最新版本的FireFox。当数字比较小的时候，跟Chrome的实现是一致的。当数字比较大的时候，跟IE6的表现是一致的。为了揭示问题的真相，我又蛋疼地写了一段代码，去测试FireFox的边界值，<a href="http://jsfiddle.net/9pYL4/4/">参考这里</a>。</p>
+            <p>得出的结论是FireFox把超过1000的数字排除在优先范围之外。所以当key值小于1000的时候是跟Chrome的行为一致，大于的时候跟IE6的行为一致。</p>
+            <p><a href="/posts/2013/09/24/javascript-for-in-order.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.ajaxPrefilter</h2>
+            <p class="blog-post-meta">写于2013年09月23日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>除了<code>jQuery.ajax</code>这个比较底层的接口之外，jQuery还提供了其他的接口供我们去控制Ajax的行为。今天就先讨论一下<code>jQuery.ajaxPrefilter</code>。</p>
+            <blockquote>
+              <p>Handle custom Ajax options or modify existing options before each request is sent and before they are processed by $.ajax().</p>
+            </blockquote>
+            <p>在请求被<code>jQuery.ajax</code>处理之前，可以通过这个接口去干涉每一个请求的配置。这个方法接受两个参数：</p>
+            <ol>
+              <li><code>dataType</code>，可选的，如果提供则需要请求配置中的<code>dataType</code>是否匹配这个参数指定的值。</li>
+              <li><code>handler</code>，在<code>jQuery.ajax</code>处理之前经过的过滤器，接受三个参数：
+                <ol>
+                  <li><code>options</code>，Ajax请求的配置。</li>
+                  <li><code>originalOptions</code>，调用<code>jQuery.ajax</code>时传入的配置。这个配置是没有<code>ajaxSetting</code>中的默认配置的。</li>
+                  <li><code>jqXHR</code>，这个请求的jqXHR对象。</li>
+                </ol>
+              </li>
+            </ol>
+            <p>通过这个方法，可以做一些有趣的东西，例如jQuery文档中的这个例子：</p> <pre><code>var currentRequests = {};
+
+$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+  if ( options.abortOnRetry ) {
+    if ( currentRequests[ options.url ] ) {
+      currentRequests[ options.url ].abort();
+    }
+    currentRequests[ options.url ] = jqXHR;
+</code></pre>
+            <p><a href="/posts/2013/09/23/jquery-ajax-prefilter.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/8.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li class="active"><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/10.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

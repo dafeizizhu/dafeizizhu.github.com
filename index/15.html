@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">三种原生JavaScript绑定事件方式对比</h2>
+            <p class="blog-post-meta">写于2013年08月02日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天又被问到三种原生JavaScript绑定事件的方式有什么不一样。感觉自己答不全啊，惭愧。晚上立马来恶补一下它们究竟有什么区别。下文主要从执行上下文（<code>this</code>）、返回值等几个方面说明三者的区别。</p>
+            <h3 id="html-onclick-">HTML标签上面的<code>onclick</code>特性</h3>
+            <p>曾经有那么一个时候，以下这种事件绑定的方式使用频率最高：</p> <pre><code>&lt;input type=&quot;button&quot; value=&quot;Click me!&quot; onclick=&quot;alert(&#39;Hello World&#39;);&quot; /&gt;
+</code></pre>
+            <p>当单击按钮的时候会弹出一个消息框。先来看看这个事件处理程序的特点：</p>
+            <ol>
+              <li>执行上下文是DOM元素。而MDN上面说的是<code>window</code>对象。</li>
+              <li>当返回值是<code>false</code>的时候阻止默认行为，但不阻止事件传播。</li>
+              <li>事件的传播只能是冒泡的。</li>
+            </ol>
+            <p>对于第一点MDN说的情况我猜是这样的，假如有以下代码：</p> <pre><code>&lt;input type=&quot;button&quot; value=&quot;Click me!&quot; onclick=&quot;doSomething();&quot; /&gt;
+</code></pre>
+            <p>JavaScript：</p> <pre><code>function doSomething() { alert(this === window); } // true
+</code></pre>
+            <p><a href="/posts/2013/08/02/javascript-bind-event-handler.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">JavaScript typeof操作符</h2>
+            <p class="blog-post-meta">写于2013年08月01日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讨论<code>instanceof</code>运算符，其中有一个比较坑的限制是，当使用iframe的时候可能会有意想不到的场景：</p> <pre><code>var a = [];
+alert(a instanceof top.Array); // 当这段代码出现在iframe里面的时候是false
+</code></pre>
+            <p>原因很简单，就是<code>window.Array</code>跟<code>top.Array</code>是两个不同的对象。虽然我们写代码的时候不会像上面那样显式地引用<code>top.Array</code>，但是在iframe集成的场景下我们可能会这么调用：</p> <pre><code>if (isArray(a)) { ... }
+</code></pre>
+            <p>而<code>isArray</code>可能会这么写：</p> <pre><code>function isArray(a) { return top.isArray(a); }
+</code></pre>
+            <p>这样就会出现上述的坑爹问题。今天来讨论另外一个检测JavaScript变量的运算符<code>typeof</code>，看它是否能解决以上这个坑爹的问题。</p>
+            <blockquote>
+              <p>typeof操作符返回一个字符串，代表一个未估值的操作数(unevaluated operand)的类型。</p>
+            </blockquote>
+            <p><code>typeof</code>接受一个操作数和一对可选的括号，返回表示该操作数的类型的字符串，操作数可以是字符串、对象、数字甚至是未定义的变量等。</p>
+            <p><code>typeof</code>运算符能返回以下表示操作数类型的字符串：</p>
+            <ol>
+              <li><code>undefined</code>，操作数是未定义的变量或者属性，例如<code>undefined</code>，或者<code>var a = {}; alert(typeof a.foo);</code>。</li>
+            </ol>
+            <p><a href="/posts/2013/08/01/javascript-typeof.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">JavaScript instanceof操作符</h2>
+            <p class="blog-post-meta">写于2013年07月31日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>JavaScript中的<code>instanceof</code>操作符通常是用来判断一个对象是否具体“类型”的“实例”，比较常见的用法是：</p> <pre><code>if (obj instanceof Array) { ... }
+</code></pre>
+            <p>大家有没有想过这个<code>instanceof</code>操作符是怎么判断一个对象是否一个“类型”的实例呢？</p>
+            <blockquote>
+              <p>instanceof运算符可以用来判断某个构造函数的prototype属性是否存在另外一个要检测对象的原型链上。</p>
+            </blockquote>
+            <p>通常来说，一个<code>obj instanceof c</code>中，会比较<code>obj</code>的<code>__proto__</code>是否存在于<code>c</code>的原型链上。在<a href="http://www.ibm.com/developerworks/cn/web/1306_jiangjj_jsinstanceof/">JavaScript instanceof 运算符深入剖析</a>中有一段JavaScript代码模拟了<code>instanceof</code>的执行过程：</p>
+            <pre><code>function instance_of(L, R) {//L 表示左表达式，R 表示右表达式
+  var O = R.prototype;// 取 R 的显示原型
+  L = L.__proto__;// 取 L 的隐式原型
+  while (true) { 
+    if (L === null) 
+      return false; 
+    if (O === L)// 这里重点：当 O 严格等于 L 时，返回 true 
+      return true; 
+    L = L.__proto__; 
+  } 
+} 
+</code></pre>
+            <p><a href="/posts/2013/07/31/javascript-instanceof.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">beforeunload事件</h2>
+            <p class="blog-post-meta">写于2013年07月30日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>去jsFiddle写代码片段的时候，如果没保存又去关闭浏览器的话，会弹出一个浏览器自带的消息框，提示是否要离开这个编辑中的页面。这种类似的功能使用的就是<code>beforeunload</code>这个事件。</p>
+            <blockquote>
+              <p>The beforeunload event is fired when the window, the document and its resources are about to be unloaded.</p>
+            </blockquote>
+            <p>这个事件在页面即将被unload的时候触发，并可以通过返回值告诉浏览器是否要弹出消息框。如果返回非空字符串，则浏览器会弹出消息框，并显示返回的字符串；否则这个事件的处理程序会静默地执行。</p>
+            <p>注意，这个事件不能让浏览器跳转到某个URL，例如以下的代码是无效的，例子<a href="http://jsfiddle.net/wpMpa/5/show/">参考这里</a>：</p> <pre><code>$(window).on(&quot;beforeunload&quot;, function () {
+  window.location.href = &quot;http://some.other.site&quot;; // 这句代码没有任何作用
+  return &quot;Are you sure to leave?&quot;;
+});
+</code></pre>
+            <p>还有一个值得注意的地方是，FireFox、IE跟Safari、Chrome对显示信息的处理方式也不一样。前者是通过事件对象的<code>returnValue</code>属性去控制显示信息，而后者则是通过<code>return</code>返回的字符串控制显示信息。以下是一个兼容多个浏览器的写法：</p> <pre><code>window.addEventListener(&quot;beforeunload&quot;, function (e) {
+  var confirmationMessage = &quot;\o/&quot;;
+  (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
+  return confirmationMessage;                                //Webkit, Safari, Chrome etc.
+});
+</code></pre>
+            <p>这个事件的效果不能通过弹出自定义的对话框（例如jQuery UI中的dialog）来模拟同样的效果哦。如果不需要弹出确认框，又需要在页面卸载的时候处理一些逻辑，例如垃圾回收之类的操作，那最好还是绑定<code>unload</code>事件。以后也会继续讨论<code>unload</code>事件的用法。</p>
+            <p><a href="/posts/2013/07/30/beforeunload-event.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML LINK 标签</h2>
+            <p class="blog-post-meta">写于2013年07月29日 关于<a href="/tags/html">html</a></p>
+            <p>我们平常用的最多的<code>link</code>标签就是引入外部的样式文件。大家有没有想过其实<code>link</code>还有别的作用。今天就来看看<code>link</code>究竟还能做些什么东西。</p>
+            <blockquote>
+              <p>The HTML link Element specifies relationships between the current document and other documents. </p>
+            </blockquote>
+            <p>以上是MDN对<code>link</code>标签的解释。其实<code>link</code>标签就是声明文档与文档之间的关系，例如HTML与外部样式文件之间的关系就是<code>stylesheet</code>的关系。这个标签的属性有：</p>
+            <ol>
+              <li><code>charset</code>，声明被链接的文件使用的字符编码。<strong>注意，这个属性在HTML5中已经被HTML文档中的<code>Content-Type</code>头取代。</strong></li>
+              <li><code>href</code>，声明被链接的文档的URI。</li>
+              <li><code>hreflang</code>，声明被链接的文档的语言，在<code>href</code>的值不为空的时候才有效。</li>
+              <li><code>type</code>，声明这个链接的MIME类型。例如平常使用的外部样式表就是<code>text/css</code>。</li>
+              <li><code>rel</code>，声明被链接文档与该文档的关系。如<code>stylesheet</code>，更多的关系请留意下文。</li>
+              <li><code>rev</code>，声明该文档与被链接文档的关系。</li>
+              <li><code>media</code>，声明目标样式与设备的关系。响应式设计中的<code>media query</code>就是基于这个属性来进行媒体查询的。关于媒体查询会在以后的博客中作介绍。</li>
+            </ol>
+            <p>还有几个不是标准的属性，<strong>不是每个浏览器都支持哦</strong>：</p>
+            <ol>
+              <li><code>disabled</code>，声明链接是否可用，例如可以通过设置值为<code>false</code>禁用某个外部样式表。</li>
+              <li><code>target</code>，声明在哪里加载这个外部文档，如<code>a</code>的<code>target</code>属性的取值。</li>
+            </ol>
+            <p>还有几个HTML5专用的属性：</p>
+            <ol>
+              <li><code>crossorigin</code>，声明这个<code>link</code>标签是否需要使用跨域请求（CROS）来获取。取值范围是<code>anonymous</code>（匿名访问）或者<code>use-credentials</code>（需要认证）。如果没有设置这个属性，则会以一般的请求来获取外部文档。</li>
+            </ol>
+            <p><a href="/posts/2013/07/29/html-link-tag.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 闭包（三）</h2>
+            <p class="blog-post-meta">写于2013年07月28日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>这次读书笔记的最后一篇。今天主要分享即时执行函数的作用。我们知道，在JavaScript中是没有块作用域的（例如<code>if</code>里面的块），唯一产生作用域的就是函数。常见的制造私有作用域的方法如以下代码所示：</p> <pre><code>(function () {...})();
+</code></pre>
+            <p>书中强调了两个括号有不同的作用。第一组括号其实是声明了运算的优先级，而第二组括号却是一个运算符，用来执行第一组括号中的匿名函数。比较有趣的用法是：</p> <pre><code>document.addEventListener(&quot;click&quot;, (function(){
+  var numClicks = 0;  
+  return function(){
+    alert( ++numClicks );
+  };
+})(), false);
+</code></pre>
+            <p>这里使用了闭包，为事件处理程序增加了一个<code>numClicks</code>的状态。这种写法适用于这个状态只是在这个事件处理程序中使用，可以减少外围作用域中的变量，也可以使代码更加简洁，层次更加清晰。</p>
+            <p>通过给即时执行函数传入参数，可以解决一些重名冲突的问题。例如在即时执行函数中使用<code>$</code>来使用jQuery，而在外部则可以让<code>$</code>指向另外的变量（例如Prototype框架的<code>$</code>）：</p> <pre><code>(function ($, undefined) {...})(jQuery, undefined);
+</code></pre>
+            <p>这种方式也可以解决一些长变量名或者引用层次深的变量的引用问题，也可以帮助JavaScript代码压缩的时候提高压缩比，例如把<code>undefined</code>压缩成<code>a</code>等。</p>
+            <p>书中也讲到了一个循环与闭包的常见问题，例如给一系列的DOM元素绑定事件处理程序（不使用jQuery）。通常我们使用<code>for</code>循环来绑定事件，要注意以下代码：</p>
+            <p><a href="/posts/2013/07/28/closure-usage-3.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 闭包（二）</h2>
+            <p class="blog-post-meta">写于2013年07月27日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天接着分享JavaScript闭包的作用。</p>
+            <h3 id="memorize">Memorize</h3>
+            <p>在一些需要频繁调用执行效率又比较低的方法可以使用Memorize这个方法，记录每次调用后的结果，下次传入相同的参数就可以直接返回缓存的结果，不需要重新再次执行其逻辑，提高执行效率。书中实现这个Memorize的代码如下：</p> <pre><code>Function.prototype.memoized = function(key){
+  this._values = this._values || {};
+  return this._values[key] !== undefined ?
+    this._values[key] :
+    this._values[key] = this.apply(this, arguments);
+  };
+Function.prototype.memoize = function(){
+  var fn = this;                        
+  return function(){                           
+    return fn.memoized.apply( fn, arguments );
+  };
+};
+</code></pre>
+            <p>在<code>memoize</code>这个方法里面，使用闭包记录原始方法，在返回的新方法中让原来的方法附加上Memorize的特性。这样封装了Memorize的具体实现，而且使用起来非常方便，甚至可以为一个匿名方法添加Memorize的功能，如：</p> <pre><code>var func = (function (n) { ... }).memoize();
+</code></pre>
+            <p><a href="/posts/2013/07/27/closure-usage-2.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 闭包（一）</h2>
+            <p class="blog-post-meta">写于2013年07月26日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>又到读书笔记的时候了！闭包，是JavaScript的重要特性之一，这里不聊什么是闭包，这篇文章主要关注闭包的作用。</p>
+            <h3 id="-">绑定函数的执行上下文</h3>
+            <p>我们知道，为一个DOM元素绑定事件，无论使用原生的<code>addEventListener</code>或者jQuery的<code>on</code>，事件处理程序里面的上下文<code>this</code>都是DOM元素本身。如果把一个对象的方法作为事件处理程序绑定到DOM元素的某个事件上，而这个方法又使用了<code>this</code>引用这个对象的其他方法，这样触发事件执行处理程序的时候必然会出错。所以我们需要手动把事件处理程序的执行上下文<code>this</code>改变成这个对象本身，如：</p>
+            <pre><code>if (!Function.prototype.bind) {
+  Function.prototype.bind = function (context){
+    var fn = this;
+    return function(){                                
+      return fn.apply(context,arguments);  
+    };                                                
+  }
+｝
+</code></pre>
+            <p>这里我作了一些小改动，在JavaScript 1.8.5中，<code>bind</code>已经是<code>Function</code>原型的方法了。通过闭包把原来的方法记录下来，在返回的匿名函数中调用原来方法的<code>apply</code>改变执行上下文<code>this</code>指向的对象，这样就可以手动地改变事件处理程序中的<code>this</code>。</p>
+            <p>我个人更偏好于使用jQuery的<code>proxy</code>方法来做这个事情，如：</p> <pre><code>$(&quot;#id&quot;).on(&quot;click&quot;, $.proxy(obj.func, obj));
+</code></pre>
+            <p>保持对象（或者“类”的“实例”）方法中<code>this</code>的指向永远是该对象本身，对于面向对象的JavaScript来说我认为是十分必要的，可以增加一个“类”中代码的可读性与可维护性。</p>
+            <p><a href="/posts/2013/07/26/closure-usage.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTTP协议之HTTP方法</h2>
+            <p class="blog-post-meta">写于2013年07月25日 关于<a href="/tags/http">http</a></p>
+            <p>今天看阿雄写代码，封装与服务器交互的相关工具方法。各种<code>get</code>、<code>post</code>、<code>put</code>、<code>del</code>的方法，对应各种HTTP方法。<code>get</code>和<code>post</code>不用说，看到<code>put</code>和<code>delete</code>的时候，阿雄说这两个方法的参数都不是放在请求体里面。奇怪了，按照常理来说对服务有影响的操作都应该把参数放到请求体里面啊（类似<code>post</code>），难道不是这样的？</p>
+            <p>看W3的规范里面，HTTP协议能使用的方法大概有以下几种：</p>
+            <ol>
+              <li><code>OPTIONS</code>，列出当前服务器支持哪些HTTP方法（几乎没有人用这个HTTP方法，不过可以利用这个方法做自文档的Restful服务的查询方法，<a href="http://zacstewart.com/2012/04/14/http-options-method.html">参考这里</a>）。</li>
+              <li><code>GET</code>，最常用的HTTP方法之一，从服务器获取URI指定的资源。资源会放到响应体里面返回。<code>GET</code>方法获取数据应该是有缓存机制的，通过<code>If-Modified-Since</code>等HTTP头可以声明当前这个URI对应的信息是否发生变化，如果没有变化则可以使用之前的缓存信息，这样可以减少不必要的网络数据传输。当请求含有<code>Range</code>头的时候，这次<code>GET</code>请求所返回的信息是部分的，当分块下载的时候会用到。<strong>注意，<code>GET</code>请求的参数都是作为查询串放到URL后面，所以当请求参数含有敏感数据的时候千万不要用<code>GET</code>。</strong></li>
+              <li><code>HEAD</code>，与<code>GET</code>类似，只是返回的响应体的内容是空的，只包含响应头。这个方法常用作校验有效性、校验权限以及查看信息是否被修改。</li>
+              <li><code>POST</code>，往URI指定的路径新增一个资源。<code>POST</code>的参数是放在请求体里面的，一般这个参数就是声明了一个新的资源，例如文件夹里面的一个新文件、邮件列表里面的一个新邮箱或者数据表中的一条新的记录。与我们日常使用的场景不同，如果服务器没有增加新的资源，或者这个请求体是空的，应该返回状态码200或者204；如果服务器正确增加了一个新的资源，应该返回一个201表示资源已经被创建。而我们日常一般就是用200表示服务器已经正确处理请求而已。一般<code>POST</code>是不会缓存的，除非设置了<code>Cache-Control</code>或者<code>Expires</code>头。</li>
+              <li><code>PUT</code>，分两种情况。如果URI指定的资源不存在，则当<code>POST</code>处理，往服务器新增一个指定的资源；如果存在，则修改现有的资源，修改成功返回状态码200或者204，修改失败则按照失败的具体原因返回5XX等状态码。</li>
+              <li><code>DELETE</code>，删除URI指定的资源。</li>
+              <li><code>TRACE</code>，对可能经过代理服务器传送到服务器上去的报文进行追踪。</li>
+              <li><code>CONNECT</code>，一个保留的方法，指定代理改变发送请求时使用的协议，例如从HTTP到HTTPS。</li>
+            </ol>
+            <p>下面使用<code>jQuery.ajax</code>方法来看看真实场景下HTTP方法是如何运用的。例子<a href="http://jsfiddle.net/4Y8t2/2/show/">参考这里</a>。</p>
+            <p>例子非常简单，就是使用不同的HTTP方法往服务器发送HTTP请求。可以看到<code>GET</code>和<code>HEAD</code>的参数是放到查询串（search）上面的。其他方法一律是放到请求体里面。这个例子里面的<code>POST</code>、<code>PUT</code>和<code>DELETE</code>都被服务器拒绝了，返回状态码403（Forbidden）。</p>
+            <p>有趣的是，同样一段代码，在IE9上面返回的结果跟Chrome上不一样。主要表现在<code>TRACE</code>和<code>CONNECT</code>上。IE9上的<code>TRACE</code>输出“参数无效”，<code>CONNECT</code>是403；而Chrome则都是输出一个“DOM Exception 18”，这个往后可以研究一下<code>jQuery.ajax</code>的具体实现才能看出什么端倪来。</p>
+            <p><a href="/posts/2013/07/25/http-method.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">换行还是不换行之word-break</h2>
+            <p class="blog-post-meta">写于2013年07月24日 关于<a href="/tags/css">css</a></p>
+            <p>再继续前两天的问题，今天介绍另一个影响单词断行的CSS样式<code>word-break</code>。</p>
+            <blockquote>
+              <p>The word-break property specifies line breaking rules for non-CJK scripts.</p>
+            </blockquote>
+            <p><code>word-break</code>声明了非CJK单词的断行规则，其中也有属性值是跟CJK单词有关系。这个样式的可选取值有以下几个：</p>
+            <ol>
+              <li><code>normal</code>，默认值，单词根据其默认的规则进行断行。</li>
+              <li><code>break-all</code>，非CJK单词会在一个单词之间断行以防止单词内容溢出。</li>
+              <li><code>keep-all</code>，保持CJK单词，不让其断行。</li>
+            </ol>
+            <p>看样子跟昨天介绍的<code>word-wrap</code>看上去作用都是差不多的，都是控制单词的断行规则。与<code>word-wrap</code>类似，<strong>当<code>white-space</code>声明为不允许自动换行的情况下是没有任何效果的</strong>。</p>
+            <p>而<code>word-break</code>跟<code>word-wrap</code>主要有以下这几个不同点：</p>
+            <ol>
+              <li>Opera和低版本的FireFox（低于15）不支持<code>word-break</code>，而所有主流的浏览器都支持<code>word-wrap</code>。</li>
+              <li>虽然<code>word-break: break-all</code>和<code>word-wrap: break-word</code>都是允许断开非CJK单词，但是前者明显暴力于后者。前者会忽略所有排版规则强制断开单词，而后者则会尽最大限度保持现有的排版规则。例子<a href="http://jsfiddle.net/RsUqv/">参考这里</a>。</li>
+              <li><code>word-break: keep-all</code>还特别声明了针对CJK单词的规则，这个是<code>word-wrap</code>所没有的。<em>（但是<code>keep-all</code>Chrome和Safari都不支持……）。</em></li>
+            </ol>
+            <p>针对<code>word-break</code>：</p>
+            <ol>
+              <li>当需要强制换行时，设置成<code>break-all</code>。</li>
+              <li>当需要强制不换行时，设置成<code>normal</code>。</li>
+            </ol>
+            <p><a href="/posts/2013/07/24/css-word-break.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/14.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li class="active"><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/16.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

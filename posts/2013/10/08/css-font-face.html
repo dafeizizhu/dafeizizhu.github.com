@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用fontface</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用fontface</h2>
+            <p class="blog-post-meta">写于2013年10月08日 关于<a href="/tags/css">css</a></p>
+            <p>以前我们需要引入一些自定义字体的时候，都只能在本地使用Photoshop等绘图软件写好这些字之后，做成图片放到页面上去。现在，有了<code>@font-face</code>这个工具，终于可以像本地一样使用自定义的各种各样字体了！</p>
+            <p>首先看一下<code>@font-face</code>的语法：</p> <pre><code>@font-face {
+  font-family: &#39;Bigelow Rules&#39;;
+  font-style: normal;
+  font-weight: 400;
+  src: local(&#39;Bigelow Rules&#39;), 
+       local(&#39;BigelowRules-Regular&#39;), 
+       url(path/to/font.woff) format(&#39;woff&#39;);
+}
+</code></pre>
+            <ol>
+              <li><code>font-family</code>，声明这个字体的名称。</li>
+              <li><code>font-style</code>，声明这个字体的样式，可以是<code>normal</code>、<code>italic</code>或者是<code>oblique</code>。</li>
+              <li><code>font-weight</code>，声明这个字体的加粗度，可以是<code>normal</code>、<code>bold</code>、<code>bolder</code>、<code>lighter</code>或者是100、200到900之间的数字。</li>
+              <li><code>font-stretch</code>，声明这个字体是否横向的拉伸变形。</li>
+              <li><code>font-variant</code>，声明这个字体是否大写，可以是<code>normal</code>或者是<code>small-cap</code>。</li>
+              <li><code>src</code>，声明这个字体文件的路径，可以是本地路径<code>local</code>（字体文件从浏览器所在的机器上），或者是一个网络路径<code>url</code>。</li>
+            </ol>
+            <p>其中<code>src</code>要注意的是除了路径之外还有一个<code>format</code>配置，声明这个字体文件的格式。虽然主流的浏览器都支持<code>@font-face</code>，但是支持的字体文件格式是不一样的：</p>
+            <ol>
+              <li><code>truetype</code>，后缀是<code>.ttf</code>，IE9以上及其他主流浏览器都支持。</li>
+              <li><code>embedded-opentype</code>，后缀是<code>.oft</code>，IE不支持。</li>
+              <li><code>woff</code>，后缀是<code>.woff</code>，IE9以上即其他主流浏览器都支持。</li>
+              <li><code>eot</code>，后缀是<code>.eot</code>，只有IE支持。</li>
+              <li><code>svg</code>，后缀是<code>.svg</code>，IE不支持。</li>
+            </ol>
+            <p>所以如果要跨浏览器支持自定义字体，必须要提供几套不同格式的字体文件。有兴趣的童鞋可以<a href="http://paulirish.com/2009/bulletproof-font-face-implementation-syntax/">参考这里</a>。</p>
+            <p>引入了<code>@font-face</code>之后，在页面中只要为特定的元素使用之前声明的<code>font-family</code>即可：</p> <pre><code>.dfzz-navbar-brand {
+  font-family: &quot;Bigelow Rules&quot;;
+}
+</code></pre>
+            <p>有几个要注意的地方。第一个是字体也受到跨域的限制，如果那个字体文件所在的域没有开放访问（HTTP头<code>Access-Control-Allow-Origin</code>），则不同域上的页面是没有办法引用这个字体的。</p>
+            <p>在字体没有下载完成之前，浏览器也会使用继承下来的字体去显示文字，当字体下载完成后再更新到制定的自定义字体。</p>
+            <p>由于中文字体的文件实在太大了，动辄几兆，所以支持中文的字体没有办法使用<code>url</code>进行加载，也不能指望用户的机器上就有特定的字体。所以现在<code>@font-face</code>只适用于一些英文的logo等纯英文的场景。</p>
+            <p>虽然有一些限制，但是能使用<code>@font-face</code>的地方我们尽量去使用，后续修改英文内容的时候就不需要再打开Photoshop去修片了哦！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/07/javascript-text-content.html" title="Secrets of the JavaScript Ninja 读书笔记之 文本内容">上一篇</a></li>
+              <li><a href="/posts/2013/10/09/use-karma-to-test-seajs-module.html" title="使用Karma测试Seajs模块">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

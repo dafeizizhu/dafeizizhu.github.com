@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>background:url(about:blank)的作用</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">background:url(about:blank)的作用</h2>
+            <p class="blog-post-meta">写于2013年08月28日 关于<a href="/tags/css">css</a></p>
+            <p>接着昨天的话题，做那个需求的时候还有一个问题，就是在IE6上，鼠标指针移动到左右遮盖层上并没有变成对应的箭头！明明其他浏览器都是好的，我艹！这时，想起隔壁前辈跟我说要在遮盖层上面加一个<code>background</code>。参考了公司其他网页的类似功能，是这么一个样式：</p> <pre><code>background: url(background.png);
+</code></pre>
+            <p>其中那个图片是一个透明的png图片。由于一些历史原因这里才用了一个透明的png图片，其实比较好的实现方式是：</p> <pre><code>background: url(about:blank);
+</code></pre>
+            <p>例子可以<a href="http://jsfiddle.net/6yS7G/1/show/">参考这里</a>还有<a href="http://jsfiddle.net/g7gvq/1/show/">这里</a>。前者在IE6上只能把鼠标放到<code>border</code>上才会变成手型，而后者则是正常的行为。</p>
+            <p>查了一下资料，发现这个样式可以解决以下的一些问题：</p>
+            <ol>
+              <li>如果给空a标签定义了宽度和高度且使用了<code>absolute</code>，则需要用这个样式“撑开”这个标签。</li>
+              <li>IE6上的<code>position: fixed</code>，使用CSS表达式来实现对应的功能时，浏览器滚动条滚动的时候会有抖动的情况。</li>
+            </ol>
+            <p>以下的内容描述了问题2的解决方案以及原因：</p>
+            <blockquote>
+              <p>解决此问题的技巧就是使用background-attachment:fixed为body或html元素添加一个background-image。这就会强制页面在重画之前先处理CSS。因为是在重画之前处理CSS，它也就会同样在重画之前首先处理你的CSS表达式。这将让你实现完美的平滑的固定位置元素！</p>
+              <p>注：如果是在样式里写position:absolute再用expression()表达式来实现的话，给html一个background:fixed url(about:blank);就能解决抖动的bug，但如果是用js重新计算浮动对像的位置background:fixed url(about:blank);就不能解决抖动问题，因为重新计算浮动对象的位置是基于一个onscroll事件的。</p>
+            </blockquote>
+            <p>总结，当使用了<code>absolute</code>并指定了宽度或者高度（无论是显示设置<code>witdh</code>和<code>height</code>或者使用<code>top</code>、<code>bottom</code>隐式设定自适应大小），在IE6下面最好加上以下的样式保证显示效果正确：</p> <pre><code>background-image: url(about:blank);
+background-attachment: fixed;
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/27/css-conflicting-absolute-positions.html" title="利用Absolute进行自适应布局">上一篇</a></li>
+              <li><a href="/posts/2013/08/29/jquery-html.html" title="jQuery扫盲之.html">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

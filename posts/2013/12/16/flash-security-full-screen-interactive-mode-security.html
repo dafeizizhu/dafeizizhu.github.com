@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之全屏交互模式安全性</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之全屏交互模式安全性</h2>
+            <p class="blog-post-meta">写于2013年12月16日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>Flash Player 11.3和更高版本支持全屏交互模式，即昨天讨论的全屏模式下，在Flash Player 11.3之前是不支持文本输入的。而在11.3之后的版本则可以通过配置参数让浏览器中的Flash Player在全屏模式下也能支持文本输入。</p>
+            <p>若要进入全屏交互模式，首先需要把<code>stage</code>的<code>displayState</code>属性设置为<code>StageDisplayState.FULL_SCREEN_INTERACTIVE</code>常量。</p>
+            <p>对于运行在远程沙箱中的<code>swf</code>文件，需要额外配置参数，允许<code>swf</code>进入全屏交互模式。在<code>object</code>或者<code>embed</code>标签中配置<code>allowFullScreenInteractive</code>参数，并将其配置成<code>true</code>：</p> <pre><code>&lt;object&gt;
+  &lt;param name=&quot;allowFullScreenInteractive&quot; value=&quot;true&quot; /&gt;
+&lt;/object&gt;
+</code></pre>
+            <p>或者：</p> <pre><code>&lt;embed allowFullScreenInteractive=&quot;true&quot; /&gt;
+</code></pre>
+            <p>与一般的全屏模式相同，仅当在响应鼠标事件和键盘事件时，才能调用启动全屏交互模式的ActionScript。也会显示如何退出全屏模式的提示信息。</p>
+            <p>管理员可以通过在<code>mms.cfg</code>中设置<code>FullScreenInteractiveDisable = 1</code>对浏览器中运行的<code>swf</code>文件禁用全屏交互模式。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/13/flash-security-full-screen-mode-security.html" title="Flash安全性之全屏模式安全性">上一篇</a></li>
+              <li><a href="/posts/2013/12/17/flash-security-loading-content.html" title="Flash安全性之加载内容">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

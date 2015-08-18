@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之Ajax工具函数</h2>
+            <p class="blog-post-meta">写于2013年09月12日 关于<a href="/tags/jQuery">jQuery</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>jQuery为了方便用户使用Ajax，提供了几个工具函数，提供一些有关参数传递与序列化的功能。</p>
+            <h3 id="jquery-param">jQuery.param</h3>
+            <hr>
+            <blockquote>
+              <p>Create a serialized representation of an array or object, suitable for use in a URL query string or Ajax request.</p>
+            </blockquote>
+            <p>这个方法可以提供数组或者对象的一个序列化之后的字符串，可以用作URL上的<code>query</code>，也可以作为Ajax的<code>data</code>传递。该方法接受两个参数：</p>
+            <ol>
+              <li><code>obj</code>，需要序列化的数组或者对象。</li>
+              <li><code>traditional</code>，可选的标志位，是否使用“浅层次”的序列化。默认是<code>false</code>，会递归地序列化对象的属性或者数组的元素。</li>
+            </ol>
+            <p>返回一个这个数组或者对象的一个序列化之后的字符串。</p>
+            <p>在jQuery 1.4及之前的版本，可以通过<code>jQuery.ajaxSetting.traditional = true</code>去设置全局的Ajax都使用浅层次的序列化。</p>
+            <p>在jQuery 1.8及之后的版本，这个设置对<code>jQuery.param</code>已经没有效果了。这时候要使用浅层次的序列化只能通过调用<code>jQuery.param</code>的时候传入第二个参数<code>true</code>来显式声明这次序列化是使用浅层次的序列化。</p>
+            <p>注意，如果传入的是数组，里面的元素需要是以下这种格式的才可以（是调用<code>jQuery.fn.serializeArray</code>返回的数组元素的格式）：</p> <pre><code>[{name:&quot;first&quot;,value:&quot;Rick&quot;},
+ {name:&quot;last&quot;,value:&quot;Astley&quot;},
+</code></pre>
+            <p><a href="/posts/2013/09/12/jquery-ajax-help-function.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML5 history API</h2>
+            <p class="blog-post-meta">写于2013年09月11日 关于<a href="/tags/html5">html5</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天偶然发现有一个需求，单击某个链接的时候，浏览器显示的URL要变化，而页面又不要跳转。这个时候可以使用HTML5的history API。</p>
+            <h3 id="-html-history-api">老的HTML history API</h3>
+            <hr>
+            <p>在HTML4中，浏览器已经提供了一些关于历史记录的API，都在<code>window.history</code>里面：</p>
+            <ol>
+              <li><code>back</code>，相当于单击浏览器的后退按钮。</li>
+              <li><code>forward</code>，相当于单击浏览器的前进按钮。</li>
+              <li><code>go</code>，前进或者后退若干个历史记录。接受一个整数作为参数，正数为前进，负数为后退，<code>0</code>为刷新本页面。</li>
+            </ol>
+            <h3 id="-html-hisotry-api">新的HTML hisotry API</h3>
+            <hr>
+            <p>HTML5提供了新的两个API，为了使一些SPA应用也能使用前进后退的功能。</p>
+            <p>第一个是<code>window.history.pushState</code>，往历史记录栈中压入一个记录。第二个是<code>window.history.replaceState</code>，替换掉历史记录栈中的栈顶的记录。这两个方法都接受三个参数：</p>
+            <ol>
+              <li><code>stateObject</code>，关于这个历史记录的数据。当<code>popstate</code>触发的时候，对应记录的这个数据会作为事件对象的<code>state</code>属性回传给事件处理程序。<strong>注意，这个对象有大小限制，当对象序列化后的大小超过这个限制的时候某些浏览器会抛出异常。</strong></li>
+              <li><code>title</code>，理论上应该是对应历史记录中浏览器应该显示的标题，但是绝大部分浏览器没有实现这个功能，而这个参数也会被忽略。</li>
+              <li><code>URL</code>，浏览器显示的地址。虽然不会跳转到该地址上面，但是应该保证这个地址是可以访问的，因为当用户刷新这个页面的时候应该能正常到达当前这个状态。</li>
+            </ol>
+            <p><a href="/posts/2013/09/11/html5-history-api.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之全局Ajax事件</h2>
+            <p class="blog-post-meta">写于2013年09月10日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>当今天没啥东西写的时候，会强迫自己看看一些常用的，但是又不完全了解的东西，例如各种文档、各种API参考等。扫盲系列其实就是去读这些API的文档，去发掘一些我们不知道的用法和要注意的事情。</p>
+            <p>今天讨论的是jQuery中有关Ajax的全局事件，这些事件有时候可以使我们的代码更加简洁，表现更加一致。</p>
+            <p>当<code>jQuery.ajaxSetup()</code>返回的<code>global</code>属性是<code>true</code>的时候（这个也是默认值），全局的Ajax事件才能生效。还有，调用<code>jQuery.ajax</code>的时候如果选项中的<code>global</code>为<code>false</code>，这次请求也不会触发全局的Ajax事件。注意，<strong>跨域的Ajax或者是jsonp是无论如何都不会触发这些全局的Ajax事件的</strong>。</p>
+            <p>强烈建议在<code>document</code>上绑定这些事件（在jQuery 1.8往后的版本只能绑定在<code>document</code>上了）。这些全局Ajax事件的绑定方法都只接受一个参数，就是要绑定的事件处理程序。</p>
+            <h3 id="ajaxcomplete">ajaxComplete</h3>
+            <p>处理程序接受三个参数，事件对象、XMLHttpRequest对象、调用这次Ajax的<code>ajaxOptions</code>。每一个Ajax请求完成（无论成功或者失败）时，都会调用所有事件处理程序。</p>
+            <h3 id="ajaxerror">ajaxError</h3>
+            <p>处理程序接受四个参数，事件对象、jQuery封装的XHR对象、调用这次Ajax的<code>ajaxOptions</code>、还有抛出的错误，例如服务器错误（5xx）、路径错误（4xx）或者是当数据类型是<code>json</code>或者其他特定类型时解析错误（json语法错误）等。错误以字符串的形式返回，例如<code>Not found</code>、<code>Internal Server Error</code>等。每一次Ajax请求以失败告终的时候，都会调用所有事件处理程序。</p>
+            <h3 id="ajaxsend">ajaxSend</h3>
+            <p>处理程序接受三个参数，与<code>ajaxError</code>的前三个参数一致。每一次发出一个Ajax请求时，都会嗲用所有事件处理程序。</p>
+            <h3 id="ajaxstart">ajaxStart</h3>
+            <p><a href="/posts/2013/09/10/jquery-ajax-event.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS表达式</h2>
+            <p class="blog-post-meta">写于2013年09月09日 关于<a href="/tags/css">css</a></p>
+            <p>对于一些呈现型的网站（例如门户、资讯类的），在国内还是必须照顾一大部分使用IE6的用户。这样导致我们的代码为了兼容很多IE6，需要在IE6上模拟一些高级浏览器的功能，例如<code>fixed</code>的CSS样式，还有<code>max-width</code>等。在不希望使用JavaScript的时候，css表达式还是可以作为一个不错的向下兼容的方案的。</p>
+            <p>CSS表达式，严格来说应该是CSS中的动态属性，在MSDN中的定义是这样的：</p> <pre><code>Using the power of dynamic properties, it is now possible to declare property values not only as constants, but also as formulas. 
+</code></pre>
+            <p>使用CSS表达式，使得CSS样式中的值不仅仅只有常量，如<code>10px</code>、<code>100%</code>等，还可以是变量、可以通过N条语句计算出来的值。由于IE8及更高版本已经完全支持CSS 2.1的全部功能，像上述说的<code>fixed</code>和<code>max-width</code>等都可以直接使用CSS来实现了。而其他更具体的功能还是推荐使用JavaScript去完成。</p>
+            <h3 id="-">接口</h3>
+            <hr>
+            <ol>
+              <li><code>getExpression</code>，获取CSS表达式。</li>
+              <li><code>recalc</code>，强制刷新CSS表达式的值。</li>
+              <li><code>removeExpression</code>，删除CSS表达式。</li>
+              <li><code>setExpression</code>，设置CSS表达式。</li>
+            </ol>
+            <p>可以在JavaScript脚本中使用以上的命令操作CSS表达式，例如：</p> <pre><code>oDiv.style.setExpression(&quot;left&quot;,
+  &quot;document.body.clientWidth/2 - oDiv.offsetWidth/2&quot;
+);
+</code></pre>
+            <p><a href="/posts/2013/09/09/css-expression.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 DOM特性跨浏览器的那些事</h2>
+            <p class="blog-post-meta">写于2013年09月08日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天简单地介绍了一下特性和属性的区别。今天来看看跨浏览器编程中，DOM特性和属性的一些问题，以防掉坑。</p>
+            <h3 id="id-name-in-form">id/name in form</h3>
+            <hr>
+            <p>第一个问题有关于<code>form</code>以及其中的表单域。在“Big Five”浏览器中，都会自动为<code>form</code>创建有<code>id</code>或者<code>name</code>特性的表单域同名的属性，以方便快速访问以及设置这些表单域的值。这个方便的功能有时候会造成误会，例如：</p> <pre><code>&lt;form id=&quot;testForm&quot; action=&quot;/&quot;&gt;                     
+  &lt;input type=&quot;text&quot; id=&quot;id&quot;/&gt;
+  &lt;input type=&quot;text&quot; name=&quot;action&quot;/&gt;
+&lt;/form&gt;
+</code></pre>
+            <p>以上这个<code>form</code>就有一个问题，就是其中有表单域的<code>id</code>或者<code>name</code>的值跟<code>form</code>的一些特性，例如<code>id</code>和<code>action</code>冲突，导致这样的代码：</p> <pre><code>document.getElementById(&quot;testForm&quot;).id;
+</code></pre>
+            <p>获取的不是<code>form</code>上的<code>id</code>的特性值，而是那个表单域。虽然Chrome、Firfox等标准浏览器可以通过<code>getAttribute</code>获取到特性值，可惜不是所有版本的IE都支持。还有一个办法去获取特性值：</p> <pre><code>var actionValue = element.getAttibuteNode(&quot;action&quot;).nodeValue;
+</code></pre>
+            <p>鉴于以上代码的复杂性，还是HTML书写阶段不要用<code>form</code>的一些内建特性或者是方法（例如<code>submit</code>）作为表单域的<code>id</code>或者<code>name</code>的值。</p>
+            <p><a href="/posts/2013/09/08/dom-attribute-cross-browser-issue.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 DOM的特性和属性</h2>
+            <p class="blog-post-meta">写于2013年09月07日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天介绍一下DOM上面的特性（Attribute）和属性（property）。</p>
+            <p>当我们需要获取一个DOM元素上面的特性值，例如<code>id</code>，我们可以使用原生的<code>getAttribute(&quot;id&quot;)</code>，也可以使用<code>elem.id</code>直接获取<code>id</code>的值。但是不要简单地认为这两个方式获取的值都是一样的。</p>
+            <h3 id="-">跨浏览器的命名</h3>
+            <hr>
+            <p>每一个浏览器对于特性和属性的命名都有一些细微的差别。例如<code>class</code>这个特性，Chrome、FireFox可以用<code>getAttribute(&quot;class&quot;)</code>去获取其值，而IE则需要使用<code>className</code>作为特性的名字才能获取到值，例子<a href="http://jsfiddle.net/DVHvy/show/">参考这里</a>。</p>
+            <p>我们可以使用jQuery等库去规范这些命名，而当我们使用原生的JavaScript的时候也要注意这些命名的细微差别。</p>
+            <h3 id="-">命名的限制</h3>
+            <hr>
+            <p>由于特性的名称是一个字符串，理论上特性的命名是没有限制的。而属性则不一样，由于属性是一个JavaScript标识符，受到很多标识符的限制，例如不能是JavaScript的关键字或者保留字等等。例如<code>for</code>这个特性对应的属性名称是<code>htmlFor</code>，<code>class</code>这个特性对应的属性名称是<code>className</code>等。</p>
+            <h3 id="xml-html">XML和HTML</h3>
+            <hr>
+            <p>为DOM元素上的特性创建对应的属性其实是HTML DOM的一个能力，而XML DOM是没有这个能力的。这样可以通过以下代码判断一个DOM是否XML DOM：</p> <pre><code>function isXML(elem) {
+</code></pre>
+            <p><a href="/posts/2013/09/07/dom-attribute-and-property.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">获取浏览器视口的大小</h2>
+            <p class="blog-post-meta">写于2013年09月05日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>在日常工作中，经常需要浏览器当前视口的大小，以防止一些绝对定位的元素跑到视口之外（例如Tips等）。最稳妥的办法是使用jQuery：</p> <pre><code>var dimension = {
+  &quot;width&quot;: $(window).width(),
+  &quot;height&quot;: $(window).height()
+};
+</code></pre>
+            <p>那用原生的JavaScript是如何获取视口大小的呢？有以下几个属性可以供我们使用：</p>
+            <ol>
+              <li><code>window.innerWidth</code>和<code>window.innerHeight</code>。</li>
+              <li><code>document.documentElement.clientWidth</code>和<code>document.documentElement.clientHeight</code>。</li>
+              <li><code>document.body.clientWidth</code>和<code>document.body.clientHeight</code>。</li>
+            </ol>
+            <p>第一组是<code>innerXXX</code>，只有<code>window</code>有这个属性，而这个属性就是代表了视口的大小！第二组和地三组都是是一个DOM元素的大小，不同是DOM元素而已，一个是<code>documentElement</code>，即<code>html</code>元素，一个是<code>body</code>元素。</p>
+            <p>不同的浏览器对于以上这几个属性的处理有所不同，大概可以分成标准和非标准两类：</p>
+            <ol>
+              <li>标准，即Chrome、FireFox、IE9及以上版本。</li>
+              <li>非标准，即IE8及以下版本。</li>
+            </ol>
+            <p>我们将运行以下的代码测试浏览器对于这些属性的处理，运行例子可以<a href="http://jsfiddle.net/s4PhQ/show/">参考这里</a>：</p>
+            <p><a href="/posts/2013/09/05/javascript-get-viewport-dimension.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.fn.append</h2>
+            <p class="blog-post-meta">写于2013年09月04日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天又来扫盲啦，带来的是<code>jQuery.fn.append</code>的用法。</p>
+            <blockquote>
+              <p>Insert content, specified by the parameter, to the end of each element in the set of matched elements.</p>
+            </blockquote>
+            <p>这个方法就是用来插入DOM元素的。有两种调用的方式：</p>
+            <p>第一种方式接受不定长的参数列表，每一个参数可以是HTML字符串、DOM元素、数组或者jQuery对象。调用该方法后，会在jQuery对象中所有元素的后面插入指定的内容，如：</p> <pre><code>$( &quot;.inner&quot; ).append( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );
+$( &quot;.container&quot; ).append( $( &quot;h2&quot; ) );
+$( &quot;p&quot; ).append( document.createTextNode( &quot;Hello&quot; ) );
+$( &quot;body&quot; ).append( $newdiv1, [ newdiv2, existingdiv1 ] );
+$(&#39;body&#39;).append( $newdiv1, newdiv2, existingdiv1 );
+</code></pre>
+            <p>第二种方式接受一个函数，调用<code>jQuery.fn.append</code>之后会在jQuery对象中所有元素的后面插入该函数返回的内容。该函数有两个参数，与<code>jQuery.fn.html</code>类似，是该元素在jQuery对象中的索引以及该元素在调用<code>append</code>之前的<code>innerHTML</code>，如：</p> <pre><code>$(&quot;body&quot;).append(function (i, oldHTML) { return &quot;Hello World&quot;; });
+</code></pre>
+            <p>与<code>jQuery.fn.append</code>对应的有<code>jQuery.fn.appendTo</code>。这两个方法唯一的区别是，<code>jQuery.fn.append</code>是把<code>append</code>的参数插到jQuery对象中的每一个元素中；而<code>jQuery.fn.appendTo</code>是把该jQuery对象的元素插入到<code>appendTo</code>的每一个参数中。例子可以<a href="http://jsfiddle.net/r6Quz/">参考这里</a>。</p>
+            <p>注意哦，如以下代码：</p>
+            <p><a href="/posts/2013/09/04/jquery-append.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS的width、max-width和min-width</h2>
+            <p class="blog-post-meta">写于2013年09月03日 关于<a href="/tags/css">css</a></p>
+            <p>昨天虽然说用<code>width</code>和<code>height</code>控制图片大小的方法生成缩略图的方式不是十分完美，但总是有它适用的场景的。使用这个方式生成缩略图，重要的是保持图片的宽高比，而且高度和宽度都不能超过特定的值。这时候，使用<code>max-width</code>和<code>max-height</code>就是非常好的选择了。今天就简单讨论一下<code>width</code>、<code>max-width</code>和<code>min-width</code>三个CSS样式的属性的区别。</p>
+            <h3 id="width">width</h3>
+            <hr>
+            <blockquote>
+              <p>The width CSS property specifies the width of the content area of an element. The content area is inside the padding, border, and margin of the element.</p>
+            </blockquote>
+            <p><code>width</code>声明的是元素的内容宽度，即不包括<code>padding</code>、<code>border</code>和<code>margin</code>的宽度。</p>
+            <p><code>width</code>的默认值是<code>auto</code>，块元素会继承包含块的宽度，而行内元素则会根据行内内容自适应宽度，所以行内元素设置<code>width</code>是没有效果的。</p>
+            <p><code>width</code>可以是绝对的长度，例如<code>100px</code>、<code>100em</code>等，也可以是百分比的长度（包含块的绝对宽度的百分比）。</p>
+            <h3 id="max-width">max-width</h3>
+            <hr>
+            <blockquote>
+              <p>The max-width CSS property is used to set the maximum width of a given element. It prevents the used value of the width property from becoming larger than the value specified for max-width.</p>
+            </blockquote>
+            <p>从名字就可以看出来，<code>max-width</code>就是为了限制元素的宽度不能超过某个特定的值。当元素的宽度（无论是绝对长度或者是经百分比计算后的长度）超过<code>max-width</code>所设置的值，元素的宽度就是等于<code>max-width</code>设置的值。这样就是说<strong><code>max-width</code>能覆盖<code>width</code>的值</strong>。</p>
+            <p><code>max-width</code>的默认值是<code>none</code>，表示元素默认是没有最大宽度的。与<code>width</code>一样，值可以是绝对长度也可以是百分比长度（同样是包含块的绝对宽度的百分比）。</p>
+            <p><a href="/posts/2013/09/03/css-width-max-width-min-width.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">img的大小问题</h2>
+            <p class="blog-post-meta">写于2013年09月02日 关于<a href="/tags/html">html</a></p>
+            <p>说到HTML元素的大小，都是使用CSS类去控制，而尽量避免内联的<code>style</code>，更是尽量不要使用<code>width</code>和<code>height</code>特性。可是在<code>img</code>元素上，可能有点不一样。今天针对<code>width</code>和<code>height</code>特性讨论一下这两个大小属性对于HTML页面的影响。</p>
+            <h3 id="-">显式指定图片大小</h3>
+            <hr>
+            <p>与普通的行内元素元素不一样，图片是可以设置宽度和高度的，可以通过CSS样式去控制，也可以通过<code>width</code>和<code>height</code>特性控制（高级浏览器都会把特性映射到对应的CSS样式中去），例如：</p> <pre><code>&lt;img src=&quot;path/to/image.png&quot; alt=&quot;a pic&quot; width=&quot;400&quot; height=&quot;300&quot; /&gt;
+</code></pre>
+            <p>在特性上面的值的单位是像素。上面的代码声明了一个宽400像素，高300像素的图片。当声明的大小跟图片实际的大小不一致的时候，浏览器会自动缩放该图片以匹配声明的大小。</p>
+            <p>这两个特性可以只设置一个。当只有一个值被设置之后，另一个值会自动变化，以保证图片的宽高比保持不变。</p>
+            <p>但是这两个属性不是必须的。如果忽略了对图片大小描述的代码，图片的显示大小跟实际大小是一致的。这样就有一个问题，在图片没有加载完成之前，浏览器并不知道图片的大小是多少（或者不用等待加载完成，但也必须等一定的事件确定图片的大小）。浏览器通常会使用一个默认大小的占位符先把图片的位置占上，当图片的大小确定之后对这个区域重新进行布局。我们知道，重新布局是有额外的开销的，频繁地重置图片的大小可能会造成性能瓶颈（尤其是那些以图片展示为目的的页面，例如图库等）。</p>
+            <p>可以在图片加载的时候，显式指定图片的大小。那样浏览器再图片加载完毕之后就不需要重新布局了，可以省下这些开销。</p>
+            <p>一个比较有意思的小点：当没有显式指定大小的时候，而图片却加载不上（404等），这个图片的大小会被重置成<code>alt</code>声明的字符串所占的大小。</p>
+            <h3 id="-">指定的大小要跟原图大小一致</h3>
+            <hr>
+            <p><a href="/posts/2013/09/02/html-img-size.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/10.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li class="active"><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/12.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

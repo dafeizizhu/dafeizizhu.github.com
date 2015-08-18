@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Flash安全性之权限控制</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Flash安全性之权限控制</h2>
+            <p class="blog-post-meta">写于2013年12月11日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>Flash对控制严格采用一种权力层次，依次是管理员设置、用户设置、网站设置和作者设置。前者拥有比后者更高的优先级，后者不能覆盖前者的限制。</p>
+            <h3 id="-">管理员控制</h3>
+            <p>这里的管理员指的是计算机的管理用户。管理员控制有两种形式。第一种是<code>mms.cfg</code>文件。该文件包含管理员用于管理隐私控制、本地文件安全性、套接字连接等功能。该文件的大部分功能不能被ActionScript访问，并且只能由计算机管理员进行修改。该文件的路径是：</p> <pre><code>Windows：system\Macromed\Flash\mms.cfg
+Mac：app support/Macromedia/mms.cfg
+</code></pre>
+            <p>第二种形式是全局 Flash Player 信任目录。这个目录中指定的<code>swf</code>文件分配到受信任的沙箱，不仅可以访问本地文件，也可以使用网络。该目录通常的位置是：</p> <pre><code>Windows：system\Macromed\Flash\FlashPlayerTrust
+app support/Macromedia/FlashPlayerTrust
+</code></pre>
+            <p>这个目录可以存放若干个文本文件，标识出哪些路径下面的文件视为受信任的文件，例如：</p> <pre><code># Trust files in the following directories: 
+C:\Documents and Settings\All Users\Documents\SampleApp
+</code></pre>
+            <h3 id="-">用户控制</h3>
+            <p>用户控制可以从这几个方面指定。第一个是设置UI和设置管理器，就是上下文菜单中的Flash设置。里面可以设置包括摄像头、麦克风、本地存储等设置。在<code>mms.cfg</code>文件中的设置在这里并不可见。</p>
+            <p>第二个是用户Flash Player信任目录。跟管理员上面的信任目录的设置类似，只是这些设置只对当前用户生效。该目录通常的位置是：</p> <pre><code>Windows：app data\Macromedia\Flash Player\#Security\FlashPlayerTrust
+Mac：app data/Macromedia/Flash Player/#Security/FlashPlayerTrust
+</code></pre>
+            <h3 id="-">网站控制</h3>
+            <p>网站控制就是之前讨论过的策略文件。策略文件可以影响包括位图、声音、视频、XML、文本、<code>swf</code>影片甚至是套接字的访问。默认情况下，<code>swf</code>只能请求与该文件在同一个域中的资源，如果要想访问其他域的资源，需要在远程服务器上面配置一个策略文件，也就是<code>crossdomain.xml</code>。</p>
+            <p>首先会查找服务器上面的主策略文件，就是<code>http://my.domain/crossdomain.xml</code>这个文件。SWF 文件可以通过调用<code>Security.loadPolicyFile</code>方法检索其他策略文件名或其他目录位置，前提是主策略文件没有配置成<code>master-only</code>或者<code>none</code>。在检索主策略文件时，Flash Player 会用三秒钟等待服务器响应。如果未接收到响应，Flash
+              Player 则假定主策略文件不存在。但是，对<code>loadPolicyFile</code>的调用没有默认超时值；Flash Player 假定调用的文件存在，在加载文件之前会一直等待。因此，如果要确保加载主策略文件，请使用<code>loadPolicyFile</code>来明确调用主策略文件。</p>
+            <p>当主策略文件的配置是允许加载其他策略文件的前提下，我们可以通过以下几个手段去预加载我们的策略文件：</p>
+            <ol>
+              <li>使用<code>Loader.load</code>方法时，设置<code>context</code>参数的<code>checkPolicyFile</code>属性，该参数是一个<code>LoaderContext</code>对象。</li>
+              <li>使用<code>img</code>标签在文本字段中嵌入图像时，将<code>img</code>标签的<code>checkPolicyFile</code>属性设置为<code>true</code>，如<code>&lt;img checkPolicyFile = &quot;true&quot; src = &quot;example.jpg&quot;&gt;</code>。</li>
+              <li>使用<code>Sound.load</code>方法时，设置<code>context</code>参数的<code>checkPolicyFile</code>属性，该参数是一个<code>SoundLoaderContext</code>对象。</li>
+              <li>使用<code>NetStream</code>类时，设置<code>NetStream</code>对象的<code>checkPolicyFile</code>属性。</li>
+            </ol>
+            <h3 id="-">作者控制</h3>
+            <p>作者控制也就是开发人员的控制。开发人员可以通过以下的代码控制权限：</p> <pre><code>Security.allowDomain(&quot;www.example.com&quot;)
+</code></pre>
+            <p>该代码可一控制的权限包括：</p>
+            <ol>
+              <li><code>swf</code>文件之间的跨脚本访问。</li>
+              <li>显示列表访问。</li>
+              <li>事件检测。</li>
+              <li>对<code>stage</code>对象的属性和方法的完全访问。</li>
+            </ol>
+            <p>可以将通配符<code>*</code>传递给<code>Security.allowDomain()</code>方法以允许从所有域进行访问。</p>
+            <p>还有一个是供<code>HTTPS</code>情况下用的，就是<code>Security.allowInsecureDomain</code>，与上面的例子类似，只是适用于<code>HTTPS</code>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/10/flash-security-sandboxes.html" title="Flash安全性之安全沙箱">上一篇</a></li>
+              <li><a href="/posts/2013/12/12/flash-security-restricting-networking-apis.html" title="Flash安全性之限制网络API">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

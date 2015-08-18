@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之cssHooks</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之cssHooks</h2>
+            <p class="blog-post-meta">写于2013年11月22日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>在DOM的<code>style</code>属性中，不同浏览器对于一些CSS属性名称的处理是不一样的，例如<code>float</code>，在IE里面是<code>styleFloat</code>，而在Chrome则是<code>cssFloat</code>等。jQuery为我们处理了这些不一致，我们可以直接使用<code>css</code>去获取或者设置<code>float</code>的属性值。jQuery还提供了<code>cssHooks</code>这个对外的属性让我们可以自定义某些CSS属性的<code>getter</code>和<code>setter</code>：</p>
+            <blockquote>
+              <p>Hook directly into jQuery to override how particular CSS properties are retrieved or set, normalize CSS property naming, or create custom properties.</p>
+            </blockquote>
+            <p>对于<code>float</code>等常用的CSS属性，jQuery已经为我们处理了这些浏览器的不一致，但是对于一些属性，例如<code>border-radius</code>（要加上浏览器特定的前缀）等，jQuery是没有处理的。对于这种场景，其中一种比较笨的方法是我们把所有浏览器的实现都写一遍：</p> <pre><code>$(elem).css({
+  &quot;border-radius&quot;: &quot;2px&quot;,
+  &quot;-ms-border-radius&quot;: &quot;2px&quot;,
+  &quot;-webkit-border-radius&quot;: &quot;2px&quot;,
+  &quot;-moz-border-radius&quot;: &quot;2px&quot;,
+});
+</code></pre>
+            <p>这时候更聪明的方式是，我们可以使用<code>cssHooks</code>去处理这些前缀：</p> <pre><code>(function( $ ) {
+
+  if ( !$.cssHooks ) {
+    throw( new Error( &quot;jQuery 1.4.3+ is needed for this plugin to work&quot; ) );
+  }
+
+  function styleSupport( prop ) {
+    var vendorProp, supportedProp,
+        capProp = prop.charAt( 0 ).toUpperCase() + prop.slice( 1 ),
+        prefixes = [ &quot;Moz&quot;, &quot;Webkit&quot;, &quot;O&quot;, &quot;ms&quot; ],
+        div = document.createElement( &quot;div&quot; );
+
+    if ( prop in div.style ) {
+      supportedProp = prop;
+    } else {
+      for ( var i = 0; i &lt; prefixes.length; i++ ) {
+        vendorProp = prefixes[ i ] + capProp;
+        if ( vendorProp in div.style ) {
+          supportedProp = vendorProp;
+          break;
+        }
+      }
+    }
+
+    div = null;
+    $.support[ prop ] = supportedProp;
+    return supportedProp;
+  }
+
+  var borderRadius = styleSupport( &quot;borderRadius&quot; );
+
+  // Set cssHooks only for browsers that support a vendor-prefixed border radius
+  if ( borderRadius &amp;&amp; borderRadius !== &quot;borderRadius&quot; ) {
+    $.cssHooks.borderRadius = {
+      get: function( elem, computed, extra ) {
+        return $.css( elem, borderRadius );
+      },
+      set: function( elem, value) {
+        elem.style[ borderRadius ] = value;
+      }
+    };
+  }
+})( jQuery );
+</code></pre>
+            <p>然后我们就可以像常用的CSS属性一样使用它了：</p> <pre><code>$( &quot;#element&quot; ).css( &quot;borderRadius&quot;, &quot;10px&quot; );
+$( &quot;#another&quot; ).css( &quot;border-radius&quot;, &quot;20px&quot; );
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/20/get-computed-style.html" title="window.getComputedStyle">上一篇</a></li>
+              <li><a href="/posts/2013/11/23/hp-innerhtml-versus-dom-methods.html" title="High Performance JavaScript 读书笔记之 访问和修改DOM（一）">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>IE的hasLayout</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">IE的hasLayout</h2>
+            <p class="blog-post-meta">写于2013年08月06日 关于<a href="/tags/css">css</a></p>
+            <p>只有在IE8之前版本的IE上才会有hasLayout这个纠结的东西。在这些版本的IE中，有两种类型的元素：</p>
+            <ol>
+              <li>a拥有布局的元素，可以控制自己的大小及其子元素的布局。</li>
+              <li>a没有布局的元素，只能根据最近的拥有布局的祖先元素来确定自己的大小和布局。</li>
+            </ol>
+            <p>拥有布局的元素可以控制自己的大小，也可以控制其自身及其子元素的布局。一些没有特定声明宽度和高度的元素，但是有一些大小限制的元素，例如表单控件、图片等，通常也是拥有布局的元素。只有拥有布局的元素才能控制是否出现滚动条。</p>
+            <p>拥有布局的元素意味着：</p>
+            <ol>
+              <li>a限制这个元素成为一个矩形（强制行内元素的布局行为变得像块元素一样）。</li>
+              <li>a一些关于这个元素的大小位置等属性会被缓存起来，也会参与到大小位置改变的算法中，造成额外的内存于时间消耗。</li>
+              <li>a不能根据子元素的内容进行自适应。</li>
+            </ol>
+            <p>当一个元素拥有布局的时候，我们说这个元素触发了<code>hasLayout</code>，也就是说这个元素有个内部属性为<code>hasLayout: true</code>。注意，这个不是一个CSS的样式，某种特定的情况下一个元素就会拥有布局。</p>
+            <p>首先是默认就拥有布局的元素：</p>
+            <ol>
+              <li>a图片</li>
+              <li>a表格、表格行、单元格</li>
+              <li>a表单控件</li>
+              <li>a<code>frameset</code>等框架元素</li>
+              <li>a<code>object</code>等嵌入元素</li>
+              <li>a绝对定位元素</li>
+              <li>a浮动元素</li>
+              <li>a<code>inline-block</code>元素</li>
+              <li>a<code>filter</code></li>
+              <li>a<code>body</code></li>
+            </ol>
+            <p>当元素满足以下条件的时候也可以变成拥有布局的元素：</p>
+            <ol>
+              <li>a在严格模式下，声明了宽度和高度的块元素</li>
+              <li>a在兼容模式下，任何声明了宽度和高度的元素</li>
+              <li>a拥有<code>zoom</code>的元素</li>
+              <li>a处于编辑模式下的元素</li>
+              <li>a阅读顺序与父元素不一样的元素</li>
+              <li>a一个拥有<code>viewlink</code>特性的元素</li>
+            </ol>
+            <p>最好是使用<code>zoom: 1</code>来触发元素的<code>hasLayout</code>，因为该CSS样式不会对元素造成任何可视的影响。</p>
+            <p>个人感觉这个<code>hasLayout</code>的最大用处就是在不支持<code>display: inline-block</code>的浏览器（例如IE6）中模拟出对应的效果。由于触发了<code>hasLayout</code>的元素可以拥有类似BFC（明天会讨论这个）的视觉效果，即可以让一个行内元素的布局行为变成类似于块元素的布局行为。所以，在IE8-的浏览器中，如果需要触发<code>hasLayout</code>，最好也同时触发BFC，保证显示效果一致。例子
+              <a
+              href="http://jsfiddle.net/rweLu/2/">参考这里</a>。</p>
+            <p>参考资料：</p>
+            <ol>
+              <li><a href="http://msdn.microsoft.com/en-us/library/bb250481(v=vs.85).aspx">&quot;HasLayout&quot; Overview</a></li>
+              <li><a href="http://kayosite.com/internet-explorer-haslayout-in-detail.html">详说 IE hasLayout</a></li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/05/javascript-flash-comunication.html" title="JavaScript与Flash通信">上一篇</a></li>
+              <li><a href="/posts/2013/08/07/css-bfc.html" title="了解BFC">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

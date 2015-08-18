@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>响应式设计入门之viewport</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">响应式设计入门之viewport</h2>
+            <p class="blog-post-meta">写于2013年07月17日 关于<a href="/tags/css">css</a></p>
+            <p>今天为我的博客加入了一些响应式设计的要素，现在妈妈再也不用担心我的微信中阅读原文之后布局全乱了。说白了就是使用了两个响应式设计相关的技术：<code>viewport</code>和<code>media query</code>而已。今天先写一下为什么需要viewport，viewport这个东西怎么用。</p>
+            <h3 id="-">背景</h3>
+            <p>先看看w3的定义：</p>
+            <blockquote>
+              <p>This specification introduces a way of overriding the size of the viewport provided by the user agent (UA).</p>
+            </blockquote>
+            <p>由于移动终端的分辨率一般比桌面浏览器的分辨率要小，移动终端上的浏览器通常会把页面放入一个虚拟的“视口“中，让页面的内容缩小以适配该移动终端的分辨率，用户可以通过缩放和移动来查看整个页面的全部内容。Safari引入<code>viewport</code>这个<code>meta</code>头，旨在让开发人员控制视口的大小和缩放。</p>
+            <p><strong>注：<code>body</code>元素（如果不是HTML和XHTML的文档则是根元素）中的<code>direction</code>会影响缩放时的原点（<code>ltr</code>是左上角，<code>rtl</code>是右上角）。</strong></p>
+            <h3 id="-">用法</h3>
+            <p>来个最简单的<code>viewport</code>使用例子：</p> <pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1&quot;&gt;
+</code></pre>
+            <p>声明一个<code>meta</code>头，<code>name</code>是<code>viewport</code>，其中的<code>content</code>是一个逗号分隔的键值对列表。可供设置的键值对有：</p>
+            <ol>
+              <li><code>width</code>，视口宽度，数字表示绝对宽度，如<code>width=900</code>，也可以使用字符串常量<code>device-width</code>表示设备的横向分辨率。在iOS的Safari上默认值是980。</li>
+              <li><code>height</code>，视口宽度，与<code>width</code>类似。</li>
+              <li><code>initial-scale</code>，初始化的缩放比例，如<code>initial-scale=1</code>表示初始缩放比例为1。</li>
+              <li><code>maximun-scale</code>，最大缩放比例。</li>
+              <li><code>minimun-scale</code>，最小缩放比例。</li>
+              <li><code>user-scalable</code>，配置用户是否能缩放。</li>
+            </ol>
+            <p><strong>注：当设备的方向发生变化时，<code>device-width</code>和<code>device-height</code>也会相应的变化。</strong></p>
+            <h3 id="-">总结</h3>
+            <p>使用<code>viewport</code>可以使移动终端上页面的展示符合响应式设计的显示效果。换句话来说，如果没有使用响应式设计，要慎重设置初始缩放比例、最大缩放比例等参数，不然很有可能用户不能看清页面所有内容了。</p>
+            <h3 id="-">参考资料</h3>
+            <p><a href="http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/UsingtheViewport/UsingtheViewport.html">Configuring the Viewport</a></p>
+            <p><a href="view-source:https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag">Using the viewport meta tag to control layout on mobile browsers - Mozilla | MDN</a></p>
+            <p><a href="http://dev.w3.org/csswg/css-device-adapt/#the-viewport">CSS Device Adaptation</a></p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/16/css-equal-hight.html" title="CSS等高布局">上一篇</a></li>
+              <li><a href="/posts/2013/07/18/negative-margin.html" title="神奇的负边距">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

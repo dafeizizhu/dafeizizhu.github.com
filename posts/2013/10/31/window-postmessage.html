@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>window.postMessage</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.postMessage</h2>
+            <p class="blog-post-meta">写于2013年10月31日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/html5">html5</a></p>
+            <p>以前我们需要在跨域的<code>iframe</code>中通讯，只能使用一个中间<code>iframe</code>跳转（或者<code>window.name</code>）来进行数据交换。而<code>window.postMessage</code>允许我们进行安全的跨域通讯。</p>
+            <p>调用<code>window.postMessage</code>的时候会在目标的<code>window</code>上分发<code>MessageEvent</code>。这个事件对象包括事件类型<code>message</code>和一些关于这次消息通讯的属性，包括数据、源还有调用<code>postMessage</code>的<code>window</code>等。</p>
+            <p>这个方法接受两个参数：</p>
+            <ol>
+              <li><code>message</code>，要传输的数据。</li>
+              <li><code>targetOrigin</code>，声明特定的域接收这个事件，可以是<code>*</code>或者是一个URI。如果目标<code>window</code>的域与这个参数不匹配，则不会把事件分发到这个<code>window</code>。这样就可以防止事件的信息被不信任的代码捕获到。</li>
+            </ol>
+            <p>我们可以通过以下的代码接收别的<code>window</code>发送过来的消息：</p> <pre><code>window.addEventListener(&quot;message&quot;, receiveMessage, false);
+function receiveMessage(event) {
+  if (event.origin !== &quot;http://example.org:8080&quot;)
+    return;
+    // ...
+}
+</code></pre>
+            <p>事件对象有以下几个属性：</p>
+            <ol>
+              <li><code>data</code>，就是通过<code>postMessage</code>传入的第一个参数的值。</li>
+              <li><code>origin</code>，调用<code>postMessage</code>的<code>window</code>所在的域。这个属性包括协议、主机还有端口。这个域只是调用<code>postMessage</code>当时的<code>window</code>所在的域。</li>
+              <li><code>source</code>，调用<code>postMessage</code>的<code>window</code>的一个引用。</li>
+            </ol>
+            <p>有以下几个实践建议：</p>
+            <ol>
+              <li>如果你不需要任何其他<code>window</code>发送的消息，不要绑定<code>message</code>事件！</li>
+              <li>如果需要这些消息，记得在处理的时候校验事件对象中的<code>origin</code>和<code>source</code>属性是否合法。任何<code>window</code>都可以向这个页面发送消息，所以一定要过滤掉一些恶意的消息。除了对来源的校验，还必须对消息的内容进行校验和过滤，防止有害的消息影响系统功能。</li>
+              <li>在发送消息的时候记得带上一个特定的<code>targetOrigin</code>，而不是<code>*</code>。这样可以防止其他恶意的站点截获你的消息。</li>
+            </ol>
+            <p>最后一个需要注意的地方是，事件对象中的<code>origin</code>属性与<code>document.domain</code>的值是没有关系的哦，有兴趣的小伙伴可以做一个实验来验证一下！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/30/javascript-same-origin-policy.html" title="JavaScript同源策略">上一篇</a></li>
+              <li><a href="/posts/2013/11/01/ie-ondataavailable-event.html" title="IE的dataavailable事件">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

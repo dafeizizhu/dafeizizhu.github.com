@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery源码解析之jQuery.fn.html</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery源码解析之jQuery.fn.html</h2>
+            <p class="blog-post-meta">写于2013年08月30日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天来看看<code>jQuery.fn.html</code>的源码。jQuery通过一个<code>access</code>方法封装了jQuery风格的<code>getter</code>和<code>setter</code>。今天先不关注<code>access</code>是怎么实现的，具体来看看<code>html</code>内部的代码逻辑。</p>
+            <p>首先来看一下这几个正则：</p> <pre><code>var rxhtmlTag = /&lt;(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^&gt;]*)\/&gt;/gi,
+  rtagName = /&lt;([\w:]+)/,
+  rhtml = /&lt;|&amp;#?\w+;/,
+  rnoInnerhtml = /&lt;(?:script|style|link)/i,
+</code></pre>
+            <ol>
+              <li>第一个正则是匹配一些自关闭的HTML标签。</li>
+              <li>第二个正则匹配字符串中第一个标签的<code>tagName</code>。</li>
+              <li>第三个正则匹配这个字符串是否HTML字符串。</li>
+              <li>第四个正则匹配这个字符串里面有没有包含样式或者是脚本。</li>
+            </ol>
+            <p>先来看<code>getter</code>，这个逻辑非常简单：</p> <pre><code>if ( value === undefined &amp;&amp; elem.nodeType === 1 ) {
+  return elem.innerHTML;
+}
+</code></pre>
+            <p><code>elem</code>是jQuery对象的第一个元素，如果没有传入任何参数并且jQuery对象的一个元素是HTML元素，则直接返回其<code>innerHTML</code>属性。</p>
+            <p>再来看<code>setter</code>，这里有两个分支。要进入第一个分支，需要满足以下几个条件：</p>
+            <ol>
+              <li>传入的参数是一个字符串。</li>
+              <li>字符串里面没有样式或者脚本，使用第四个正则表达式去匹配。</li>
+              <li><code>wrapMap</code>里面没有<code>key</code>是使用第二个正则表达式匹配出来的第一个标签的<code>tagName</code>。</li>
+            </ol>
+            <p>满足这三个条件之后，jQuery会使用第一个正则表达式匹配不应该自关闭的标签，例如<code>div</code>。如果找到这些不应该自关闭的标签，会使用以下这句代码自动替换成一个关闭的空标签：</p> <pre><code>value = value.replace( rxhtmlTag, &quot;&lt;$1&gt;&lt;/$2&gt;&quot; );
+</code></pre>
+            <p>替换完成之后，会遍历jQuery对象里面所有的元素，先使用<code>cleanData</code>去掉内部元素的所有数据和事件处理程序：</p> <pre><code>jQuery.cleanData( getAll( elem, false ) );
+</code></pre>
+            <p>并直接把元素的<code>innerHTML</code>属性设置成<code>value</code>。全部元素都处理完之后，会把<code>elem</code>的值置成<code>0</code>，这样第二个分支就不会执行了。注意，在对<code>innerHTML</code>赋值的时候可能会抛出异常。抛出异常后<code>elem</code>的值是非0的，这个情况下都会进入第二个分支。</p>
+            <p>第二个分之就是调用<code>empty</code>之后再调用<code>append</code>来获得跟直接设置<code>innerHTML</code>一样的效果：</p> <pre><code>this.empty().append( value );
+</code></pre>
+            <p>以上就是<code>html</code>的主要逻辑。<code>getter</code>很简单，就是返回<code>innerHTML</code>。而<code>setter</code>就比较复杂，如果要单纯使用<code>innerHTML</code>这个属性，要判断参数是否适合直接使用<code>innerHTML</code>，例如参数里面有脚本或者样式，则需要进入第二个分之，交给<code>append</code>去处理。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/29/jquery-html.html" title="jQuery扫盲之.html">上一篇</a></li>
+              <li><a href="/posts/2013/08/31/javascript-cross-browser-concerns.html" title="Secrets of the JavaScript Ninja 读书笔记之 跨浏览器需要关心的东西">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

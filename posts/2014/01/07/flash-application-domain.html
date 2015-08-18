@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用应用程序域</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用应用程序域</h2>
+            <p class="blog-post-meta">写于2014年01月07日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>应用程序域<code>ApplicationDomain</code>的用途是存储ActionScript 3.0的定义表。<code>swf</code>文件中的所有代码都被定义在应用程序域中。通过不同的应用程序域，可以允许同一个类有多个定义，并且还允许子级重用父级定义。</p>
+            <p>在使用<code>Loader</code>的<code>load</code>方法的时候，通过<code>context</code>这个参数可以指定加载内容的应用程序域，例如：</p> <pre><code>ldr = new Loader(); 
+var req:URLRequest = new URLRequest(&quot;Greeter.swf&quot;); 
+var ldrContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain); 
+ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler); 
+ldr.load(req, ldrContext);
+</code></pre>
+            <p>以上的代码把加载的<code>swf</code>文件放入到当前<code>swf</code>文件的应用程序域中。在使用应用程序域时，要记住以下几点：</p>
+            <ol>
+              <li><code>swf</code>文件中的所有代码都会被定义在该应用程序域中。</li>
+              <li>已加载的类尽在其父级中没有相关定义时才进行定义，不能用较新的定义覆盖已加载类的定义。</li>
+            </ol>
+            <p>在加载其他<code>swf</code>文件的时候，我们可以通过创建系统域的子与划分子级<code>swf</code>文件：</p> <pre><code>var appDomainA:ApplicationDomain = new ApplicationDomain(); 
+var contextA:LoaderContext = new LoaderContext(false, appDomainA); 
+var loaderA:Loader = new Loader(); 
+loaderA.load(new URLRequest(&quot;application2.swf&quot;), contextA);
+</code></pre>
+            <p>也可以使用<code>Application.currentDomain</code>，这样可以将新的类定义添加到应用程序当前的一组类定义中，这样加载的<code>swf</code>被视为运行时共享库：</p> <pre><code>var appDomainB:ApplicationDomain = ApplicationDomain.currentDomain; 
+var contextB:LoaderContext = new LoaderContext(false, appDomainB); 
+var loaderB:Loader = new Loader(); 
+loaderB.load(new URLRequest(&quot;module1.swf&quot;), contextB);
+</code></pre>
+            <p>最后一种方式是通过创建当前域的新子域，使用父级的类定义：</p> <pre><code>var appDomainC:ApplicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);  
+var contextC:LoaderContext = new LoaderContext(false, appDomainC); 
+var loaderC:Loader = new Loader(); 
+loaderC.load(new URLRequest(&quot;module3.swf&quot;), contextC);
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/06/flash-loader-context.html" title="AS3 LoaderContext">上一篇</a></li>
+              <li><a href="/posts/2014/01/08/flash-security-domain.html" title="使用安全域">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

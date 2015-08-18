@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 执行字符串形式的表达式</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 执行字符串形式的表达式</h2>
+            <p class="blog-post-meta">写于2013年08月11日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>周末还是继续读书笔记。今天讨论的是JavaScript中执行字符串形式的表达式的几种方式。</p>
+            <h3 id="eval">eval</h3>
+            <p>这个应该是最简单的执行字符串表达式的方法了。<code>eval</code>接受一个参数，就是字符串形式的表达式，并返回最后一条语句的返回结果。比较常见的用法就是把JSON格式的字符串转换成JavaScript的对象：</p> <pre><code>var o = eval(&#39;({ninja: 1})&#39;);
+</code></pre>
+            <p>如果把圆括号省略，<code>o</code>的值是<code>undefined</code>，因为参数语句执行时没有返回任何东西。加上圆括号之后，执行该语句会返回这个对象的值，<code>o</code>才能正确赋值。</p>
+            <p>还有一点需要注意的是<code>eval</code>中的语句执行的作用域与上下文与调用<code>eval</code>所在的作用域和上下文一致。</p>
+            <h3 id="function-">Function构造器</h3>
+            <p>Function构造器的参数列表是可变的。其中最后一个参数是字符串形式的函数逻辑，前面所有参数声明了构造的函数接受哪些参数，如：</p> <pre><code>var add = new Function(&quot;a&quot;, &quot;b&quot;, &quot;return a + b;&quot;);
+</code></pre>
+            <p>与<code>eval</code>不一样的是，使用Function构造器创建的函数<strong>不会产生闭包</strong>，即不能访问外部函数的变量，如：</p> <pre><code>(function () {
+  var a = &quot;outter&quot;;
+  var test = new Function(&quot;alert(a);&quot;);
+  test();
+})();
+</code></pre>
+            <p>运行结果<a href="http://jsfiddle.net/hdLmt/show/">参考这里</a>。运行的时候抛出异常<code>a is not defined</code>，因为没有创建闭包，导致<code>test</code>内部无法访问外部函数的变量<code>a</code>。</p>
+            <h3 id="timer">Timer</h3>
+            <p><code>setTimeout</code>和<code>setInterval</code>的第一个参数除了可以是函数（无论是函数的引用或者是匿名函数），也可以是一个字符串，表示timer触发时执行的逻辑，如：</p> <pre><code>var tick = window.setTimeout(&#39;alert(&quot;Hi!&quot;)&#39;,100);
+</code></pre>
+            <p>除了十分特殊的需求，一般都不需要这么使用timer。就算是需要运行时动态执行的逻辑，也可以通过以上两种方式创建函数的引用，在把它传入到<code>setTimeout</code>或者<code>setInterval</code>中。</p>
+            <h3 id="-">在全局作用域中执行</h3>
+            <p><code>eval</code>执行的代码跟执行<code>eval</code>所在的作用域是一致的。而有一些时候需要<code>eval</code>在全局作用域中执行。使用动态script标签可以解决以上的问题：</p> <pre><code>var head = document.getElementsByTagName(&quot;head&quot;)[0] ||
+             document.documentElement,
+    script = document.createElement(&quot;script&quot;); 
+script.type = &quot;text/javascript&quot;;
+script.text = data;
+head.appendChild(script);               
+head.removeChild(script); 
+</code></pre>
+            <p>在<code>head</code>中插入一个<code>script</code>元素，设置<code>type</code>为JavaScript脚本，把<code>text</code>设置成需要执行的字符串形式的代码，然后插入到<code>head</code>中，再把它删除。这样，<code>text</code>中的代码就会放到全局作用域中执行。</p>
+            <h3 id="-">安全执行</h3>
+            <p>在运行时环境中执行字符串形式的代码通常都会带来安全性的问题。代码的来源是我们最关心的问题，它是否可信？它是否包含高危的代码，把整个页面弄挂，甚至对后台服务器发起攻击？我们需要一种机制去过滤动态执行的代码，Google的Caja是其中一个方式，让代码安全的执行。其思路大概就是把一段动态的代码编译成另外一段更复杂，更难看的代码，实现相同的功能，又能防止该代码执行一些对页面可能有危害的行为。关于Caja，后面会专门写一篇讲述其原理及其使用方法。</p>
+            <p>在日常工作中，需要使用动态执行字符串形式的代码场景有限（想必应该是十分高雅的实现……）。但是一旦要使用，记得注意采用哪种方式去执行动态代码，注意作用域以及上下文等细节问题哦亲。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/10/javascript-oo-gotchas.html" title="Secrets of the JavaScript Ninja 读书笔记之 面向对象陷阱">上一篇</a></li>
+              <li><a href="/posts/2013/08/12/dom-getattribute.html" title="DOM的getAttribute方法">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

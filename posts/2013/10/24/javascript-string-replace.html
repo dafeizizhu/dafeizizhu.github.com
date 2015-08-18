@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>字符串的replace方法</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">字符串的replace方法</h2>
+            <p class="blog-post-meta">写于2013年10月24日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p><code>replace</code>是一个我们经常都会使用到的方法，最简单的就是直接使用字符串进行替换，还有就是可以传入正则表达式进行替换。不仅可以简单地替换字符串，而且还可以传入一个回调函数进行更复杂的替换。今天就简单看一下这个方法可以怎么用。</p>
+            <p><code>replace</code>方法不会改变原来的字符串，它会返回一个替换后的新字符串。它接受两个参数，每个参数都有两种传入形式。</p>
+            <p>第一个参数可以是一个正则表达式，它匹配的结果会被第二个参数的返回值替换；也可以是一个字符串，原字符串中与这个字符串相同的子串会被第二个参数的返回值：</p> <pre><code>&quot;abca&quot;.replace(&quot;a&quot;, &quot;d&quot;); // &quot;dbca&quot;
+&quot;abca&quot;.replace(/a/, &quot;d&quot;); // &quot;dbca&quot;
+</code></pre>
+            <p>注意哦，如果第一个参数是字符串，则只会替换第一个相同的子串，如上例中的第二个<code>a</code>是没有被替换的，如果要替换全部相同的子串只能使用正则表达式：</p> <pre><code>&quot;abca&quot;.replace(/a/g, &quot;d&quot;); // &quot;dbcd&quot;
+</code></pre>
+            <p>第二个参数比较有意思，它可以是一个字符串，作为新值被替换。这个字符串也简单支持了一些模式，例如：</p>
+            <ol>
+              <li><code>$$</code>，表示一个美元符号<code>$</code>。</li>
+              <li><code>$&amp;</code>，表示匹配的子串。</li>
+              <li><code>$[反引号]</code>，表示匹配子串之前的子串。</li>
+              <li><code>$&#39;</code>，表示匹配子串之后的子串。</li>
+              <li><code>$n</code>或者<code>$nn</code>，当<code>n</code>是一个数字的时候表示第n个捕获的子串，只有当第一个参数是正则表达式的时候才有效。</li>
+            </ol>
+            <p>除了字符串，我们还可以指定一个回调函数作为第二个参数。<code>replace</code>会使用这个回调函数返回的值进行替换，例如：</p> <pre><code>&quot;abca&quot;.replace(&quot;b&quot;, function () { return &quot;a&quot;;});
+// equals =&gt;
+&quot;abca&quot;.replace(&quot;b&quot;, &quot;a&quot;);
+</code></pre>
+            <p>这个回调函数接受可变长度的参数，可以分成四块：</p>
+            <ol>
+              <li><code>match</code>，匹配的子串，同字符串值<code>$&amp;</code>。</li>
+              <li><code>p1</code> ... <code>pn</code>，捕获的子串，有多少个捕获的子串就有多少个参数。</li>
+              <li><code>offset</code>，倒数第二个参数表示匹配的子串在原字符串的偏移量。</li>
+              <li><code>string</code>，原字符串。</li>
+            </ol>
+            <p>例子：</p> <pre><code>&quot;abcdefg&quot;.replace(/(d)([^g]*)(g)/, function (match, 
+  p1, p2, p3, offset, string) {
+  console.log(&quot;match:&quot;, match); // defg
+  console.log(&quot;p1:&quot;, p1); // d
+  console.log(&quot;p2:&quot;, p2); // ef
+  console.log(&quot;p3:&quot;, p3); // g
+  console.log(&quot;offset:&quot;, offset); // 3
+  console.log(&quot;string:&quot;, string); // abcdefg
+});
+</code></pre>
+            <p>基本上<code>replace</code>已经非常灵活了，使用正则表达式和替换的回调函数几乎可以实现所有字符串替换的操作，赞！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/23/javascript-unicode-hex-decode.html" title="Unicode 16进制编码">上一篇</a></li>
+              <li><a href="/posts/2013/10/25/jquery-val.html" title="jQuery扫盲之val">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

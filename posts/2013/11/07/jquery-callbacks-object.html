@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之callbacks对象</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之callbacks对象</h2>
+            <p class="blog-post-meta">写于2013年11月07日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>callbacks对象是使用<code>jQuery.Callbacks</code>返回的对象，可以使用这个对象去管理回调函数列表。</p>
+            <h3 id="-">增加</h3>
+            <p>调用<code>callbacks.add</code>就可以往列表里面增加一个或者多个回调函数：</p> <pre><code>callbacks.add(function () {...});
+</code></pre>
+            <h3 id="-">删除</h3>
+            <p>调用<code>callbacks.remove</code>可以在列表中删除一个或者多个回调函数：</p> <pre><code>callbacks.remove(foo);
+</code></pre>
+            <p>也可以使用<code>callbacks.empty</code>清空整个回调函数列表：</p> <pre><code>callbacks.empty();
+</code></pre>
+            <h3 id="-">查询</h3>
+            <p>调用<code>callbacks.has</code>可以判断一个回调函数是否在列表里面：</p> <pre><code>callbacks.add(foo);
+alert(callbacks.has(foo)); // true
+</code></pre>
+            <h3 id="-">触发</h3>
+            <p>调用<code>callbacks.fire</code>可以把回调函数列表中的函数都执行。这个方法接受可变参数列表，这些参数都会传递到每一个回调函数中：</p> <pre><code>callbacks.add(function (a) {
+  alert(a);
+});
+callbacks.fire(&quot;abc&quot;); // alert(&quot;abc&quot;);
+</code></pre>
+            <p>还可以使用<code>callbacks.fireWith</code>制定一个回调函数的执行上下文：</p> <pre><code>callbacks.fireWidth(contenxt, args);
+</code></pre>
+            <p>调用<code>callbacks.fired</code>判断当前这个回调函数列表有没有至少被触发一次：</p> <pre><code>callbacks.fire();
+alert(callbacks.fired()); // true
+</code></pre>
+            <h3 id="-">禁用</h3>
+            <p>调用<code>callbacks.disable</code>可以禁用这个回调函数列表，即使调用了<code>callbacks.fire</code>回调函数都不会触发：</p> <pre><code>callbacks.disable();
+</code></pre>
+            <p>可以调用<code>callbacks.disabled</code>判断当前这个回调函数列表是否被禁用了：</p> <pre><code>callbacks.disable();
+alert(callbacks.disabled()); // true
+</code></pre>
+            <h3 id="-">锁定</h3>
+            <p>调用<code>callbacks.lock</code>可以锁定这个回调函数列表，在锁定之前加入的回调函数不会再被触发。当调用<code>jQuery.Callbacks</code>时传入了<code>memory</code>这个标志位，新加入的函数仍然可以被触发，只是参数被锁定在锁定之前最后一次<code>fire</code>时所提供的参数：</p> <pre><code>callbacks.add(function (a) { alert(a); });
+callbacks.fire(&quot;first&quot;);
+callbacks.lock();
+callbacks.add(function (a) { alert(&quot;again &quot; + a); });
+callbacks.fire(&quot;second&quot;); // again first
+</code></pre>
+            <p>同样地可以调用<code>callbacks.locked</code>判断当前这个回调函数列表是否被锁定了：</p> <pre><code>callbacks.lock();
+alert(callbacks.locked()); // true
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/06/node-redis.html" title="在Node上使用Redis">上一篇</a></li>
+              <li><a href="/posts/2013/11/08/jquery-constructor.html" title=" jQuery扫盲之jQuery">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

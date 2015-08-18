@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>css content</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">css content</h2>
+            <p class="blog-post-meta">写于2013年11月05日 关于<a href="/tags/css">css</a></p>
+            <p><code>content</code>属性通常会跟<code>before</code>和<code>after</code>伪类一起使用。这个属性就是<code>before</code>或者<code>after</code>插入到文档中的“伪元素”的内容。</p>
+            <p>这个属性接受以下几个值：</p>
+            <ol>
+              <li><code>none</code>，不生成伪元素。</li>
+              <li><code>normal</code>，在<code>before</code>或者<code>after</code>的时候会被当成<code>none</code>。</li>
+              <li><code>&lt;string&gt;</code>，一个字符串，表示伪元素的内容。</li>
+              <li><code>&lt;url&gt;</code>，使用格式是<code>content: url(path/to/resource)</code>，表示伪元素是一个外部资源，例如图片等。</li>
+              <li><code>&lt;counter&gt;</code>，使用格式是<code>content: counter(name, decimal)</code>，表示伪元素是一个计数器，第一个参数是计数器的名字，使用<code>conter-increment</code>声明一个CSS类为计数器；第二个参数是计数器的样式，默认是十进制数字。</li>
+              <li><code>attr(x)</code>，表示伪元素的内容是当前元素的<code>x</code>特性的值。</li>
+              <li><code>open-quote|close-quote</code>，表示伪元素的内容是引号。</li>
+              <li><code>no-open-quote|no-close-quote</code>，增加或者减少引号的层次。</li>
+            </ol>
+            <p>下面是几个例子：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/r8sv8/embedded/html,css,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>注意几点：</p>
+            <ol>
+              <li>IE6、IE7不支持<code>content</code>，其他主流浏览器都支持。</li>
+              <li><code>content</code>插入的内容其实只是“视觉”上的，所以不存在于文档中，无法复制粘贴。</li>
+            </ol>
+            <p><code>content</code>配合<code>after</code>伪类，可以修复浮动元素容器的高度塌陷问题：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/Vx3j7/embedded/html,css,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/04/css-overflow.html" title="css overflow">上一篇</a></li>
+              <li><a href="/posts/2013/11/06/node-redis.html" title="在Node上使用Redis">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

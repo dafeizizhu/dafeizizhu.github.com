@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>神奇的负边距</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">神奇的负边距</h2>
+            <p class="blog-post-meta">写于2013年07月18日 关于<a href="/tags/css">css</a></p>
+            <p>之前写过一篇<a href="http://dafeizizhu.github.io/2013/07/08/three-column-layout-middle-first/">《经典三列布局之如何让中间的列先显示出来》</a>，里面讲的就是使用浮动、相对定位和负边距来做的一套布局。写那篇文章的时候还没太搞懂负边距是怎么回事，今天简单分析一下对不同元素（正常、浮动、绝对定位等）的负边距是如何起作用的。</p>
+            <p>首先明确几点：</p>
+            <ol>
+              <li>负边距是完全合法的CSS写法，W3允许边距的值是负值。</li>
+              <li>负边距不属于CSS hack。</li>
+              <li>a负边距不会使元素脱离文档流。</li>
+              <li>所有现代浏览器都支持负边距（IE6也部分支持，太棒了！）。</li>
+            </ol>
+            <p>简单看看负边距的工作原理：</p>
+            <ol>
+              <li>在<code>top</code>和<code>left</code>方向上应用负边距，该元素会向指定的方向移动，随后的元素也会跟着一起移动。</li>
+              <li>在<code>bottom</code>和<code>right</code>方向上应用负边距，该元素的位置不会发生任何移动，但是随后的元素会挤压过来，看上去的效果就是该元素占的空间变小了。</li>
+              <li>当该元素没有应用宽度（<code>width: auto</code>也算），为该元素设置<code>left</code>和<code>right</code>方向上的负边距会让元素的宽度边大。</li>
+            </ol>
+            <p>负边距有什么用呢？其中最重要的一个作用我认为是把DOM树中较后出现的元素显示在页面较前的位置。我们知道HTML解析DOM树的时候是根据书写的顺序解析的。而文档的解析顺序是从上到下，从左到右（当然方向是<code>ltr</code>）的，那么正常书写的N列布局肯定是第一列写在最前边，但是可能我们需要中间第n列先解析，这时候就要把第n列的内容书写在前边，通过负边距调整位置，达到理想的效果。</p>
+            <p>现在分析一下之前写过的那篇文章中，左列的CSS究竟是如何达到最后的效果的。现来看看左列的CSS代码。</p> <pre><code>#left {
+    position: relative; // 1
+    left: -100px;       // 2
+    float: left;        // 3
+    margin-left: -100%; // 4   
+}
+</code></pre>
+            <p>这个元素分别使用了浮动、相对定位和负边距三种方式进行布局。现在按负边距、浮动、相对定位的顺序加上CSS，效果为：</p>
+            <ol>
+              <li>加上负边距，该元素向左移动，移动的距离跟父元素的宽度一致。注意，这里的宽度是指<strong>内容宽度</strong>，即不算<code>padding</code>、<code>border</code>和<code>margin</code>的宽度。</li>
+              <li>加上浮动，该元素与<code>middle</code>两个元素都变成浮动元素，负边距使得该元素沿着浮动方向位移了父元素的宽度，效果是该元素的左边界与<code>middle</code>的左边界重合。</li>
+              <li>最后加上相对定位，让该元素相对于其现有位置再向左移动与其宽度相等的距离。最后的效果就是该元素移动到<code>middle</code>元素的左侧。</li>
+            </ol>
+            <p>利用负边距，还能做出很多有趣的效果，例如一些层叠效果，如标签页、印章等。与其他CSS样式结合起来更是有趣。</p>
+            <p>今天在工作中也利用了之前写的三列布局的知识。用心沉淀，再返回到实践中，这种感觉真好。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/17/viewport.html" title="响应式设计入门之viewport">上一篇</a></li>
+              <li><a href="/posts/2013/07/19/css-equal-height-again.html" title="再谈CSS等高布局">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

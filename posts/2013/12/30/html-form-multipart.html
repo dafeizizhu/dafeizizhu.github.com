@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML Form的enctype</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML Form的enctype</h2>
+            <p class="blog-post-meta">写于2013年12月30日 关于<a href="/tags/html">html</a></p>
+            <p>表单的这个特性用来声明这个表单的内容类型。当我们没有显式声明这个特性的值的时候，使用的是其默认值<code>application/x-www-form-urlencoded</code>，对表单中的每个控件的值进行URL编码，提交编码之后的字符串。</p>
+            <p>这种编码方式满足大部分的场景，但是当我们需要传输一些非文本数据（例如文件、二进制数据等），这种方式是低效的。这时候我们需要把表单的<code>enctype</code>特性设置成<code>multipart/form-data</code>。</p>
+            <p>设置成这个值之后提交的表单，请求头的<code>Content-Type</code>会变成<code>multipart/form-data</code>。还需要跟上一个字符串，这个字符串不能存在于每个部分当中。这样表单接收方就可以根据这个字符串正确地分割请求体。分割后的每一个部分对应表单中的一个“控件”，里面包含了这个部分的名字和值。</p>
+            <p>每一个部分由以下几个部分组成：</p>
+            <ol>
+              <li><code>Content-Disposition</code>，固定为<code>form-data</code>。</li>
+              <li><code>name</code>，声明这个部分“控件”的名称，例如一般表单提交的时候就是表单控件对应的<code>name</code>特性的值。</li>
+            </ol>
+            <p>例如：</p> <pre><code>Content-Disposition: form-data; name=&quot;mycontrol&quot;
+</code></pre>
+            <p>然后一个回车换行之后就是这个部分对应的值。默认的<code>Content-Type</code>是<code>text/plain</code>，即是一个文本。当这个部分是一个文件或者二进制数据，需要显式声明这个部分的<code>Content-Type</code>，例如：</p> <pre><code>Content-Disposition: file; filename=&quot;file2.gif&quot;
+Content-Type: image/gif
+</code></pre>
+            <p>这种部分还需要一个额外的头信息，<code>filename</code>，声明这个文件或者二进制块的名称，方便表单接收方获取文件的原来的名字。</p>
+            <p>当表单中的上传文件控件可以上传多个文件（<code>multiple</code>）的时候，这个控件的部分的<code>Content-Type</code>则会声明成<code>multipart/mixed</code>，再跟上一个边界字符串，以分割这个部分里面的每一个文件：</p> <pre><code>--AaB03x
+Content-Disposition: form-data; name=&quot;files&quot;
+Content-Type: multipart/mixed; boundary=BbC04y
+
+--BbC04y
+Content-Disposition: file; filename=&quot;file1.txt&quot;
+Content-Type: text/plain
+
+... contents of file1.txt ...
+--BbC04y
+Content-Disposition: file; filename=&quot;file2.gif&quot;
+Content-Type: image/gif
+Content-Transfer-Encoding: binary
+
+...contents of file2.gif...
+--BbC04y--
+--AaB03x--
+</code></pre>
+            <p>如果我们是使用HTML表单的提交，那这些编码的工作浏览器其实已经做好了，我们只需要把表单设置好就可以了。但是，现在很多上传的控件都是不需要刷新页面的，类似于Ajax的效果。这时候，有没有可能我们自己构筑这个请求的请求体，然后通过Ajax提交出去呢？明天将继续介绍HTML5的File API，还有<code>multipart/form-data</code>的Ajax提交利器<code>FormData</code>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/24/flash-security-loading-data.html" title="Flash安全性之加载数据">上一篇</a></li>
+              <li><a href="/posts/2013/12/31/html5-file-api.html" title="HTML5的File API">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

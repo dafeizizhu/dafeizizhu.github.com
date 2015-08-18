@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Flash中控制声音之SoundTransform</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中控制声音之SoundTransform</h2>
+            <p class="blog-post-meta">写于2014年01月24日 关于<a href="/tags/Flash">Flash</a></p>
+            <p><code>Sprite</code>中有一个属性，<code>soundTransform</code>，就是用于控制这个<code>Sprite</code>的声音播放，包括音量大小和声道等。这个属性是<code>SoundTransform</code>类的一个实例，通过调整<code>soundTransform</code>的对应属性，就可以控制这个<code>Sprite</code>的声音播放。</p>
+            <p><code>SoundTransform</code>有以下几个属性可以供我们调整：</p>
+            <ol>
+              <li><code>leftToLeft</code>，指定左输入在左扬声器播放的量。</li>
+              <li><code>leftToRight</code>，指定左输入在右扬声器播放的量。</li>
+              <li><code>pan</code>，声音从左到右的平移。</li>
+              <li><code>rightToLeft</code>，指定右输入在右扬声器的量。</li>
+              <li><code>rightToRight</code>，指定右输入在右扬声器的量。</li>
+              <li><code>volume</code>，指定音量范围。</li>
+            </ol>
+            <p>其实上面的属性，平常只会使用到<code>volume</code>。这个属性的取值范围是<code>0</code>到<code>1</code>,分别表示静音和最大音量。</p>
+            <p>这个类只有构造函数一个公共方法，接受两个参数，分别是<code>volume</code>和<code>pan</code>两个属性的值。</p>
+            <p>下面的代码演示了如何控制一个<code>Sound</code>实例的声音播放：</p> <pre><code>var mySound:Sound = new Sound();
+var url:URLRequest = new URLRequest(&quot;mySound.mp3&quot;);
+var channel:SoundChannel;
+var transform:SoundTransform = new SoundTransform(0.5, 1.0);
+
+mySound.load(url);    
+channel = mySound.play();
+channel.soundTransform = transform;
+</code></pre>
+            <p>我们也可以把<code>SoundTransform</code>的实例设置到<code>Sprite</code>实例的<code>soundTransform</code>属性来调整<code>Sprite</code>的声音播放。</p>
+            <p>但是有个问题，如果<code>swf</code>文件是在ActionScript 3.0之前的版本创作的，从<code>Loader</code>加载回来的内容不是<code>Sprite</code>的实例，自然也没有办法通过<code>soundTransform</code>来调整音量。明天将继续介绍全局音量是如何控制的。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/23/as3-netstream-play.html" title="用NetStream播放视频，包括二进制数据哦！">上一篇</a></li>
+              <li><a href="/posts/2014/01/26/as3-soundmixer.html" title="全局声音控制：SoundMixer">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

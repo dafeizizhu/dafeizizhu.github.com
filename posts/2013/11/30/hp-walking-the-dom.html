@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>High Performance JavaScript 读书笔记之 遍历DOM</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">High Performance JavaScript 读书笔记之 遍历DOM</h2>
+            <p class="blog-post-meta">写于2013年11月30日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>DOM提供了多种方式供我们去遍历整个文档。虽然使用哪种方式都可以达到目的，但是有些时候还是需要选出一个效率最高的方式去达到某些性能基线。</p>
+            <p>我们可以使用<code>childNodes</code>去访问一个DOM的所以子元素，这样就可以递归地遍历整个文档中的DOM，下面是一个使用<code>childNodes</code>的例子：</p> <pre><code>function testChildNodes() {
+  var el = document.getElementById(&#39;mydiv&#39;),
+      ch = el.childNodes,
+      len = ch.length,
+      name = &#39;&#39;;
+  for (var count = 0; count &lt; len; count++) {
+    name = ch[count].nodeName;
+  }
+  return name;
+};
+</code></pre>
+            <p>我们也可以使用<code>nextSibling</code>去访问一个DOM的邻接节点，这样也可以遍历整个文档中的DOM：</p> <pre><code>function testNextSibling() {
+  var el = document.getElementById(&#39;mydiv&#39;),
+      ch = el.firstChild,
+      name = &#39;&#39;;
+  do {
+    name = ch.nodeName;
+  } while (ch = ch.nextSibling);
+  return name;
+};
+</code></pre>
+            <p>这两种方式在现代浏览器中的效率是差不多的，但是在IE上，<code>nextSibling</code>要比<code>childNodes</code>的效率要高得多。</p>
+            <p><code>childNodes</code>、<code>nextSibling</code>或者<code>firstChild</code>等属性是不区分DOM的类型的，也就是说注释和文本节点都会包含在里面。大多数时候我们不会关心这些注释或者文本节点，所以在遍历的过程中我们需要判断元素的类型。基于这种需求，DOM也提供了一些过滤之后的属性，如<code>children</code>和<code>nextElementSibling</code>等。使用这些属性去遍历DOM，只会遍历到元素节点，不会包括注释和文本。注意，IE6、7、8只支持<code>children</code>。</p>
+            <p>由于<code>children</code>等属性已经过滤掉注释和文本，所以其效率通常要比<code>childNodes</code>要高哦。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/26/javascript-swfobject.html" title="使用JavaScript在页面中嵌入Flash">上一篇</a></li>
+              <li><a href="/posts/2013/12/01/hp-repaints-and-reflows.html" title="High Performance JavaScript 读书笔记之 Repaints和Reflow">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

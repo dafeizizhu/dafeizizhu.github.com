@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在canvas中使用图片</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在canvas中使用图片</h2>
+            <p class="blog-post-meta">写于2013年11月14日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/html5">html5</a></p>
+            <p>在canvas中可以使用浏览器支持的所有图片格式，甚至是另一个canvas上面的图像。要在canvas上使用图片，可以分成两个步骤：</p>
+            <ol>
+              <li>获取图像的引用。</li>
+              <li>使用<code>drawImage</code>在canvas上画出对应的图像。</li>
+            </ol>
+            <p>图像的引用可以通过以下几种方式获取：</p>
+            <ol>
+              <li><code>Image</code>对象，例如<code>var img = new Image()</code>或者<code>document.getElementById(&quot;img&quot;)</code>。</li>
+              <li><code>Video</code>对象，canvas可以把这个视频对象当成图片使用。</li>
+              <li>另外一个canvas。</li>
+            </ol>
+            <p>如果图像跟canvas在同一个文档，就可以使用各种DOM API直接获取图像的引用，例如<code>getElementById</code>、<code>getElementsByTagName</code>等。值得注意是，使用<code>Image</code>等构造函数动态创建的图像，需要等该图像完全加载完毕之后才能使用，不然画出来的图像就有可能不正确：</p> <pre><code>var img = new Image();   // Create new img element
+img.addEventListener(&quot;load&quot;, function() {
+  // execute drawImage statements here
+}, false);
+img.src = &#39;myImage.png&#39;; // Set source path
+</code></pre>
+            <p>获取到图像的引用之后就可以使用<code>drawImage</code>在canvas上画图了。该方法是在canvas的上下文中：</p> <pre><code>var canvas = document.getElementById(&quot;canvas&quot;);
+if (canvas.getContext) {
+  var context = canvas.getContext(&quot;2d&quot;);
+}
+</code></pre>
+            <p>该方法支持多种形式传入参数。第一种接受三个参数：</p> <pre><code>context.drawImage(img, x, y);
+</code></pre>
+            <p>其中<code>img</code>就是上面获取到的图像的引用，<code>x</code>和<code>y</code>表示图像在canvas中的坐标，会按照图像的原始大小在指定的坐标上绘制图像。</p>
+            <p>第二种接受五个参数：</p> <pre><code>context.drawImage(img, x, y, width, height);
+</code></pre>
+            <p>前三个参数跟上面是一样的，只是增加了两个参数可以指定图像的大小，会按比例缩放图像。</p>
+            <p>最后一种接受九个参数：</p> <pre><code>context.drawImage(img, sx, sy, swidth, sheight, dx, dy, dwidth, dheight);
+</code></pre>
+            <p>逆天了！第一个参数就是图像的引用，第二至第五个参数表示原图像中，这次要绘制的坐标以及大小，后四个参数表示在目标canvas中绘制的坐标以及大小。使用这个方式可以对图片做出一些简单的<a href="http://mdn.mozillademos.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Using_images$samples/Art_gallery_example?revision=467551">裁剪</a>效果哦。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/13/jquery-no-conflict.html" title="jQuery扫盲之jQuery.noConflict">上一篇</a></li>
+              <li><a href="/posts/2013/11/15/jquery-when.html" title="jQuery扫盲之jQuery.when">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

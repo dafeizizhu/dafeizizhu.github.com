@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 style的那些事</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 style的那些事</h2>
+            <p class="blog-post-meta">写于2013年09月14日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p><code>style</code>算是一个比较麻烦的东西，因为使用<code>getAttribute(&quot;style&quot;)</code>和<code>elem.style</code>这两个返回的结果是不一样的。通常的用法是使用后者，返回一个<code>style</code>对象，通过这个对象操作DOM的各种CSS样式。而通过这个对象访问DOM上的CSS样式，<strong>只能访问到内联的CSS样式</strong>，而通过样式表（<code>style</code>标签、外部CSS样式表）叠加的CSS样式则不能通过这个对象访问。不过还是可以通过一些方式得到“层叠后”的CSS样式。</p>
+            <h3 id="style-">style属性的命名</h3>
+            <hr>
+            <p>很多CSS样式都是使用<code>-</code>来连接多个单词，例如<code>border-width</code>、<code>margin-left</code>等。要访问这些<code>style</code>对象的属性，需要通过以下的代码访问：</p> <pre><code>elem.style[&#39;border-width&#39;];
+</code></pre>
+            <p>如果使用<code>.</code>来访问属性，例如<code>elem.style.border-width</code>，中间的<code>-</code>会被解析成减号，导致逻辑错误或者是语法错误。需要使用<code>.</code>访问这些CSS样式，需要把这些样式名改成驼峰大小写的形式，例如：</p> <pre><code>elem.style.borderWidth;
+</code></pre>
+            <p>可以简单使用以下代码去进行转换：</p> <pre><code>name = name.replace(/-([a-z])/ig,                   
+  function(all,letter){
+    return letter.toUpperCase();
+  });
+</code></pre>
+            <h3 id="float">float</h3>
+            <hr>
+            <p>由于<code>float</code>是一个JavaScript保留字，所以不能使用<code>elem.style.float</code>来访问<code>float</code>的值。被催的是，遵循标准实现的浏览器使用的是<code>cssFloat</code>，而IE则是使用<code>styleFloat</code>。这需要在命名转换的函数中加入特殊判断，当属性是<code>float</code>的时候分别尝试<code>cssFloat</code>或者<code>styleFloat</code>的值。</p>
+            <h3 id="-">像素值</h3>
+            <hr>
+            <p>一些声明大小的CSS样式，例如<code>width</code>或者<code>hight</code>等，其实是需要指定单位的。而老的代码通常会在HTML元素中加入<code>width</code>和<code>height</code>特性来指定元素的大小。在这些特性的值里面是不需要填写单位的，浏览器会默认添加<code>px</code>作为单位。但是在CSS样式中，需要指定单位才能使这个样式生效，例如：</p> <pre><code>element.style.height = &quot;10px&quot;;
+</code></pre>
+            <p>遗憾的是，不是所有值是数字的CSS样式都是有单位的，例如<code>z-index</code>。除了这些没有单位的CSS样式，其他值是数字的CSS样式都可以为它们添加默认的单位。</p>
+            <h3 id="-">计算元素的大小</h3>
+            <hr>
+            <p>通过<code>elem.style.width</code>只能够获取到显式设置了<code>width</code>样式的元素的宽度。而元素的默认样式是<code>width: auto</code>，表示宽度是自动的（根据是块元素还是行内元素<code>auto</code>的行为是不同的）。这个时候通过以上的代码不能获取到元素的宽度。</p>
+            <p>浏览器在每个DOM元素上都附加了两个属性<code>offsetWidth</code>和<code>offsetHeight</code>，让我们能方便地获取元素的大小。这两个属性的值包含了元素的<code>padding</code>大小哦！</p>
+            <p>注意，当元素的<code>display</code>为<code>none</code>的时候，这两个属性的值都是<code>0</code>。</p>
+            <h3 id="opacity">opacity</h3>
+            <hr>
+            <p>这个属性声明元素的透明度，遗憾的是IE9之前的IE浏览器需要使用<code>filter</code>才能实现同样的效果，例如：</p> <pre><code>opacity: 0.5;
+filter: alpha(opacity=50);
+</code></pre>
+            <p>需要正确获取元素的透明度，首先需要判断元素是否支持<code>opacity</code>，书中通过这段代码去判断：</p> <pre><code>div.setAttribute(&#39;style&#39;,&#39;opacity:.5&#39;);
+var OPACITY_SUPPORTED = div.style.opacity === &quot;0.5&quot;;
+</code></pre>
+            <p>这里使用了一个特性，就是当<code>opacity</code>的值是以小数点开头的时候，在<code>style</code>对象的<code>opacity</code>属性会自动转成对应的小数，以数字<code>0</code>开头。如果有这个特性，说明浏览器原生支持<code>opacity</code>，否则则不支持<code>opacity</code>，忽略掉<code>style.opacity</code>的值，转去获取对应<code>filter</code>的值。</p>
+            <h3 id="-">颜色</h3>
+            <hr>
+            <p>在CSS中，颜色有好几种表示方式：</p>
+            <ol>
+              <li>关键字，例如<code>red</code>、<code>white</code>等。</li>
+              <li><code>#rgb</code>，使用一位十六进制数表示红绿蓝的值，范围是从<code>0</code>到<code>f</code>，<code>#123</code>等效于<code>#112233</code>。</li>
+              <li><code>#rrggbb</code>，使用两位十六进制数表示红绿蓝的值，范围从<code>00</code>到<code>ff</code>。</li>
+              <li><code>rgb(r, g, b)</code>，括号中的值代表红绿蓝的值，范围从<code>0</code>到<code>256</code>。</li>
+              <li><code>rgba(r, g, b, a)</code>，与<code>rgb</code>类似，只是多了第四个值，表示<code>alpha</code>通道，表示颜色的透明度。</li>
+              <li><code>hsl(h, s, l)</code>，使用亮度、色相和饱和度表示颜色。</li>
+              <li><code>hsla(h, s, l, a)</code>，与<code>hsl</code>类似，增加了<code>alpha</code>通道，表示颜色的透明度。</li>
+            </ol>
+            <p>当使用不同的颜色表达式去设置元素的颜色相关的CSS样式，再通过<code>style</code>去访问这些样式的值，不同浏览器有不同的表现：</p>
+            <ol>
+              <li>Chrome等webkit的浏览器会统一转成<code>rgb</code>或者<code>rgba</code>的形式。</li>
+              <li>FireFox会保留关键字，其他统一转成<code>rgb</code>或者<code>rgba</code>的形式。</li>
+              <li>IE8会保留原始设置的颜色表达式（只是不支持<code>alpha</code>通道，通过<code>rgba</code>或者<code>hsla</code>设置的颜色不生效，返回的是空字符串）。</li>
+              <li>IE9会保留全部原始设置的颜色表达式。</li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/13/jquery-ajax.html" title="jQuery扫盲之jQuery.ajax">上一篇</a></li>
+              <li><a href="/posts/2013/09/15/javascript-fetch-computed-styles.html" title="Secrets of the JavaScript Ninja 读书笔记之 获取层叠后的style">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

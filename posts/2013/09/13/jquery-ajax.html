@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之jQuery.ajax</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.ajax</h2>
+            <p class="blog-post-meta">写于2013年09月13日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>继续扫盲，今天是<code>jQuery.ajax</code>方法详解。</p>
+            <blockquote>
+              <p>Perform an asynchronous HTTP (Ajax) request.</p>
+            </blockquote>
+            <p>这个方法应该是jQuery有关Ajax的最底层的一个方法。</p>
+            <h3 id="-">用法</h3>
+            <hr>
+            <p>这个方法有两种调用形式：</p>
+            <ol>
+              <li>接受两个参数，第一个是<code>url</code>，第二个是Ajax的配置。</li>
+              <li>接受一个参数，就是Ajax的配置。</li>
+            </ol>
+            <p>其实第一种调用方式就是方便发出请求，只需要传递URL作为参数即可。注意哦，所有配置都是可选的，可以通过<code>$.ajaxSetup</code>来设置默认配置。</p>
+            <h3 id="-">配置</h3>
+            <hr>
+            <ol>
+              <li><code>accepts</code>，用来设置接受那些MIME类型的数据，例如<code>accepts: { xml: &quot;text/xml&quot; }</code>。默认值与<code>dataType</code>配置有关。</li>
+              <li><code>async</code>，声明这个Ajax请求是否异步。默认值是<code>true</code>，表示请求是异步的。可以通过<code>async: false</code>来显式声明这个请求是同步的。使用跨域的请求或者是jsonp的时候，不支持同步请求。<strong>注意，在1.8之后，同步的请求只能通过<code>success</code>等回调进行处理，而不能使用jqXHR的promise。</strong></li>
+              <li><code>beforeSend</code>，配置一个回调函数，在Ajax请求发出之前调用。接受两个参数，第一个是jqXHR对象，第二个是这次Ajax请求的配置。如果在回调函数中返回<code>false</code>，则这个Ajax请求会被取消。</li>
+              <li><code>cache</code>，声明这个Ajax请求是否允许缓存。默认值是<code>true</code>。只对GET请求有效，原理是通过在GET的URL后面附上一个时间戳参数<code>_=13xxxxxxx</code>来达到不取缓存的作用。使用其他HTTP方法的时候是没有效的（除了奇葩IE8，当POST之前已经使用GET请求相同URL的时候）。</li>
+              <li><code>complete</code>，请求完成时的回调函数，接受jqXHR对象还有一个字符串形式的状态组为参数。这个回调函数会在<code>success</code>或者<code>error</code>后调用。在1.5之后的版本，还可以接受一个函数数组，当Ajax请求完成的时候会按顺序执行数组中的回调函数。</li>
+              <li><code>contents</code>，配置特定的<code>contentType</code>按照特定的正则表达式去转换返回的数据。</li>
+              <li><code>contentType</code>，配置<code>Content-Type</code>请求头，默认是<code>application/x-www-form-urlencoded; charset=UTF-8</code>，适用于大部分的情况。</li>
+              <li><code>context</code>，指定回调函数的执行上下文。</li>
+              <li><code>converters</code>，指定返回数据类型的转化方式，例如<code>json</code>的是<code>jQuery.parseJSON</code>。</li>
+              <li><code>crossDomain</code>，当同域请求的时候默认为<code>false</code>，当不同域请求的时候默认为<code>true</code>。</li>
+              <li><code>data</code>，被发送到服务器的数据，可以是一个字符串，也可以是一个对象，这个对象会被序列化成一个查询串的形式。</li>
+              <li><code>dataFilter</code>，在数据返回前执行的回调函数，接受原始数据的字符串和数据类型两个参数。返回值会被当作参数传到下一个回调函数中（例如<code>success</code>）。</li>
+              <li><code>dataType</code>，返回数据的类型，可以是字符串、JSON对象或者是XML等。jQuery会根据相应头自动进行判断返回的数据类型。可以通过这个配置显式指定返回的数据类型。</li>
+              <li><code>error</code>，Ajax请求发生错误的时候执行的回调函数，接受三个参数，分别是jqXHR对象、状态字符串还有抛出的错误。状态可能是<code>timeout</code>、<code>error</code>、<code>abort</code>或者是<code>parsererror</code>。而抛出的错误大部分是HTTP的错误，例如<code>Not Found</code>（404）、<code>Internal Server Error</code>（50X）等。</li>
+              <li><code>global</code>，配置这个请求是否触发全局Ajax事件，默认为<code>true</code>。</li>
+              <li><code>headers</code>，配置请求头。该配置是一个对象，其中的键是请求头的名字，值是对应请求头的值，例如<code>&quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot;</code>。</li>
+              <li><code>ifModified</code>，默认值是<code>false</code>。当这个配置为<code>true</code>的时候，返回值发生变化才认为请求成功，否则不会触发<code>success</code>回调。</li>
+              <li><code>isLocal</code>，当页面是在本地环境（文件系统等）打开的时候是<code>true</code>。强烈建议在<code>jQuery.ajaxSetup</code>中设置该配置的值。</li>
+              <li><code>jsonp</code>，配置jsonp回调函数名在查询串中的键名，默认是<code>callback</code>。</li>
+              <li><code>jsonpCallback</code>，配置jsonp回调的函数名。默认情况下jQuery会生成一个随机的函数名以确保每次的回调都能与这个Ajax请求匹配上。我们可以配置一个特定的函数名称，当Ajax请求完成时就回直接调用该函数。</li>
+              <li><code>mimeType</code>，配置XHR的MIME类型。</li>
+              <li><code>password</code>，配置认证需要的密码信息。</li>
+              <li><code>processData</code>，默认值是<code>true</code>，表示对提交的数据进行查询串形式的转换。如果想传递XML DOM等非查询串形式的数据，则需要把这个配置设置成<code>false</code>。</li>
+              <li><code>scriptCharset</code>，当数据类型是<code>script</code>或者是<code>jsonp</code>的时候，而且远程的脚本使用的编码与页面编码不一致的时候才需要配置这个选项。需要显式指定远程脚本的字符集编码。</li>
+              <li><code>statusCode</code>，配置一个对象，键是HTTP状态码，例如<code>200</code>、<code>404</code>等，值是一个回调函数，当Ajax请求完成时，会执行返回的状态码对应的回调函数。</li>
+              <li><code>success</code>，Ajax请求成功时执行的回调函数，该函数接受三个参数，返回的数据（已经根据<code>dataType</code>进行转换后的数据）、状态字符串还有jqXHR对象。</li>
+              <li><code>timeout</code>，设置这个请求的超时时间。</li>
+              <li><code>traditional</code>，当配置为<code>true</code>的时候使用<code>jQuery.param</code>来序列化传给服务器的数据。</li>
+              <li><code>type</code>，声明这次请求的HTTP方法，例如<code>GET</code>、<code>POST</code>等。</li>
+              <li><code>url</code>，声明请求的URL，默认值是当前页面。</li>
+              <li><code>username</code>，配置认证需要的用户名信息。</li>
+              <li><code>xhr</code>，配置获取XMLHttpRequest的方法，默认是优先使用<code>ActiveXObject</code>，其次是使用标准的<code>XMLHttpRequest</code>。可以通过配置一个回调函数，配置自定义的方法获取XMLHttpRequest对象。</li>
+              <li><code>xhrField</code>，在xhr对象上配置自定义的属性。</li>
+            </ol>
+            <p>哇，竟然有33个配置这么多！其实日常使用也不会用到这么多的配置，更多的情况下我们是会使用jQuery包装的函数去发送Ajax请求，例如<code>$.get</code>或者<code>$.getScript</code>等。我们还可以根据自己的需要封装自己的工具函数与服务器进行交互。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/12/jquery-ajax-help-function.html" title="jQuery扫盲之Ajax工具函数">上一篇</a></li>
+              <li><a href="/posts/2013/09/14/javascript-style-attribute-issue.html" title="Secrets of the JavaScript Ninja 读书笔记之 style的那些事">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之val</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之val</h2>
+            <p class="blog-post-meta">写于2013年10月25日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>jQuery提供了一个简便的方法让我们去获取DOM的<code>value</code>特性，就是<code>jQuery.fn.val</code>方法。跟<code>attr</code>和<code>prop</code>一样，它也是一个<code>getter</code>和<code>setter</code>一体的方法。</p>
+            <h3 id="getter">getter</h3>
+            <blockquote>
+              <p>Get the current value of the first element in the set of matched elements.</p>
+            </blockquote>
+            <p>跟<code>attr</code>和<code>prop</code>也一样的是，作为<code>getter</code>的<code>val</code>方法不接受任何参数，只会获取jQuery对象中地一个元素的<code>value</code>的值：</p> <pre><code>$(elem).val();
+</code></pre>
+            <p>通常我们会在<code>input</code>、<code>select</code>或者<code>textarea</code>元素上使用<code>val</code>方法。当<code>select</code>的<code>multiple</code>特性声明为有效的时候，<code>val</code>会返回一个数组，包含了选中的<code>option</code>的<code>value</code>；如果没有选中任何<code>option</code>，则会返回<code>null</code>。</p>
+            <p>如果目标对象不是以上的元素（例如<code>div</code>、<code>a</code>等），<code>val</code>方法会返回一个空字符串。其实就是返回DOM上的<code>value</code>属性，而不是<code>value</code>特性：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/Hrv6u/embedded/js,html/" allowfullscreen="allowfullscreen"
+            frameborder="0"> </iframe>
+            <h3 id="setter">setter</h3>
+            <blockquote>
+              <p>Set the value of each element in the set of matched elements.</p>
+            </blockquote>
+            <p>跟<code>attr</code>和<code>prop</code>也十分类似，有两种传输参数的方式：</p>
+            <ol>
+              <li><code>value</code>，传入要设置的<code>value</code>的值。</li>
+              <li><code>function(index, value)</code>，一个回调函数，会把该函数的返回值设置到<code>value</code>里面。回调函数接受元素在jQuery对象的索引和元素原来的<code>value</code>值作为参数。</li>
+            </ol>
+            <p>这个方法通常用来设置表单元素中的<code>value</code>值。我们还可以传入一个数组，让<code>checkbox</code>、<code>radio</code>（只会选中最后一个……）和多选模式下的<code>select</code>选中多个元素：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/b9mkA/embedded/html,js,result/" allowfullscreen="allowfullscreen"
+            frameborder="0"> </iframe>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/24/javascript-string-replace.html" title="字符串的replace方法">上一篇</a></li>
+              <li><a href="/posts/2013/10/27/javascript-css-selector-implementation.html" title="Secrets of the JavaScript Ninja 读书笔记之 纯JavaScript实现的CSS选择器引擎">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

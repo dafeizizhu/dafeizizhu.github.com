@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.requestAnimationFrame</h2>
+            <p class="blog-post-meta">写于2013年11月12日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>基于脚本的动画，我们通常会使用<code>setTimeout</code>或者<code>setInterval</code>去做：</p> <pre><code>setInterval(step, interval);
+</code></pre>
+            <p>但是有没有想过当中的<code>interval</code>要设置多少才合适呢？为了动画的流畅，我们可能会把这个时间设置成尽可能的小，例如<code>10</code>。这样，动画就会每10毫秒绘制一祯。但是，由于显示的时候还是有一个频率的（例如60HZ），过小的时间间隔会造成某些祯处于显示的间隔时间，这样这些祯就显示不出来。而且设置这么小的时间间隔也会加大浏览器对CPU的消耗。</p>
+            <p>这时候，可以使用<code>window.requestAnimationFrame</code>来替代以前基于<code>setTimeout</code>的实现：</p>
+            <blockquote>
+              <p>The window.requestAnimationFrame() method tells the browser that you wish to perform an animation and requests that the browser call a specified function to update an animation before the next repaint.</p>
+            </blockquote>
+            <p>这个方法告诉浏览器现在需要为一个动画重绘一祯，浏览器会自行计算调用的时间，调用传入的回调函数。回调函数的单位时间调用次数跟显示设备的刷新频率有关，不过不用担心，这些东西浏览器都会帮我们算好的。回调函数接受一个参数，就是这次调用的时间间隔。调用这个方法之后跟<code>setTimeout</code>一样，会返回一个<code>id</code>，调用<code>window.cancelAnimationFrame</code>也可以终止下一个回调函数的执行，跟<code>clearTimeout</code>是一致的。</p>
+            <p>很可惜，<code>window.requestAnimationFrame</code>不是所有IE都支持，只有IE10才支持这个方法。但是由于这个方法的调用方式跟<code>setTimeout</code>是一致的，我们其实可以比较方便地在IE上做一个退化方案：</p> <pre><code>function reqAnimationFrame(callback) {
+  if (typeof requestAnimationFrame == &quot;function&quot;) {
+    return requestAnimationFrame(callback);
+  } else {
+    return setTimeout(callback, 60); // Default interval
+  }
+}
+function cancel(id) {
+</code></pre>
+            <p><a href="/posts/2013/11/12/request-animation-frame.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jQuery.holdReady</h2>
+            <p class="blog-post-meta">写于2013年11月11日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天来看一下一个我们平常都不会使用的方法<code>jQuery.holdReady</code>：</p>
+            <blockquote>
+              <p>Holds or releases the execution of jQuery&#39;s ready event.</p>
+            </blockquote>
+            <p>顾名思义，这个方法是用来延迟<code>ready</code>事件的触发时间。它接受一个参数<code>hold</code>，是个布尔值，表示这次调用是把<code>ready</code>事件hold住还是释放<code>ready</code>事件。</p>
+            <p>那把<code>ready</code>事件hold住有什么场景？有时候我们需要为页面动态加载一段代码，而又想我们的其他代码在这动态加载的代码之后执行，一般会这么做：</p> <pre><code>$(function () {
+  $.getScript(&quot;path/to/script&quot;, function () {
+    ... // our code here
+  });
+});
+</code></pre>
+            <p>本来直接写到<code>$()</code>里面的代码要写到<code>$.getScript</code>的回调中去。这时候使用<code>jQuery.holdReady</code>就可以不改原来的代码，直接增加以下的代码：</p> <pre><code>$.holdReady(true);
+$.getScript(&quot;path/to/script&quot;, function () {
+  $.holdReady(false);
+});
+// old code
+$(function () {
+</code></pre>
+            <p><a href="/posts/2013/11/11/jquery-hold-ready.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 递归与合并</h2>
+            <p class="blog-post-meta">写于2013年11月10日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>CSS选择器引擎需要递归访问元素及其子孙元素，然后合并多个匹配的结果，返回完整的结果。但是我们需要保证这个结果的结合里面没有重复的元素。由于调用类似<code>getElementsByTagName</code>这样的API，如果在子孙元素上调用的时候会返回相同的结果，例如：</p> <pre><code>&lt;div id=&quot;outer&quot;&gt;Outer
+  &lt;div id=&quot;middle&quot;&gt;Middle
+    &lt;div id=&quot;inner&quot;&gt;Inner&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>如果这么调用：</p> <pre><code>document.getElementById(&quot;outer&quot;).getElementsByTagName(&quot;div&quot;); // middle and inner
+document.getElementById(&quot;middle&quot;).getElementsByTagName(&quot;div&quot;); // inner
+</code></pre>
+            <p>可以看到两个都返回了<code>inner</code>，这样的重复明显是不必要的，所以我们需要一些额外的机制去判断这个元素是否已经存在在集合当中了：</p> <pre><code>this.unique = function(array) {
+  var ret = [];
+  run++;
+  for (var i = 0, length = array.length; i &lt; length; i++) {
+    var elem = array[i];
+    if (elem.uniqueID !== run) {
+      elem.uniqueID = run;
+</code></pre>
+            <p><a href="/posts/2013/11/10/javascript-set-recurseing-and-merging.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 过滤元素</h2>
+            <p class="blog-post-meta">写于2013年11月09日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>一个CSS选择器是由多个部分组成，例如<code>div.class[id]</code>，这里有三个部分：<code>div</code>、<code>.class</code>、<code>[id]</code>。首先，我们会根据<code>div</code>这个选择器，使用<code>getElementsByTagName</code>去获取文档中所有<code>div</code>。然后，我们需要对这个集合进行过滤，过滤出匹配<code>.class</code>和<code>[id]</code>这两个选择器的元素。</p>
+            <p>过滤操作基本上在每一个CSS选择器引擎的实现都会有。通常会根据特性和元素的位置对集合进行过滤：</p>
+            <ol>
+              <li>特性过滤，需要在每一个元素上面调用<code>getAttribute</code>来获取对应的特性，跟特性选择器进行对比（特性的名称或者特性的值）。这里包括类选择器的过滤，因为<code>class</code>也可以作为一个特性。</li>
+              <li>位置过滤，例如<code>nth-child</code>或者<code>first-child</code>等。这些过滤通常会优先使用DOM的<code>children</code>，这个属性是这个DOM元素的所有子孙元素。如果不支持这个属性，则需要遍历每一个DOM元素，访问其<code>childNodes</code>属性，这个属性只会包含这个元素的子元素。使用这两个属性就可以判断元素在集合中的位置是否匹配位置选择器。</li>
+            </ol>
+            <p>这种过滤功能还能提供给用户，例如<code>jQuery.fn.filter</code>或者<code>jQuery.grep</code>，使用这个方法可以使用自定义的过滤逻辑过滤这个集合，提供比CSS选择器更方便、更灵活的过滤功能。</p>
+            <p><a href="/posts/2013/11/09/javascript-filter-the-set.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title"> jQuery扫盲之jQuery</h2>
+            <p class="blog-post-meta">写于2013年11月08日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>jQuery的<code>jQuery</code>方法（通常是<code>$</code>）相信是最最最最常用的方法了，通常会传入一个选择器然后返回匹配这个选择器的元素的集合（jQuery对象）。其实这个函数还有一些其他的调用形式，一起看下去。</p>
+            <h3 id="-">选择元素</h3>
+            <p>第一类是在文档中选择元素，有以下几种调用形式：</p>
+            <p><strong>jQuery(selector, context)</strong></p>
+            <p>其中<code>selector</code>就是CSS选择器，<code>context</code>是可选的上下文元素，默认是在整个文档中查找。传入<code>context</code>即等于<code>jQuery(context).find(selector)</code>。</p>
+            <p><strong>jQuery(element)</strong></p>
+            <p>其中<code>element</code>就是DOM元素，即把DOM元素“包裹”成jQuery对象。</p>
+            <p><strong>jQuery(elementArray)</strong></p>
+            <p>同上，只是传入的是DOM元素的一个数组。</p>
+            <p><strong>jQuery(object)</strong></p>
+            <p>其中<code>object</code>是一个普通的JavaScript对象，也是把它“包裹”成jQuery对象。这样我们就可以在普通的元素上使用jQuery的方法，例如一个简单的观察者模式：</p>
+            <p><a href="/posts/2013/11/08/jquery-constructor.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之callbacks对象</h2>
+            <p class="blog-post-meta">写于2013年11月07日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>callbacks对象是使用<code>jQuery.Callbacks</code>返回的对象，可以使用这个对象去管理回调函数列表。</p>
+            <h3 id="-">增加</h3>
+            <p>调用<code>callbacks.add</code>就可以往列表里面增加一个或者多个回调函数：</p> <pre><code>callbacks.add(function () {...});
+</code></pre>
+            <h3 id="-">删除</h3>
+            <p>调用<code>callbacks.remove</code>可以在列表中删除一个或者多个回调函数：</p> <pre><code>callbacks.remove(foo);
+</code></pre>
+            <p>也可以使用<code>callbacks.empty</code>清空整个回调函数列表：</p> <pre><code>callbacks.empty();
+</code></pre>
+            <h3 id="-">查询</h3>
+            <p>调用<code>callbacks.has</code>可以判断一个回调函数是否在列表里面：</p>
+            <p><a href="/posts/2013/11/07/jquery-callbacks-object.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Node上使用Redis</h2>
+            <p class="blog-post-meta">写于2013年11月06日 关于<a href="/tags/node">node</a></p>
+            <p>Redis是一个开源的，基于<code>key-value</code>的内存数据库，可以作为一个能够存储字符串、哈希表、列表、集合等数据结构的数据服务器。</p>
+            <p>首先是要安装一个Redis。在Unix/Linux下需要下载源码编译安装，今天就来简单看看Windows下如何安装吧。打开Redis的Windows版本的<a href="https://github.com/rgl/redis/downloads">下载页面</a>，选择对应Windows版本的包下载即可。</p>
+            <p>下载完解压到一个地方就可以使用了。首先启动Redis服务，双击<code>redis-server.exe</code>即可：</p> <pre><code>[9612] 07 Nov 18:01:28 # Warning: no config file specified, using the default config. In order to specify a config file use &#39;redis-server /path/to/redis.conf&#39;
+[9612] 07 Nov 18:01:28 * Server started, Redis version 2.4.5
+[9612] 07 Nov 18:01:28 * DB loaded from disk: 0 seconds
+[9612] 07 Nov 18:01:28 * The server is now ready to accept connections on port 6379
+[9612] 07 Nov 18:01:29 - DB 0: 8 keys (0 volatile) in 12 slots HT.
+[9612] 07 Nov 18:01:29 - 0 clients connected (0 slaves), 1182568 bytes in use
+</code></pre>
+            <p>启动后可以看到当前的端口、使用了多少个<code>key</code>还有多少个客户端链接进来等信息。注意哦，这些信息现在都是默认的配置，修改配置文件<code>redis.conf</code>可以修改这些信息，详细的配置文档<a href="http://redis.io/topics/config">参考这里</a>。然后就可以启动<code>redis-cli.exe</code>来使用Redis了：</p> <pre><code>redis 127.0.0.1:6379&gt; set foo bar
+OK
+redis 127.0.0.1:6379&gt; get foo
+&quot;bar&quot;
+</code></pre>
+            <p>今天主要是关注Node下面怎么使用Redis。<a href="https://github.com/mranney/node_redis">这里</a>有封装了一套API，让我们很方便地在Node里面使用Redis。API跟Redis的命令的名称基本上是一致的，例如<code>get</code>、<code>set</code>，还有最常用的哈希表操作<code>hgetAll</code>、<code>hmset</code>等。</p>
+            <p><a href="/posts/2013/11/06/node-redis.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">css content</h2>
+            <p class="blog-post-meta">写于2013年11月05日 关于<a href="/tags/css">css</a></p>
+            <p><code>content</code>属性通常会跟<code>before</code>和<code>after</code>伪类一起使用。这个属性就是<code>before</code>或者<code>after</code>插入到文档中的“伪元素”的内容。</p>
+            <p>这个属性接受以下几个值：</p>
+            <ol>
+              <li><code>none</code>，不生成伪元素。</li>
+              <li><code>normal</code>，在<code>before</code>或者<code>after</code>的时候会被当成<code>none</code>。</li>
+              <li><code>&lt;string&gt;</code>，一个字符串，表示伪元素的内容。</li>
+              <li><code>&lt;url&gt;</code>，使用格式是<code>content: url(path/to/resource)</code>，表示伪元素是一个外部资源，例如图片等。</li>
+              <li><code>&lt;counter&gt;</code>，使用格式是<code>content: counter(name, decimal)</code>，表示伪元素是一个计数器，第一个参数是计数器的名字，使用<code>conter-increment</code>声明一个CSS类为计数器；第二个参数是计数器的样式，默认是十进制数字。</li>
+              <li><code>attr(x)</code>，表示伪元素的内容是当前元素的<code>x</code>特性的值。</li>
+              <li><code>open-quote|close-quote</code>，表示伪元素的内容是引号。</li>
+              <li><code>no-open-quote|no-close-quote</code>，增加或者减少引号的层次。</li>
+            </ol>
+            <p>下面是几个例子：</p>
+            <iframe width="100%" height="300" src="http://jsfiddle.net/r8sv8/embedded/html,css,result/" allowfullscreen="allowfullscreen" frameborder="0"> </iframe>
+            <p>注意几点：</p>
+            <ol>
+              <li>IE6、IE7不支持<code>content</code>，其他主流浏览器都支持。</li>
+              <li><code>content</code>插入的内容其实只是“视觉”上的，所以不存在于文档中，无法复制粘贴。</li>
+            </ol>
+            <p><a href="/posts/2013/11/05/css-content.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">css overflow</h2>
+            <p class="blog-post-meta">写于2013年11月04日 关于<a href="/tags/css">css</a></p>
+            <p><code>overflow</code>声明当一个块元素的内容超过块元素的高度的时候应该如何显示。</p>
+            <p>当这个属性的值不是默认值（<code>visible</code>）的时候，会创建一个BFC，这意味着这个容器会把里面的<code>float</code>的元素包裹起来（也就是修复浮动元素的高度塌陷问题）。注：即使是<code>hidden</code>，还是可以用脚本控制内部元素的<code>scrollTop</code>等滚动相关的属性。</p>
+            <p>这个属性可选的值有4个：</p>
+            <ol>
+              <li><code>visible</code>，默认值，内容不被裁剪，直接渲染到盒子外面，但是不影响布局。</li>
+              <li><code>hidden</code>，内容被裁剪，且没有滚动条，意味着这些内容在页面上没法直接看见。</li>
+              <li><code>scroll</code>，内容被裁剪，浏览器会显示滚动条，通过滚动条可以查看完整的内容。注：在打印设备上<code>scroll</code>是没效的，同<code>visible</code>。</li>
+              <li><code>auto</code>，由浏览器去决定怎么显示，一般是当内容超过容器的时候自动出现滚动条。</li>
+            </ol>
+            <p>常见的用法就是修复容器内部浮动元素导致的高度塌陷问题，一般只需要在容器上写上一条CSS：</p> <pre><code>overflow: hidden;
+</code></pre>
+            <p>这样容器就可以把内部浮动元素也包裹起来，高度也就是正常的了。</p>
+            <p>最后有兴趣的童鞋可以看看<a href="http://edskes.net/ie/ie8overflowandexpandingboxbugs.htm">这里</a>，是一些关于IE8的<code>overflow</code>的bug，竟然有一个bug是可以把页面弄不见的，太牛逼了！</p>
+            <p><a href="/posts/2013/11/04/css-overflow.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 寻找元素</h2>
+            <p class="blog-post-meta">写于2013年11月03日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>解析完选择器之后，需要根据每个部分去查找匹配的元素。要使用哪些技术要取决于要支持什么CSS选择器和浏览器对CSS选择器的支持能力。</p>
+            <p>第一个是<code>getElementById</code>，只在文档的根元素上（<code>document</code>）提供的API，用于在当前文档中找出第一个<code>id</code>是指定参数的元素。Id选择器就是直接调用这个API去获取匹配的元素。但是IE和Opera还会找到第一个<code>name</code>是指定参数的元素。这个“有用”的副作用是我们所不需要的，所以还要编写一些代码去过滤这些额外的元素：</p> <pre><code>if (elem.getAttribute(&quot;id&quot;) == id) { ... }
+</code></pre>
+            <p>如果我们希望找到文档中所有包含指定<code>id</code>的元素，则需要遍历这个文档中所有元素，并比较它们的<code>id</code>特性，或者使用<code>document.all[&quot;id&quot;]</code>，这个会返回一个匹配该<code>id</code>的元素的一个数组（IE、Opera、Safari支持）。</p>
+            <p>第二个是<code>getElementsByTagName</code>，可以寻找所有匹配该标签名的元素。这个API还有另外一个作用，就是查找元素的所有子孙元素：</p> <pre><code>elem.getElementsByTagName(&quot;*&quot;);
+</code></pre>
+            <p>当传入的CSS选择器中不包含标签选择器的时候（例如<code>.class</code>等），这种调用方式十分有用。</p>
+            <p>有一个使用<code>*</code>的陷阱：IE会返回注释（IE把注释视为标签名为<code>!</code>的元素）！所以这里又需要一个过滤器把所有注释过滤掉。</p>
+            <p>第三个是<code>getElementsByName</code>，根据<code>name</code>特性去查找元素，在使用<code>[name=name]</code>这种选择器的时候十分有用。</p>
+            <p>最后一个是<code>getElementsByClassName</code>，这个是HTML5的API，根据<code>class</code>特性去寻找元素。这个方法的出现大大提高了类选择器的查找速度。</p>
+            <p>以上就是用来寻找元素的最常用的API。匹配到元素之后，我们就可以根据某些选择器去过滤结果集（例如<code>nth-child</code>等），得到最后的结果。</p>
+            <p><a href="/posts/2013/11/03/javascript-find-the-elements.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/4.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li class="active"><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/6.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

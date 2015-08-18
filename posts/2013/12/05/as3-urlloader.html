@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Flash中发送请求之二：URLLoader</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中发送请求之二：URLLoader</h2>
+            <p class="blog-post-meta">写于2013年12月05日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>使用<code>URLRequest</code>生成请求的内容之后，我们需要发送这个请求，这时候就需要用到<code>URLLoader</code>这个类。这个类相当于Ajax中的<code>XMLHttpRequest</code>，使用其<code>load</code>方法就可以把请求发送出去。这个类除了可以处理文本之外，还能处理二进制的数据哦，例如文件等。</p>
+            <p>这个类有以下几个实例属性：</p>
+            <ol>
+              <li><code>bytesLoaded</code>，表示加载完毕的字节数。</li>
+              <li><code>bytesTotal</code>，表示这个请求完全加载后的字节数。</li>
+              <li><code>data</code>，表示接收到的数据。数据类型又<code>dataFormat</code>这个属性决定。</li>
+              <li><code>dataFormat</code>，表示接收数据的格式，默认是文本<code>URLLoaderDataFormat.TEXT</code>。可选的值是二进制<code>URLLoaderDataFormat.BINARY</code>和URL编码变量<code>URLLoaderDataFormat.VARIABLES</code>。</li>
+            </ol>
+            <p>这个类的实例方法很简单，只有两个：</p>
+            <ol>
+              <li><code>load(request:URLRequest)</code>，发送请求，参数为请求的内容，类似于<code>xhr.send</code>。</li>
+              <li><code>close()</code>，取消这次请求，类似于<code>xhr.abort</code>。</li>
+            </ol>
+            <p><code>load</code>方法是异步的，所以处理这次请求的过程跟Ajax也是十分类似，需要通过绑定事件去监听加载中的每一个过程。调用<code>load</code>之后，会触发以下几个事件：</p>
+            <ol>
+              <li><code>complete</code>，请求完成，数据可以通过事件对象的<code>target</code>属性中的<code>data</code>属性获取。</li>
+              <li><code>httpStatus</code>，如果请求是通过HTTP协议发送的，当接收到HTTP请求的状态码的时候会触发这个事件。状态码通过事件对象的<code>status</code>属性获取。</li>
+              <li><code>ioError</code>，请求无法完成的时候触发，具体失败的内容可以通过事件对象的<code>text</code>属性获取。</li>
+              <li><code>progress</code>，请求进行中会触发若干遍，通过监听这个事件我们可以做出进度条的效果。根据事件对象的<code>bytesLoaded</code>属性和<code>bytesTotal</code>属性可以知道当前加载完成的百分比。</li>
+              <li><code>securityError</code>，加载操作尝试从调用方安全沙箱外部的服务器检索数据时触发。</li>
+              <li><code>open</code>，加载开始的时候触发。</li>
+            </ol>
+            <p>调用<code>load</code>还可能抛出以下几个错误，需要根据情况使用<code>try...catch</code>来捕获： </p>
+            <ol>
+              <li><code>ArgumentError</code>，请求头（<code>URLRequest</code>中的<code>URLRequestHeaders</code>）对象包含某些被禁用的HTTP请求标头。</li>
+              <li><code>MemoryError</code>，内存分配错误。</li>
+              <li><code>SecurityError</code>，本地不受信任的 SWF 文件可能无法与 Internet 进行通信。</li>
+              <li><code>TypeError</code>，传入的<code>URLRequest</code>参数为<code>null</code>。</li>
+            </ol>
+            <p>下面是一个使用<code>URLRequest</code>和<code>URLLoader</code>发送请求的一段示例代码：</p> <pre><code>var urlRequest:URLRequest = new URLRequest();
+urlRequest.url = &quot;path/to/url&quot;;
+var urlLoader:URLLoader = new URLLoader();
+urlLoader.addEventListener(Event.Complete, function (event:Event):void
+{
+  trace(event.target.data);
+}
+urlLoader.load(urlRequest);
+</code></pre>
+            <p>这两个类的基本的使用方法就是这么简单。但是在实战中，还有很多需要注意的问题，特别是涉及到跨域访问还有异常（包括错误事件）的处理，对一个初学者来说真是非常的蛋疼菊紧啊！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/04/as3-urlrequest.html" title="在Flash中发送请求之一：URLRequest">上一篇</a></li>
+              <li><a href="/posts/2013/12/07/minimizing-repaints-and-reflows.html" title="High Performance JavaScript 读书笔记之 减少Repaint和Reflow的次数">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

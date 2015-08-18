@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>CSS表达式</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS表达式</h2>
+            <p class="blog-post-meta">写于2013年09月09日 关于<a href="/tags/css">css</a></p>
+            <p>对于一些呈现型的网站（例如门户、资讯类的），在国内还是必须照顾一大部分使用IE6的用户。这样导致我们的代码为了兼容很多IE6，需要在IE6上模拟一些高级浏览器的功能，例如<code>fixed</code>的CSS样式，还有<code>max-width</code>等。在不希望使用JavaScript的时候，css表达式还是可以作为一个不错的向下兼容的方案的。</p>
+            <p>CSS表达式，严格来说应该是CSS中的动态属性，在MSDN中的定义是这样的：</p> <pre><code>Using the power of dynamic properties, it is now possible to declare property values not only as constants, but also as formulas. 
+</code></pre>
+            <p>使用CSS表达式，使得CSS样式中的值不仅仅只有常量，如<code>10px</code>、<code>100%</code>等，还可以是变量、可以通过N条语句计算出来的值。由于IE8及更高版本已经完全支持CSS 2.1的全部功能，像上述说的<code>fixed</code>和<code>max-width</code>等都可以直接使用CSS来实现了。而其他更具体的功能还是推荐使用JavaScript去完成。</p>
+            <h3 id="-">接口</h3>
+            <hr>
+            <ol>
+              <li><code>getExpression</code>，获取CSS表达式。</li>
+              <li><code>recalc</code>，强制刷新CSS表达式的值。</li>
+              <li><code>removeExpression</code>，删除CSS表达式。</li>
+              <li><code>setExpression</code>，设置CSS表达式。</li>
+            </ol>
+            <p>可以在JavaScript脚本中使用以上的命令操作CSS表达式，例如：</p> <pre><code>oDiv.style.setExpression(&quot;left&quot;,
+  &quot;document.body.clientWidth/2 - oDiv.offsetWidth/2&quot;
+);
+
+oDiv.style.setExpression(&quot;top&quot;,
+  &quot;document.body.clientHeight/2 - oDiv.offsetHeight/2&quot;
+);
+document.recalc(true);
+</code></pre>
+            <p>也可以在<code>style</code>特性的内联样式、<code>style</code>标签块、甚至是外部CSS样式表中书写CSS表达式，例如：</p> <pre><code>&lt;DIV ID=&quot;oDiv&quot;
+STYLE=&quot;background-color: #CFCFCF; position: absolute; 
+     left:expression(document.body.clientWidth/2-oDiv.offsetWidth/2);
+     top:expression(document.body.clientHeight/2-oDiv.offsetHeight/2)&quot;&gt;
+Example DIV
+&lt;/DIV&gt;
+</code></pre>
+            <p>以上的代码实现了一个无论怎么<code>resize</code>一个浏览器窗口，该<code>div</code>始终保持居中的这么一个功能。注意哦，没用任何一段“脚本”。</p>
+            <h3 id="-">问题</h3>
+            <hr>
+            <p>既然CSS表达式可以省去一大堆代码，例如上例中绑定<code>window</code>的<code>resize</code>事件等代码，那为什么现代的CSS教程、书籍、规范都不约而同的要我们不要去使用CSS表达式呢？</p>
+            <p>其中一个最重要的原因是它不是标准的CSS实现，在现代的浏览器中是不支持的。</p>
+            <p>另外一个重要的原因，就是性能问题。有没有考虑过，这些写在CSS样式中的代码什么时候会被执行？这个是摘自YUI的一篇文档的翻译：</p>
+            <blockquote>
+              <p>表达式的问题就在于它的计算频率要比我们想象的多。不仅仅是在页面显示和缩放时，就是在页面滚动、乃至移动鼠标时都会要重新计算一次。给CSS表达式增加一个计数器可以跟踪表达式的计算频率。在页面中随便移动鼠标都可以轻松达到10000次以上的计算量。</p>
+            </blockquote>
+            <p>这里有一个<a href="http://www.17css.com/works/09/03/CSS%20Expressions1.html">例子</a>供大家参考。当鼠标随便移动几下，在IE6上CSS表达式就被执行超过1000次。就算执行的逻辑十分简单，随着执行的次数增大，性能消耗也是相当高的，尤其是IE6这些蹩脚的浏览器。</p>
+            <h3 id="-">总结</h3>
+            <hr>
+            <p>虽然CSS表达式有兼容性和性能等问题，使用它有时候对代码的简洁以及可靠性也是有一定帮助的。例如解决IE6上<code>fixed</code>的方案，使用JavaScript脚本就不能完美解决（会造成<code>fixed</code>元素的抖动），而使用CSS表达式就可以比较完美地解决。</p>
+            <p>请记住，只能在IE6上使用对应的CSS表达式哦亲！这时候条件注释或者是对应的CSS hack就要出场啦！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/08/dom-attribute-cross-browser-issue.html" title="Secrets of the JavaScript Ninja 读书笔记之 DOM特性跨浏览器的那些事">上一篇</a></li>
+              <li><a href="/posts/2013/09/10/jquery-ajax-event.html" title="jQuery扫盲之全局Ajax事件">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

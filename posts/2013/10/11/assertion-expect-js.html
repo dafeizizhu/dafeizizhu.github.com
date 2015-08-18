@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>一个断言：expect.js</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">一个断言：expect.js</h2>
+            <p class="blog-post-meta">写于2013年10月11日 关于<a href="/tags/前端">前端</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>讲了测试驱动和测试框架，最后再来讲一下断言。断言的风格其实有很多，而Mocha这个测试框架则允许我们使用自己喜欢的断言来写测试代码。今天简单了解一下其中一个断言：expect.js（我不会告诉你为什么选择这个断言是因为Arale也用了这个）。</p>
+            <p>expect.js是基于<code>should.js</code>的一个断言工具，比<code>should</code>要清爽一些。支持所有主流的浏览器和测试框架，并兼容Node的模块格式，所以在Node中可以这样使用expect.js：</p> <pre><code>require(&quot;path/to/expect.js&quot;);
+</code></pre>
+            <p>为了在浏览器也使用这个断言，SPM封装了其CMD的模块，使用以下命令就可以安装了：</p> <pre><code>spm install gallery/expect -d path/to/seajs-base-path
+</code></pre>
+            <p>因为昨天编写的测试用例也是一个CMD模块，所以在浏览器也可以使用expect.js来断言啦！</p>
+            <p>也可以通过<code>script</code>标签直接引入脚本文件来使用，不过这个时候<code>expect</code>就是一个全局变量了：</p> <pre><code>&lt;script src=&quot;expect.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+            <p>它的断言很有意思，符合英文语法，例如：</p> <pre><code>expect(1).to.be.ok();
+</code></pre>
+            <p>这个断言判断<code>expect</code>中的参数是否一个在JavaScript中代表<code>true</code>的变量，例如非0数字和非空字符串等。是不是跟写英文句子有点像？</p>
+            <p>除了这个最基本的断言，还提供了一些快捷方式，例如：</p>
+            <ol>
+              <li><code>.to.be.a</code>，判断参数是否某个“类”的实例，例如<code>expect(5).to.be.a(&quot;number&quot;)</code>或者<code>expect(5).to.be.a(Number)</code>。</li>
+              <li><code>.to.match</code>，判断参数是否匹配某个正则表达式。</li>
+              <li><code>.to.contain</code>，判断参数是否包含某个项，调用的是<code>indexOf</code>方法。</li>
+              <li><code>.to.have.length</code>，判断数组的长度是否某个特定的值。</li>
+              <li><code>.to.be.empty</code>，判断数组是否为空。</li>
+              <li><code>.to.have.property</code>，判断一个对象是否含有特定的属性。</li>
+              <li><code>.to.have.key</code>，判断一个对象是否含有特定的键。</li>
+              <li><code>.to.throwException</code>，判断执行一个方法是否抛出异常。</li>
+              <li><code>.to.be.within</code>，判断一个数值是否在给定范围之内，例如<code>expect(1).to.be.within(0, Infinity);</code>。</li>
+              <li><code>.to.be.greaterThan</code>和<code>.to.be.lessThan</code>，判断大小关系。</li>
+            </ol>
+            <p>详细的信息可以<a href="https://github.com/LearnBoost/expect.js">参考这里</a>。最后，文档提到了跟<code>should.js</code>的区别。由于没有用过<code>should.js</code>，所以纯翻译：</p>
+            <ol>
+              <li>不需要使用静态方法，例如<code>should.strictEqual</code>，所有断言都是<code>expect(val).</code>开头的。</li>
+              <li>API更简洁。</li>
+              <li>修改某些API中关于浏览器兼容的内容。</li>
+            </ol>
+            <p>我个人感觉这个断言最厉害的地方是语法跟英文的语法非常接近，一眼看上去就能够知道这个断言大概的意思，可读性比较强。</p>
+            <p>一连3天从测试驱动、测试框架到测试断言都过了一遍，做了这么久的前端终于第一次从头到尾地体验了一套完整的单元测试解决方案，爽！如果能集成到Travis就完美了！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/10/use-mocha-to-test-seajs-modules.html" title="使用Mocha测试SeaJs模块">上一篇</a></li>
+              <li><a href="/posts/2013/10/12/dom-innerhtml.html" title="DOM的innerHTML属性">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

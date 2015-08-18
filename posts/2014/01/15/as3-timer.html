@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>在Flash中使用计时器</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">在Flash中使用计时器</h2>
+            <p class="blog-post-meta">写于2014年01月15日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>如同在JavaScript中使用<code>setTimeout</code>和<code>setInterval</code>中使用计时器，在ActionScript中也能使用计时器达到同样的目的，例如定时、超时等功能。</p>
+            <p>虽然在ActionScript里面也有<code>setTimeout</code>和<code>setInterval</code>两个工具函数，但是ActionScript封装了一个工具类<code>Timer</code>，让我们能更灵活地使用定时器，以上两个工具函数也是<code>Timer</code>的一个封装。</p>
+            <p><code>Timer</code>类的构造函数接受两个参数：</p>
+            <ol>
+              <li><code>delay</code>，声明计时器事件间的延迟，以毫秒为单位。当指定的时间经过之后，<code>Timer</code>实例会触发事件，我们可以为这个事件注册事件处理程序在指定的时间延迟之后执行一段代码。建议这个值不要低于<code>20</code>毫秒，因为计时器的频率不得超过<code>60</code>帧每秒，而计时器事件执行的频率必须是帧率的整数倍，所以少于<code>16.6</code>毫秒的延迟可能会导致延迟不准确。</li>
+              <li><code>repeatCount</code>，可选，声明重复次数。默认是<code>0</code>，计时器会不断地重复执行，最长可以执行<code>int.MAX_VALUE + 1</code>（大概24天）。如果不为<code>0</code>,则计时器执行到指定的次数之后会自动停止。</li>
+            </ol>
+            <p>注意，与JavaScript中的计时器一样，指定的延迟会根据<code>swf</code>文件的帧速率或者其他因素，运行时调度事件的间隔可能会有偏差。例如某个<code>swf</code>文件以每秒<code>10</code>帧，也就是每帧间隔<code>100</code>毫秒的速度播放，但延迟设置为<code>80</code>毫秒，则将会在接近于<code>100</code>毫秒的间隔触发事件。大量耗费内从的脚本也可能使事件发生偏差。</p>
+            <p><code>Timer</code>类的实例还有以下几个属性：</p>
+            <ol>
+              <li><code>currentCount</code>，只读，当前触发的总次数。</li>
+              <li><code>delay</code>，计时器时间的延迟，单位是毫秒。</li>
+              <li><code>repeatCount</code>，计时器运行的总次数。</li>
+              <li><code>running</code>，只读，计时器的当前状态，如果正在运行则为<code>true</code>，否则为<code>false</code>。</li>
+            </ol>
+            <p><code>Timer</code>类的实例还有以下几个公共方法：</p>
+            <ol>
+              <li><code>reset</code>，如果计时器正在运行，则停止计时器，并且将<code>currentCount</code>设为<code>0</code>，类似于秒表的重置按钮。</li>
+              <li><code>start</code>，如果计时器还没启动，启动计时器。</li>
+              <li><code>stop</code>，停止计时器。如果在<code>stop</code>之后调用<code>start</code>，则将继续运行计时器，运行次数为<strong>剩余</strong>的重复次数。</li>
+            </ol>
+            <p>当计时器启动之后，会触发两种事件：</p>
+            <ol>
+              <li><code>timer</code>，每当<code>Timer</code>对象达到<code>delay</code>制定的间隔时调度。</li>
+              <li><code>timerComplete</code>，每当<code>Timer</code>对象完成<code>repeatCount</code>指定的次数之后调度。</li>
+            </ol>
+            <p>在ActionScript 3.0中使用计时器，要先实例化一个<code>Timer</code>实例，然后绑定事件处理程序，最后启动计时器即可：</p> <pre><code>public class TimerExample extends Sprite {
+  public function TimerExample() {
+    var myTimer:Timer = new Timer(1000, 2);
+    myTimer.addEventListener(&quot;timer&quot;, timerHandler);
+    myTimer.start();
+  }
+  public function timerHandler(event:TimerEvent):void {
+    trace(&quot;timerHandler: &quot; + event);
+  }
+}
+</code></pre>
+            <p>由于<code>delay</code>不是完全准确的，在需要精确的时间间隔则不能使用<code>Timer</code>。虽然不是完全准确，但是<code>Timer</code>类能基本满足程序中需要使用定时的场景，尤其是一些外部调用的超时机制，这时候使用<code>Timer</code>十分方便。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/14/flash-share-object-data.html" title="使用ShareObject中的data">上一篇</a></li>
+              <li><a href="/posts/2014/01/20/as3-displayobject-mask.html" title="内容不要超过容器！">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

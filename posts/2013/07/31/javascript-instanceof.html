@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>JavaScript instanceof操作符</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">JavaScript instanceof操作符</h2>
+            <p class="blog-post-meta">写于2013年07月31日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>JavaScript中的<code>instanceof</code>操作符通常是用来判断一个对象是否具体“类型”的“实例”，比较常见的用法是：</p> <pre><code>if (obj instanceof Array) { ... }
+</code></pre>
+            <p>大家有没有想过这个<code>instanceof</code>操作符是怎么判断一个对象是否一个“类型”的实例呢？</p>
+            <blockquote>
+              <p>instanceof运算符可以用来判断某个构造函数的prototype属性是否存在另外一个要检测对象的原型链上。</p>
+            </blockquote>
+            <p>通常来说，一个<code>obj instanceof c</code>中，会比较<code>obj</code>的<code>__proto__</code>是否存在于<code>c</code>的原型链上。在<a href="http://www.ibm.com/developerworks/cn/web/1306_jiangjj_jsinstanceof/">JavaScript instanceof 运算符深入剖析</a>中有一段JavaScript代码模拟了<code>instanceof</code>的执行过程：</p>
+            <pre><code>function instance_of(L, R) {//L 表示左表达式，R 表示右表达式
+  var O = R.prototype;// 取 R 的显示原型
+  L = L.__proto__;// 取 L 的隐式原型
+  while (true) { 
+    if (L === null) 
+      return false; 
+    if (O === L)// 这里重点：当 O 严格等于 L 时，返回 true 
+      return true; 
+    L = L.__proto__; 
+  } 
+} 
+</code></pre>
+            <p>注意哦，同一个对象对同一个构造函数作<code>instanceof</code>运算的结果不是一成不变的。构造函数的原型链是可以发生改变的，例如：</p> <pre><code>function A () {}
+function B () {}
+function C () {}
+B.prototype = new A();
+var b = new B();
+alert(b instanceof B); // true
+B.prototype = new C();
+alert(b instanceof B); // false
+alert(b instanceof A); // true!
+</code></pre>
+            <p>例子<a href="http://jsfiddle.net/Lzsba/3/">参考这里</a>。由于<code>B</code>的原型链发生变化，令后一个<code>instanceof</code>的结果发生变化。奇怪的是为什么最后一个<code>instanceof</code>还是返回的<code>true</code>？原因是在实例化的时候，<code>b</code>的原型链指向的是一个<code>A</code>的实例，即使后面<code>B</code>的原型指向另一个对象，也不影响已经实例化的<code>b</code>原型链上的对象，所以沿着<code>b</code>的原型链还是可以找到<code>A</code>。而改变原型链可以影响到已经实例化的对象的前提是<strong>往原型对象上附加属性或者更改已有的属性，而不能把原型对象的引用指向一个新的对象</strong>。</p>
+            <p>即使修改<code>b</code>的<code>constructor</code>属性，也不能改变<code>instanceof</code>的结果，如以下代码：</p> <pre><code>b.constructor = C;
+alert(b instanceof C); // still false
+</code></pre>
+            <p>这应该说明了在进行<code>instanceof</code>计算的时候，即使手工改变一个对象上的<code>constructor</code>或者<code>__proto__</code>不会影响<code>instanceof</code>的结果。详细的例子<a href="http://jsfiddle.net/vkk8L/">参考这里</a>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/30/beforeunload-event.html" title="beforeunload事件">上一篇</a></li>
+              <li><a href="/posts/2013/08/01/javascript-typeof.html" title="JavaScript typeof操作符">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

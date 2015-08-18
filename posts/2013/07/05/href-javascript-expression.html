@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Href中的JavaScript link</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Href中的JavaScript link</h2>
+            <p class="blog-post-meta">写于2013年07月05日 关于<a href="/tags/html">html</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>在<code>A</code>标签的<code>href</code>属性写上JavaScript“表达式”，其中一个目的就是为了那些不是链接的<code>A</code>标签通过HTML验证，<a href="http://stackoverflow.com/questions/7755088/href-expression-a-href-javascript-a">参考这里</a>。<em>（注：刚才试了一下在最新的W3C的HTML在线校验里面没有<code>name</code>和<code>href</code>属性的<code>A</code>标签也能通过校验）</em></p>
+            <p>不能写“#”，因为会跳到页面的头部<em>（可以通过取消浏览器默认事件防止该行为，<a href="http://dafeizizhu.github.io/2013/07/03/a-tag/">参考这里</a>）</em>。也不能写空字符串，在IE下会刷新页面。那只能写一个JavaScript表达式，该表达式什么也不做。最常见的就是以下这个代码：</p> <pre><code>&lt;a href=&quot;javascript:void(0)&quot;&gt;Do not refresh or go to the top of this page.&lt;/a&gt;
+</code></pre>
+            <p>JavaScrit提供了一种机制，供页面与JavaScript方法进行交互，其中一种机制就是<code>href</code>中的JavaScript链接（JavaScript link）。一个最简单的JavaScript链接示例如下：</p> <pre><code>&lt;a href=&quot;javascript:MyFunction();&quot;&gt;Text to Click&lt;/a&gt;
+</code></pre>
+            <p>其中<code>MyFunction</code>是全局的一个函数，当单击这个<code>A</code>标签的时候，对应JavaScript链接的语句会被执行。</p>
+            <p>如果同时设置了<code>href</code>上的JavaScript链接，又设置了<code>onclick</code>属性<em>（当然这个应该存在于黑暗之中永远不让它出来o(╯□╰)o）</em>，会是怎样的一个场景呢？立马做一个实验，<a href="http://jsfiddle.net/b7YLJ/1/">参考这里</a>。</p> <pre><code>&lt;a href=&quot;javascript:alert(1);&quot; onclick=&quot;alert(2);&quot;&gt;Text to Click&lt;/a&gt;
+</code></pre>
+            <p>结果是先弹出了2，再弹出1。仔细思考一下，其实这个结果是跟前天写的内容是吻合的。事件处理函数先执行，再执行浏览器的默认行为，在这里浏览器的默认行为就是弹出1。</p>
+            <p>最后简单看看JavaScript中一个被忽略的运算符：<code>void</code>。这个运算符有两种使用方式：</p> <pre><code>void (expression)
+
+void expression
+</code></pre>
+            <p>这个运算符的作用是执行JavaScript语句，但是不返回任何东西。可以作为<code>href</code>的值，当单击<code>A</code>标签的时候会执行该JavaScript语句。详细情况可以<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#void">参考这里</a>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/04/html-meta-tag.html" title="HTML META 标签入门">上一篇</a></li>
+              <li><a href="/posts/2013/07/06/frontend-career.html" title="前端攻城师的职业规划">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

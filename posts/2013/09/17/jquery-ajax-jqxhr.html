@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之jqXHR对象</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之jqXHR对象</h2>
+            <p class="blog-post-meta">写于2013年09月17日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>当执行<code>jQuery.ajax</code>的时候会返回一个jQuery封装的XMLHttpRequest对象，简称jqXHR对象。该对象是原生的XMLHttpRequest对象扩展，不仅含有所有原生对象中的属性和方法，jQuery还加入了一些新的属性，例如promise模式的<code>done</code>、<code>fail</code>等方法。还有，jQuery为jsonp等方式获取的脚本模拟了XMLHttpRequest对象，使得所有Ajax的行为趋于一致。</p>
+            <p>从1.5之后，jQuery在jqXHR中提供了Promise接口。接口中的方法接受一个或者多个回调函数，当Ajax请求终止的时候会根据请求的状态，例如成功或者失败等，调用不同的回调函数。接口中的方法有：</p>
+            <ol>
+              <li><code>jqXHR.done</code>，跟<code>ajaxSetting</code>中的<code>success</code>类似，在Ajax请求成功时调用作为参数的回调函数。</li>
+              <li><code>jqXHR.fail</code>，跟<code>ajaxSetting</code>中的<code>error</code>类似，在Ajax请求失败时调用作为参数的回调函数。</li>
+              <li><code>jqXHR.always</code>，跟<code>ajaxSetting</code>中的<code>complete</code>类似，无论请求成功或者失败都调用作为参数的回调函数。</li>
+              <li><code>jqXHR.then</code>，接受两个参数，第一个是成功时的回调函数，同<code>done</code>中的参数；第二个是失败时的回调函数，同<code>fail</code>中的参数。</li>
+            </ol>
+            <p>回调函数中的<code>this</code>指向的都是调用<code>jQuery.ajax</code>时，指定的<code>context</code>。如果没有指定<code>context</code>，则为这次调用的<code>ajaxSetting</code>对象。</p>
+            <p>由于需要兼容原生的XMLHttpRequest，jqXHR对象中还有很多XMLHttpRequest上的属性，例如<code>readyState</code>、<code>status</code>、<code>responseText</code>等。唯一不同的是<code>onreadystatechange</code>机制不再提供，需要使用<code>jqXHR.done</code>等Promise接口去处理对应的逻辑。</p>
+            <p>包含<code>jQuery.ajax</code>的配置还有这几个Promise接口，jQuery允许我们在各种不同的阶段”勾入“我们的代码，这些钩子按以下的顺序执行：</p>
+            <ol>
+              <li><code>ajaxSetting.beforeSend</code>。</li>
+              <li><code>ajaxSetting.error</code>。</li>
+              <li><code>ajaxSetting.dafaFilter</code>。</li>
+              <li><code>ajaxSetting.success</code>。</li>
+              <li><code>jqXHR.done</code>等Promise接口。</li>
+              <li><code>ajaxSetting.complete</code>。</li>
+            </ol>
+            <p>写到最后，才发现原来原生的XMLHttpRequest有什么属性和方法都不太了解呢。明天先补这一块再继续翻译jQuery的文档吧。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/16/javascript-document-fragment.html" title="Document Fragment">上一篇</a></li>
+              <li><a href="/posts/2013/09/18/javascript-httpxmlrequest.html" title="XMLHttpRequest对象">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

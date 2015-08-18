@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML Object标签</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML Object标签</h2>
+            <p class="blog-post-meta">写于2013年08月23日 关于<a href="/tags/html">html</a></p>
+            <p>今天看一下<code>object</code>这个标签。</p>
+            <blockquote>
+              <p>The HTML object Element (or HTML Embedded Object Element) represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be handled by a plugin.</p>
+            </blockquote>
+            <p><code>object</code>标签用来引用一个外部资源，该资源可以是一个图片、一个被插件使用的资源。最常见的用法是用它来引入一个flash影片，如：</p> <pre><code>&lt;object data=&quot;move.swf&quot; type=&quot;application/x-shockwave-flash&quot;&gt;&lt;/object&gt;
+</code></pre>
+            <h3 id="html4">HTML4</h3>
+            <p>以下几个特性只能在HTML4中使用了：</p>
+            <ol>
+              <li><code>archive</code>，由空格分隔的指向档案文件的 URL 列表。这些档案文件包含了与对象相关的资源。</li>
+              <li><code>classid</code>，定义嵌入 Windows Registry 中或某个 URL 中的类的 ID 值，此属性可用来指定浏览器中包含的对象的位置。</li>
+              <li><code>codebase</code>，定义在何处可找到对象所需的代码，提供一个基准 URL。</li>
+              <li><code>codetype</code>，通过 classid 属性所引用的代码的 MIME 类型。</li>
+              <li><code>declare</code>，可定义此对象仅可被声明，但不能被创建或例示，直到此对象得到应用为止。</li>
+              <li><code>standby</code>，定义当对象正在加载时所显示的文本。</li>
+              <li><code>tabindex</code>，定义在文档中的<code>tab</code>键顺序。</li>
+            </ol>
+            <p>在HTML4里面，这样引用一个flash影片可能更常见：</p> <pre><code>&lt;object width=&quot;400&quot; height=&quot;40&quot;
+  classid=&quot;clsid:d27cdb6e-ae6d-11cf-96b8-444553540000&quot;
+  codebase=&quot;http://fpdownload.macromedia.com/
+  pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0&quot;&gt;
+  &lt;param name=&quot;SRC&quot; value=&quot;bookmark.swf&quot;&gt;
+  &lt;embed src=&quot;bookmark.swf&quot; width=&quot;400&quot; height=&quot;40&quot;&gt;
+  &lt;/embed&gt;
+&lt;/object&gt;
+</code></pre>
+            <h3 id="-">标准</h3>
+            <ol>
+              <li><code>data</code>，定义引用对象数据的URL，例如flash影片的URL。</li>
+              <li><code>height</code>，定义高度，单位是像素。</li>
+              <li><code>name</code>，为对象定义唯一的名称（以便在脚本中使用）。</li>
+              <li><code>type</code>，定义被规定在 data 属性中指定的文件中出现的数据的 MIME 类型，例如flash影片<code>type</code>就是<code>application/x-shockwave-flash</code>。</li>
+              <li><code>usemap</code>，定义该文档中对应<code>map</code>元素的<code>name</code>属性（需要增加一个<code>#</code>）。</li>
+              <li><code>width</code>，定义宽度，单位是像素。</li>
+            </ol>
+            <h3 id="html5">HTML5</h3>
+            <p>在HTML5中<code>object</code>还有一个<code>from</code>属性，该属性的值表示与该<code>object</code>有关联的表单的id。</p>
+            <h3 id="param">param</h3>
+            <p>在<code>object</code>里面还可以嵌入多个<code>param</code>对象，表示这个<code>object</code>的参数，例如：</p> <pre><code>&lt;object data=&quot;move.swf&quot; type=&quot;application/x-shockwave-flash&quot;&gt;
+  &lt;param name=&quot;foo&quot; value=&quot;bar&quot;&gt;
+&lt;/object&gt;
+</code></pre>
+            <p>每一个<code>param</code>就是一个键值对。特定<code>type</code>的<code>object</code>会有与之对应的<code>param</code>。</p>
+            <p>例如<code>object</code>可以在页面中嵌入图片（请务必使用<code>img</code>！）、视频、声音、flash等。还可以以插件的形式与浏览器交互，获取浏览器所在环境的一些信息。通过插件的回调机制可以把插件获取的信息返回到该页面上面，实现一些需要系统环境才能实现的功能。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/22/alice-css-module-guide.html" title="搬运：Alice CSS模块化规范">上一篇</a></li>
+              <li><a href="/posts/2013/08/24/javascript-with-statment.html" title="Secrets of the JavaScript Ninja 读书笔记之 with语句">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

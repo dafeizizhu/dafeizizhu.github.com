@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Position: fixed 浏览器兼容性分析</h2>
+            <p class="blog-post-meta">写于2013年07月02日 关于<a href="/tags/css">css</a></p>
+            <p>写这个是因为现在很多门户网站都采用了顶栏固定的布局，提供导航还有一些工作（例如搜索）。对于现代浏览器来说，可以简单的使用以下这个css样式达到效果：</p>
+            <p>{% highlight css %} .fixed { positon: fixed; } {% endhighlight %}</p>
+            <p>这个样式在Chrome、FireFox、Safari、Opera、IE7、IE8、IE9都是生效的。<strong>其中需要注意的是，在IE7和IE8下面需要声明文档模式是标准模式才能生效</strong>。</p>
+            <p>在IE6下需要CSS hack才能达到<code>position: fixed;</code>的效果：</p>
+            <p>{% highlight css %} html div#fixedbox { position: fixed; }</p>
+            <ul>
+              <li>html { overflow-y: hidden; }</li>
+              <li>html body { overflow-y: auto; height: 100%;</li>
+            </ul>
+            <p><a href="/posts/2013/07/02/position-fixed.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">弹出的模态对话框被拦截的条件</h2>
+            <p class="blog-post-meta">写于2013年01月23日 关于<a href="/tags/notes">notes</a></p>
+            <p>只要从用户行为到弹出模态对话框<code>showModalDialog</code>之间，有任意一个异步调用（例如<code>setTimeout</code>或者ajax调用），则会被浏览器认为是恶意的窗口，导致窗口被拦截。</p>
+            <p>解决方案：</p>
+            <ol>
+              <li>删除任何<code>setTimeout</code></li>
+              <li>删除任何ajax调用，如果要跟服务交互，必须使用同步调用</li>
+              <li>不使用<code>showModalDialog</code>弹出对话框，使用更现代的方法（例如div模拟的模态对话框效果）</li>
+            </ol>
+            <p><a href="/posts/2013/01/23/post.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">2012 12 22 笔记</h2>
+            <p class="blog-post-meta">写于2012年12月22日 关于<a href="/tags/notes">notes</a></p>
+            <h3 id="vertical-align-line-height-">vertical-align 与line-height的垂直居中答案</h3>
+            <p>其实很简单……只要在label里面也加上vertical-align就ok了……</p>
+            <p>{% highlight html %}</p>
+            <style>
+              p {
+                vertical-align: middle;
+              }
+              
+              label {
+                vertical-align: middle;
+                display: inline-block;
+                width: 50px;
+              }
+            </style>
+            <p>
+              <label>This is long long label</label> <span>I want to vertical middle!</span> </p>
+            <p><a href="/posts/2012/12/22/note-2012-12-22.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">2012 12 20 Note</h2>
+            <p class="blog-post-meta">写于2012年12月20日 关于<a href="/tags/notes">notes</a></p>
+            <h3 id="vertical-align-line-height-">vertical-align 与line-height的垂直居中</h3>
+            <p>vertical-align用于块元素内的行内元素的垂直居中，而line-height则用于在行内元素中文字居中，当行高被块元素内部的某个元素（display: inline-block）撑大之后，使用前两个垂直居中的方法都不凑效。</p>
+            <ol>
+              <li>vertical-aligin作用在块元素中，不能使其他行内元素垂直居中，因为受到了那个撑大元素的影响</li>
+              <li>line-height则要显式的设置固定像素值，不能满足自适应那个撑大元素的高度</li>
+            </ol>
+            <p>到最后还是要使用表格布局……</p>
+            <p>遗留一个题目，等自己以后想起来了可以做一下，让那个span居中显示：</p> <pre><code>&lt;style&gt;
+    p {
+        vertical-align: center;
+    ｝
+    label {
+        width: 50px;
+        display: inline-block;
+    ｝
+&lt;/style&gt;
+&lt;p&gt;
+    &lt;label&gt;This is a long long long label&lt;/label&gt;
+</code></pre>
+            <p><a href="/posts/2012/12/20/2012-12-20-note.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">2012-12-18 笔记</h2>
+            <p class="blog-post-meta">写于2012年12月18日 关于<a href="/tags/notes">notes</a></p>
+            <h3 id="-">兼容的强制换行样式</h3> <pre><code>&lt;div class=&quot;content&quot;&gt;
+    &lt;p class=&quot;wrap&quot;&gt;No matter how long, i wrap...&lt;/p&gt;
+&lt;/div&gt;
+
+.content {
+    /* Important! */
+    width: 200px;
+}
+.wrap {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+</code></pre>
+            <p><a href="/posts/2012/12/18/note-2012-12-18.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Note 2012 12 17</h2>
+            <p class="blog-post-meta">写于2012年12月17日 关于<a href="/tags/notes">notes</a></p>
+            <h3 id="ff-jquery-ajax-datatype-">FF jQuery.ajax 默认的dataType属性不生效</h3>
+            <p>在FF10以上的环境，使用jQuery的ajax方法，如果没有配置dataType属性，返回的结果类型不可遇见（经调试发现是Document），例如：</p> <pre><code>$.ajax({
+    &quot;url&quot;: &quot;xxx&quot;,
+    &quot;success&quot;: function (result) {
+        console.log(result);    // In FF, it may be Document if has no dataType...
+    }
+    // This is nessery
+    &quot;dataType&quot;: &quot;text&quot;
+});
+</code></pre>
+            <h3 id="-ie8-jquery-attr-boolean-">在IE8下使用jQuery的attr方法，最好能使用明确的boolean值</h3>
+            <p>在IE8下使用attr，如果使用例如空字符串或者undefined之类的去设置对应attr的值，可能会有意想不到的结果，例如：</p> <pre><code>function test(booleanValue) {
+    // This is nessery
+    booleanValue = !!booleanValue;        
+
+    $(&quot;#id&quot;).attr(&quot;someAttr&quot;, booleanValue);
+</code></pre>
+            <p><a href="/posts/2012/12/17/note-2012-12-17.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">My First Post</h2>
+            <p class="blog-post-meta">写于2012年12月16日 关于
+              <a href="/tags/"></a>
+            </p>
+            <h3 id="this-is-the-first-post-">This is the first Post!!!!!</h3> <pre><code>function () {
+    console.log(&quot;Hello World!&quot;);
+}
+</code></pre>
+            <p>一个IT闷骚男的闷骚技术剥壳，记录编码中的一点一滴</p>
+            <p><a href="/posts/2012/12/16/my-first-post.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/17.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li class="active"><a href="/index/18.html">19</a></li>
+        <li class="disabled">:a(href='/index/19.html', aria-label='Next'): span(aria-hidden='true') &raquo;</li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

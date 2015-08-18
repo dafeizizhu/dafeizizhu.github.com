@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之全局Ajax事件</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之全局Ajax事件</h2>
+            <p class="blog-post-meta">写于2013年09月10日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>当今天没啥东西写的时候，会强迫自己看看一些常用的，但是又不完全了解的东西，例如各种文档、各种API参考等。扫盲系列其实就是去读这些API的文档，去发掘一些我们不知道的用法和要注意的事情。</p>
+            <p>今天讨论的是jQuery中有关Ajax的全局事件，这些事件有时候可以使我们的代码更加简洁，表现更加一致。</p>
+            <p>当<code>jQuery.ajaxSetup()</code>返回的<code>global</code>属性是<code>true</code>的时候（这个也是默认值），全局的Ajax事件才能生效。还有，调用<code>jQuery.ajax</code>的时候如果选项中的<code>global</code>为<code>false</code>，这次请求也不会触发全局的Ajax事件。注意，<strong>跨域的Ajax或者是jsonp是无论如何都不会触发这些全局的Ajax事件的</strong>。</p>
+            <p>强烈建议在<code>document</code>上绑定这些事件（在jQuery 1.8往后的版本只能绑定在<code>document</code>上了）。这些全局Ajax事件的绑定方法都只接受一个参数，就是要绑定的事件处理程序。</p>
+            <h3 id="ajaxcomplete">ajaxComplete</h3>
+            <p>处理程序接受三个参数，事件对象、XMLHttpRequest对象、调用这次Ajax的<code>ajaxOptions</code>。每一个Ajax请求完成（无论成功或者失败）时，都会调用所有事件处理程序。</p>
+            <h3 id="ajaxerror">ajaxError</h3>
+            <p>处理程序接受四个参数，事件对象、jQuery封装的XHR对象、调用这次Ajax的<code>ajaxOptions</code>、还有抛出的错误，例如服务器错误（5xx）、路径错误（4xx）或者是当数据类型是<code>json</code>或者其他特定类型时解析错误（json语法错误）等。错误以字符串的形式返回，例如<code>Not found</code>、<code>Internal Server Error</code>等。每一次Ajax请求以失败告终的时候，都会调用所有事件处理程序。</p>
+            <h3 id="ajaxsend">ajaxSend</h3>
+            <p>处理程序接受三个参数，与<code>ajaxError</code>的前三个参数一致。每一次发出一个Ajax请求时，都会嗲用所有事件处理程序。</p>
+            <h3 id="ajaxstart">ajaxStart</h3>
+            <p>处理程序不接受任何参数。当一个Ajax请求发出之前，jQuery会检测是否正在有其他Ajax请求已经发出。如果没有，则认为这个请求是当前第一个发出的Ajax请求，<code>ajaxStart</code>会被触发。触发时会调用所有事件处理程序。</p>
+            <h3 id="ajaxstop">ajaxStop</h3>
+            <p>处理程序不接受任何参数。当一个Ajax请求完成之后，jQuery会检测是否还有其他Ajax请求还没完成。如果没有，则认为这个请求是当前完成的最后一个Ajax请求，<code>ajaxStop</code>会被触发。触发时会调用所有事件处理程序。</p>
+            <h3 id="ajaxsuccess">ajaxSuccess</h3>
+            <p>处理程序接受三个参数，与<code>ajaxComplete</code>一致。当请求正确返回（2xx或者304）时，会调用所有事件处理程序。</p>
+            <h3 id="-">执行顺序</h3>
+            <p>经过上面的解释，其实已经可以得出这几个事件的执行顺序了。先是<code>ajaxStart</code>，然后是<code>ajaxSend</code>，请求返回后根据返回正确与否触发<code>ajaxSuccess</code>或者是<code>ajaxError</code>，然后是<code>ajaxComplete</code>，最后是<code>ajaxStop</code>。我写了一个例子，可以<a href="http://jsfiddle.net/MCacd/">参考这里</a>。</p>
+            <p>例子的执行跟文档有一点出入，就是事件处理程序的接受的参数不同（jQuery是2.x的最高版本）：</p>
+            <ol>
+              <li><code>ajaxStart</code>和<code>ajaxStop</code>的事件处理程序接受一个参数，就是jQuery封装的事件对象。</li>
+              <li><code>ajaxSuccess</code>和<code>ajaxComplete</code>的事件处理程序接受的第二个参数也是jQuery封装过的jqXHR对象，而不是原生的XMLHttpRequest对象。</li>
+              <li><code>ajaxSuccess</code>的事件处理程序还接受第四个对象，就是返回的数据转化后的对象，例如<code>json</code>、<code>xml</code>等有格式的数据。</li>
+            </ol>
+            <p>根据官网上的文档去使用这些API不会有太大的问题，不过不知道在哪里可以看到jQuery最新版本的文档呢？</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/09/09/css-expression.html" title="CSS表达式">上一篇</a></li>
+              <li><a href="/posts/2013/09/11/html5-history-api.html" title="HTML5 history API">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

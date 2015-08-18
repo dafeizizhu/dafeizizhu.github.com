@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTTP协议之HTTP状态码</h2>
+            <p class="blog-post-meta">写于2013年07月13日 关于<a href="/tags/http">http</a></p>
+            <p>继续HTTP协议科普贴。讲一下HTTP状态码，这个已经被人问过N次了。记得上次只能答出200、304、404、503等，然后被深深的鄙视。HTTP状态码表示该HTTP响应状态的三位数字代码，所有状态的第一个数字表示的是同一类的状态。</p>
+            <h3 id="1xx">1XX</h3>
+            <p>这类的响应指的是服务器已经接受到客户端的请求，在继续处理。<strong>由于HTTP协议没有定义1XX的状态码，除非在某些试验的情况下，不应该向客户端发送该类响应的状态码。</strong></p>
+            <ol>
+              <li>100 Continue，表示客户端应该继续发送剩余的请求部分。服务器必须在请求完成后返回一个最终的请求结果。</li>
+              <li>101 Switch Protocol，表示客户端应该使用不同的协议继续完成这个请求。只能转移到比现在这个协议更加好的协议上去。</li>
+              <li>103 Processing，WebDAV定义的状态码，表示处理将继续进行。</li>
+            </ol>
+            <h3 id="2xx">2XX</h3>
+            <p>这类的响应指的是请求已经被正确接收并理解，是正确的状态。</p>
+            <ol>
+              <li>200 OK，请求成功，并根据不同的HTTP Method返回不同的信息。</li>
+              <li>201 Created，请求已经被实现，而且有一个新的资源已经依据请求的需要而创建，且其URI已经随Location头信息返回。假如需要的资源无法及时创建的话，应当返回&#39;202 Accepted&#39;。</li>
+              <li>202 Accepted，表示请求已经被接受，但是还没有处理。这个状态码特别适合某种异步操作的场景，当服务器操作可能比较慢的场景下，可以通过发送202状态码通知客户端，不需要客户端继续保持与服务器的这个HTTP连接。</li>
+              <li>203 Non-Authoritative Information，表示这个请求已经成功处理了，但是entity-header的信息在当前服务器上没有有效的确定集合，可能存在本地或者第三方的某个拷贝。</li>
+              <li>204 No Content，表示返回的响应没有内容。</li>
+              <li>205 Reset Content，表示返回的响应没有内容。与204不一样，205会重置文档视图，即会重置表单的输入域的值。</li>
+              <li>206 Partial Content，表示只返回了部分响应的内容，这个状态码在分块下载的时候非常有用，以后会单独进行分析。</li>
+              <li>207 Multi-Status，WebDAV定义的状态码，代表之后的消息体将是一个XML消息，并且可能依照之前子请求数量的不同，包含一系列独立的响应代码。</li>
+            </ol>
+            <p><a href="/posts/2013/07/13/http-status-code.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTTP协议之HTTP 头</h2>
+            <p class="blog-post-meta">写于2013年07月12日 关于<a href="/tags/http">http</a></p>
+            <p>今天启程去阿里ADC，无奈被困机场，飞机起飞遥遥无期，故趁等飞机起飞的闲暇事件写一下HTTP协议之HTTP头的简介，来慰藉我寂寞的心（顺便鄙视周围的家伙们都在玩手机）。</p>
+            <p>看了一下RFC关于HTTP头的规范，我跟我的小伙伴们都惊呆了，有这么多，<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">参考这里</a>。今天我决定先从一个比较简单的角度入手，对HTTP头及几个重要的头进行解析，抛砖引玉一下。</p>
+            <blockquote>
+              <p>HTTP header fields are components of the message header of requests and responses in the Hypertext Transfer Protocol (HTTP). They define the operating parameters of an HTTP transaction.</p>
+            </blockquote>
+            <p>简单地说就是一些关于HTTP协议中请求与响应的传输中的控制参数。HTTP头由多个头域组成，至一个空的头域结束。每个头域是一个冒号分隔的键值对。HTTP头有标准头跟自定义头两种。标准头是每个实现都必须支持的头，如<code>Expires</code>、<code>Set-Cookie</code>等。非标准头可以由实现者自己定义，如IE的<code>X-UA-Compatible</code>等。</p>
+            <p>在HTTP协议本身是没有限制HTTP头的大小。尽管如此，很多Web服务器、客户端和代理软件都对HTTP头的大小进行限制。如Apache2.3中，每个头的大小最多是8160个字节，一个请求里面最多包含100个头。</p>
+            <p>头域大致可以分成两种，一种是请求头，客户端向服务器发请求的时候使用什么方法、请求什么URI、协议版本等都是在请求头中指定。另一种是响应头，服务器接到客户端的请求后返回响应的是否成功、返回的MIME类型是什么都在请求头中指定。</p>
+            <h3 id="-">请求头</h3>
+            <p>常用的标准请求头包括下面几个：</p>
+            <ol>
+              <li><code>Accept</code>，声明哪种相应是可接受的，如<code>text\plain</code>、<code>application\json</code>等。</li>
+              <li><code>Cache-Control</code>，声明缓存控制机制，如<code>no-cache</code>声明不做缓存。</li>
+              <li><code>Connection</code>，声明与服务器的连接机制，如<code>keep-alive</code>等。</li>
+              <li><code>Cookie</code>，声明Cookie信息。</li>
+              <li><code>Content-Type</code>，声明请求体的MIME类型。</li>
+            </ol>
+            <p><a href="/posts/2013/07/12/http-header.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery事件绑定研究续</h2>
+            <p class="blog-post-meta">写于2013年07月11日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>昨天留下了两个问题：</p>
+            <ol>
+              <li>究竟<code>on</code>能否解决在事件委托的情况下不能使用<code>event.stopPropagation</code>的问题？</li>
+              <li>假如在委托模式下，选择元素的其中一个子元素阻止事件冒泡，<code>on</code>委托的事件处理程序还能否顺利执行？</li>
+            </ol>
+            <p>针对问题1，先做一个实验，<a href="http://jsfiddle.net/Ask5n/2/">参考这里</a>：</p>
+            <p>HTML：</p> <pre><code>&lt;div id=&quot;root&quot;&gt;
+    &lt;div id=&quot;outer&quot;&gt;
+        Outer
+        &lt;div id=&quot;inner&quot;&gt;Inner&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>JavaScript：</p> <pre><code>$(&quot;#root&quot;).on(&quot;click&quot;, function (evt) {
+    alert(&quot;click on root&quot;);
+});
+</code></pre>
+            <p><a href="/posts/2013/07/11/jquery-event-2.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">简析jQuery几个绑定事件方法的优劣异同</h2>
+            <p class="blog-post-meta">写于2013年07月10日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天被问到jQuery中绑定事件的方式，回答了<code>bind</code>、<code>live</code>、<code>on</code>三种。继续被问到哪种方式比较好。当时我毫不犹豫地说是<code>on</code>。继续被追问说除了<code>on</code>还知不知道有什么更好的方式绑定事件。当时哥就蒙了，还有更好的绑定事件的方式吗？决定写一下jQuery中绑定事件有哪些方式，各种方式之间的区别又是啥。</p>
+            <h3 id="-bind">.bind</h3>
+            <p>先看看jQuery官方是怎么描述<code>bind</code>的：</p>
+            <blockquote>
+              <p>Attach a handler to an event for the elements.</p>
+            </blockquote>
+            <p>简单地说就是往元素上绑定事件处理程序。该方法接受三个参数：</p>
+            <ol>
+              <li><code>eventType</code>，绑定事件的名称。名称可以是任意的，接受自定义事件（只能通过<code>trigger</code>触发）。</li>
+              <li><code>eventData</code>，可选，绑定事件附加的数据，这个数据会附在事件对象的<code>data</code>属性里面。</li>
+              <li><code>handler</code>，事件处理程序，每次触发事件都会执行这个事件处理程序。</li>
+            </ol>
+            <p><strong>必须在一个已存在的元素上才能使用<code>bind</code>。</strong><code>bind</code>只能把事件处理程序绑定到指定的DOM元素上面。注意的是，如果为该对象的同一个事件绑定多个事件处理程序，则其执行的顺序是按照其绑定的先后顺序决定的。</p>
+            <p>假如绑定的对象只是一个DOM元素（例如通过id选择器选择），那么用<code>bind</code>是可以的，不会带来太多额外的开销。但是当选择器选择的DOM对象个数非常多，由于要在每一个元素上都绑定同一个事件处理程序，会带来额外的开销，包括获取DOM元素、遍历所有DOM元素绑定事件处理程序等。而且由于<code>bind</code>绑定时机的局限性，一般在频繁动态创建和删除DOM的场景下都不会使用<code>bind</code>。</p>
+            <h3 id="-live">.live</h3>
+            <p>又看看jQuery官方是怎么描述<code>live</code>的：</p>
+            <p><a href="/posts/2013/07/10/jquery-bind-live-on-delegate.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">经典三列布局之如何让中间的列先显示出来</h2>
+            <p class="blog-post-meta">写于2013年07月08日 关于<a href="/tags/html">html</a>,<a href="/tags/css">css</a></p>
+            <p>在某些并发访问非常高的页面，由于服务器压力过大，导致页面的内容要很久才能加载完。这个时候，我们应该尽可能把用户觉得重要的信息（大多数情况放在中栏）先显示出来。</p>
+            <p>首先是原始的HTML：</p> <pre><code>&lt;div id=&quot;container&quot;&gt;
+    &lt;div id=&quot;left&quot;&gt;This is left!&lt;/div&gt;
+    &lt;div id=&quot;middle&quot;&gt;This is middle!&lt;/div&gt;
+    &lt;div id=&quot;right&quot;&gt;This is right!&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>按照HTML解析顺序，上面的HTML片段应该是先显示left，再显示middle，最后显示right。</p>
+            <h3 id="-">第一步</h3>
+            <p>先调整HTML的顺序，让middle先行。</p> <pre><code>&lt;div id=&quot;container&quot;&gt;
+    &lt;div id=&quot;middle&quot;&gt;This is middle!&lt;/div&gt;
+    &lt;div id=&quot;left&quot;&gt;This is left!&lt;/div&gt;
+    &lt;div id=&quot;right&quot;&gt;This is right!&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p><a href="/posts/2013/07/08/three-column-layout-middle-first.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">window.location 浅析</h2>
+            <p class="blog-post-meta">写于2013年07月07日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>国际惯例，先看看<code>window.location</code>在w3schools的简单描述：</p>
+            <blockquote>
+              <p>The window.location object can be used to get the current page address (URL) and to redirect the browser to a new page.</p>
+            </blockquote>
+            <p>简单地说，这个对象就是用来获取页面的URL，控制页面跳转等功能。</p>
+            <h3 id="-">属性</h3>
+            <p>可以通过以下属性获取关于当前页面路径的信息，也可以设置某些属性跳转到新的url上面。</p>
+            <ol>
+              <li><code>hash</code>，url中跟着<code>#</code>的内容，包含<code>#</code>。注意，<strong>如果<code>#</code>后面没用东西或者没有<code>#</code>，则这个属性的值是空字符串</strong>。还可以绑定<code>hashchange</code>事件监听<code>hash</code>变化。</li>
+              <li><code>host</code>，由url的主机名称<code>hostname</code>跟端口<code>port</code>组成的字符串。</li>
+              <li><code>hostname</code>，url的主机名称。注意，<strong>在Chrome跟Safari是包括括号的（IPv6的情况），而IE跟FireFox则不包括括号</strong>。</li>
+              <li><code>href</code>，完整的url。</li>
+              <li><code>pathname</code>，相对于主机名的路径。</li>
+              <li><code>port</code>，url的端口号。如果使用的是默认端口（80），则这个属性的值是空字符串。</li>
+              <li><code>protocol</code>，url的协议。</li>
+              <li><code>search</code>，url中跟着<code>?</code>的内容，包含<code>?</code>。</li>
+              <li><code>orign</code>，由url的协议、主机名跟端口组成的字符串。目前只有Chrome跟FireFox 21支持这个属性。</li>
+            </ol>
+            <h3 id="-">方法</h3>
+            <ol>
+              <li><code>assign(url)</code>，将当前页面跳转到指定的url。</li>
+            </ol>
+            <p><a href="/posts/2013/07/07/window-location.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">前端攻城师的职业规划</h2>
+            <p class="blog-post-meta">写于2013年07月06日 关于<a href="/tags/前端">前端</a></p>
+            <p>直接上图。</p>
+            <p><img alt="frontend" src="http://popotang.com/blog/wp-content/uploads/2011/12/655534efgw1do2a8dvcldj.jpg" width="100%" /></p>
+            <p><a href="/posts/2013/07/06/frontend-career.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Href中的JavaScript link</h2>
+            <p class="blog-post-meta">写于2013年07月05日 关于<a href="/tags/html">html</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>在<code>A</code>标签的<code>href</code>属性写上JavaScript“表达式”，其中一个目的就是为了那些不是链接的<code>A</code>标签通过HTML验证，<a href="http://stackoverflow.com/questions/7755088/href-expression-a-href-javascript-a">参考这里</a>。<em>（注：刚才试了一下在最新的W3C的HTML在线校验里面没有<code>name</code>和<code>href</code>属性的<code>A</code>标签也能通过校验）</em></p>
+            <p>不能写“#”，因为会跳到页面的头部<em>（可以通过取消浏览器默认事件防止该行为，<a href="http://dafeizizhu.github.io/2013/07/03/a-tag/">参考这里</a>）</em>。也不能写空字符串，在IE下会刷新页面。那只能写一个JavaScript表达式，该表达式什么也不做。最常见的就是以下这个代码：</p> <pre><code>&lt;a href=&quot;javascript:void(0)&quot;&gt;Do not refresh or go to the top of this page.&lt;/a&gt;
+</code></pre>
+            <p>JavaScrit提供了一种机制，供页面与JavaScript方法进行交互，其中一种机制就是<code>href</code>中的JavaScript链接（JavaScript link）。一个最简单的JavaScript链接示例如下：</p> <pre><code>&lt;a href=&quot;javascript:MyFunction();&quot;&gt;Text to Click&lt;/a&gt;
+</code></pre>
+            <p>其中<code>MyFunction</code>是全局的一个函数，当单击这个<code>A</code>标签的时候，对应JavaScript链接的语句会被执行。</p>
+            <p>如果同时设置了<code>href</code>上的JavaScript链接，又设置了<code>onclick</code>属性<em>（当然这个应该存在于黑暗之中永远不让它出来o(╯□╰)o）</em>，会是怎样的一个场景呢？立马做一个实验，<a href="http://jsfiddle.net/b7YLJ/1/">参考这里</a>。</p> <pre><code>&lt;a href=&quot;javascript:alert(1);&quot; onclick=&quot;alert(2);&quot;&gt;Text to Click&lt;/a&gt;
+</code></pre>
+            <p>结果是先弹出了2，再弹出1。仔细思考一下，其实这个结果是跟前天写的内容是吻合的。事件处理函数先执行，再执行浏览器的默认行为，在这里浏览器的默认行为就是弹出1。</p>
+            <p>最后简单看看JavaScript中一个被忽略的运算符：<code>void</code>。这个运算符有两种使用方式：</p> <pre><code>void (expression)
+</code></pre>
+            <p><a href="/posts/2013/07/05/href-javascript-expression.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML META 标签入门</h2>
+            <p class="blog-post-meta">写于2013年07月04日 关于<a href="/tags/html">html</a></p>
+            <p>今天被妹纸狠狠地鄙视了我的博客样子太丑(/＞皿&lt;)/ ～ ┴┴。闲逛看看有没有好看的博客设计。偷看他们源代码，发现有好多<code>meta</code>标签都不认识，所以写一篇东西好好学习一下<code>html</code>中的<code>meta</code>标签究竟怎么用。</p>
+            <h3 id="-">定义</h3>
+            <p>又看看w3schools对<code>meta</code>标签的定义：</p>
+            <blockquote>
+              <p>The meta tag provides metadata about the HTML document. Metadata will not be displayed on the page, but will be machine parsable.</p>
+            </blockquote>
+            <p>再看看wikipedia的解释：</p>
+            <blockquote>
+              <p>Meta elements can specify HTTP headers which should be sent <strong>before</strong> the actual content when the HTML page is served from Web server to client.</p>
+            </blockquote>
+            <p><code>meta</code>标签不会显示在页面中。使用<code>meta</code>可以声明这个页面的描述、作者、关键字、最后修改日期等信息，可以供浏览器、搜索引擎和一些Web服务使用。</p>
+            <h3 id="-">注意</h3>
+            <p>以下是几点注意事项：</p>
+            <ol>
+              <li><code>meta</code>标签总是定义在<code>head</code>标签之类。</li>
+              <li><code>meta</code>标签总是以键值对（<code>name</code>和<code>content</code>）传递信息。</li>
+              <li>在定义<code>name</code>或者<code>http-equiv</code>属性之后才能定义<code>content</code>属性。</li>
+            </ol>
+            <h3 id="name">NAME</h3>
+            <p><a href="/posts/2013/07/04/html-meta-tag.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML A 标签简析</h2>
+            <p class="blog-post-meta">写于2013年07月03日 关于<a href="/tags/html">html</a></p>
+            <p>HTML中的<code>A</code>标签，使用频率应该非常高。可以作为一个链接、一个锚点，甚至一些按钮（Extjs和dojo等框架）。先看看w3schools对<code>A</code>标签的定义是：</p>
+            <blockquote>
+              <p>The a tag defines a hyperlink, which is used to link from one page to another.</p>
+            </blockquote>
+            <p>简单的说，<code>A</code>标签就是一个超链接。有趣的是，对于HTML4跟HTML5对<code>A</code>标签的定义又有所不同。</p>
+            <blockquote>
+              <p>In HTML 4.01, the a tag could be either a hyperlink or an anchor. In HTML5, the a tag is always a hyperlink, but if it has no href attribute, it is only a placeholder for a hyperlink.</p>
+            </blockquote>
+            <p>在HTML4中，如果<code>A</code>标签没有<code>href</code>这个属性，则说明该<code>A</code>标签仅仅是个锚，可以供链接跳转到该位置，就像一个“书签”的作用。但是在HTML5中<code>A</code>标签<strong>只是个链接</strong>。</p>
+            <p>最近在项目中发现有个奇怪的问题：在一个<code>A</code>标签的事件处理程序中，改变浏览器的hash，发现不生效，只是在浏览器的地址栏的末尾加上了“#&quot;。打断点调试后发现该行代码执行之后，浏览器的地址栏确实是改变了，可以看到代码设置的hash。但是在代码走完之后，浏览器的hash自动变成“#”，代码设置上去的hash被重置了。观察该事件在jQuery中的处理函数，只有一个事件处理函数，没有其他的事件处理函数被执行，也没有异步方法执行。究竟这个hash是怎么被重置回去了？</p>
+            <p>观察该<code>A</code>标签的属性，发现有一行这样的代码：<code>href=&quot;#&quot;</code>。使用Chrome的调试工具，把其改成<code>href=&quot;#123&quot;</code>，神奇的事情发生了。单击按钮后地址栏上的hash被改成了“#123”。难道是<code>A</code>标签的默认行为重置了浏览器的hash？</p>
+            <p>为了验证该问题，为一个<code>DIV</code>元素绑定了同样一个鼠标单击的事件处理函数，发现单击该<code>DIV</code>元素，地址栏上的hash被正确修改，没有被重置。</p>
+            <p>重现该场景写了一个<a href="http://jsfiddle.net/Vy3W7/">测试代码</a>：</p>
+            <p>{% highlight html %} <a href="#123">click me!</a> {% endhighlight %}</p>
+            <p><a href="/posts/2013/07/03/a-tag.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/16.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li class="active"><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/18.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

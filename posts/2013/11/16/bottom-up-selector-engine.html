@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 从下到上的CSS选择器引擎</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 从下到上的CSS选择器引擎</h2>
+            <p class="blog-post-meta">写于2013年11月16日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>如果不想做之前的唯一性的过滤，那么从下到上的CSS选择器实现应该是一个比较好的替换方式。这种实现跟之前的实现最大的不同就是它是从最右边开始解析CSS选择器。举个例子，假如有这么一个CSS选择器<code>div span</code>，从下到上的实现会先查找出文档中所有的<code>span</code>，然后在这些<code>span</code>中过滤出祖先节点有<code>div</code>的一个集合，就是最后的结果。</p>
+            <p>这种先查出一个大集合再过滤的方式，优点就是代码实现起来比较简单，最明显的就是不用之前的唯一性判断。但是，代码简单带来的缺点就是扩展性比较差，而且当选择器比较复杂的时候局限性比较大。</p>
+            <p>这个实现首先根据选择器的最右的部分查出所有元素。然后的操作就是从右到左，根据每一个选择器在这个集合中过滤掉合适的部分即可：</p> <pre><code>function find(selector, root){
+  root = root || document;
+  var parts = selector.split(&quot; &quot;),
+  query = parts[parts.length - 1],
+  rest = parts.slice(0,-1).join(&quot;&quot;),
+  elems = root.getElementsByTagName(query),
+  results = [];
+  for (var i = 0; i &lt; elems.length; i++) {
+    if (rest) {
+      var parent = elems[i].parentNode;
+      while (parent &amp;&amp; parent.nodeName != rest) {
+        parent = parent.parentNode;
+      }
+      if (parent) {
+        results.push(elems[i]);
+      }
+    } else {
+      results.push(elems[i]);
+    }
+  }
+  return results;
+};
+</code></pre>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/15/jquery-when.html" title="jQuery扫盲之jQuery.when">上一篇</a></li>
+              <li><a href="/posts/2013/11/17/hp-dom-in-browser.html" title="High Performance JavaScript 读书笔记之 浏览器中的DOM">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

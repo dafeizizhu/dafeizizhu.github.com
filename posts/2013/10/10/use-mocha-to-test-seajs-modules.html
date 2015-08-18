@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用Mocha测试SeaJs模块</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用Mocha测试SeaJs模块</h2>
+            <p class="blog-post-meta">写于2013年10月10日 关于<a href="/tags/前端">前端</a>,<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天介绍了测试驱动，Karma的作用只是拉起浏览器，加载需要的脚本，例如测试框架、源码还有测试代码，执行加载的代码。测试代码怎么写，用什么测试框架，它是不关心的。今天继续昨天的单元测试问题，讨论的是使用Mocha这个单元测试框架去编写我们的测试用例。</p>
+            <p>由于是使用Karma拉起的，所以只使用Karma里面的Mocha适配器即可，即在Karma配置文件中配置<code>framework</code>：</p> <pre><code>`framework`: [&quot;mocha&quot;],
+</code></pre>
+            <p>然后参考昨天讨论过的结果，在测试入口文件调用：</p> <pre><code>mocha.run();
+</code></pre>
+            <p>即可拉起之前通过<code>seajs.use</code>加载的测试代码。</p>
+            <p>我们的测试代码也是以一个CMD模块加载进来的，所以测试代码看上去应该是这样的：</p> <pre><code>define(function (require) {
+  var expect = require(&quot;path/to/expect.js&quot;);
+  describe(&quot;Some subject&quot;, function () {
+    it(&quot;Some case&quot;, function () {
+      expect(true).to.be(true);
+    });
+  });
+});
+</code></pre>
+            <p>其中第一行就是要使用的断言风格。这里以<code>expect.js</code>为例，由于我们的代码是在CMD模块里面，所以可以使用SPM去下载对应<code>expect.js</code>的CMD版本：</p> <pre><code>spm install gallery/expect -d path/to/seajs-base-path
+</code></pre>
+            <p>也可以使用其他风格的断言，只需要去SPM上下载对应的CMD版本或者自行封装也可以。</p>
+            <p>里面的<code>describe</code>和<code>it</code>就不说明了，<code>describe</code>还可以重复嵌套，例如：</p> <pre><code>describe(&quot;Some subject&quot;, function () {
+  describe(&quot;Child subject&quot;, function () { ... });
+});
+</code></pre>
+            <p>最后测试用例的名字会把所有上层的<code>describe</code>的名字拼接起来，十分方便，层次也比较清晰。</p>
+            <p>Mocha比Jasmine要好的地方是，我在Jasmine的官网上看的例子，异步测试是使用<code>waitFor</code>，等待一个时间之后再进行断言，这太不科学了！而Mocha使用的是回调的机制，只要在<code>it</code>的第二个参数，声明一个<code>done</code>参数，这个测试就变成支持异步的了：</p> <pre><code>it(&quot;Some async test&quot;, function (done) {
+  setTimeout(function () {
+    expect(true).to.be(true);
+    done();
+  }, 1000);
+});
+</code></pre>
+            <p>单元测试框架必不可少的<code>setUp</code>和<code>tearDown</code>在Mocha中是<code>before</code>、<code>after</code>、<code>beforeEach</code>和<code>afterEach</code>。其中前两个适用于<code>describe</code>，而后两个则使用于<code>it</code>，即每个测试用例之前和之后都要执行。</p>
+            <p>Mocha还有一个非常人性化的地方，就是可以只执行或者排除执行某些用例。想象一下两个场景：</p>
+            <p>第一个场景就是有100个用例，只有一个用例执行失败了，所以需要调试一下为什么失败。这时，如果还是100个用例跑的话，一是时间可能非常长，二是其他用例也有可能被断点。难道要注释掉其他用例么？不用！这时候可以<code>it</code>后面加上一个小东西：</p> <pre><code>it.only(&quot;Some case&quot;, function () { ... });
+</code></pre>
+            <p>这样，下次执行测试用例的时候就只执行这个用例了，太方便了！同样适用于<code>describe</code>。</p>
+            <p>第二个场景也有100个用例，其中有一个不是非常重要的用例失败了，但是其执行的时间非常长，导致影响了其他用例的执行。难道又要把它注释了么？不用！这时候可以在<code>it</code>后面加上另外一个小东西：</p> <pre><code>it.skip(&quot;Some case&quot;, function () { ... });
+</code></pre>
+            <p>这样，下次执行测试用例的时候就不会执行这个用例了，太方便了！也同样适用于<code>describe</code>。</p>
+            <p>Mocha - the fun, simple, flexible JavaScript test framework，一点都木有错！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/09/use-karma-to-test-seajs-module.html" title="使用Karma测试Seajs模块">上一篇</a></li>
+              <li><a href="/posts/2013/10/11/assertion-expect-js.html" title="一个断言：expect.js">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Node中spawn和exec的区别</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Node中spawn和exec的区别</h2>
+            <p class="blog-post-meta">写于2013年08月26日 关于<a href="/tags/node">node</a></p>
+            <p>今天试着结合SPM和Grunt来做项目的构建，在Node中使用子进程调用SPM命令的时候，看文档先用了<code>spawn</code>，发现老是抛出一个错误。后来使用<code>exec</code>就没有什么问题。这两个方法都可以在Node中创建一个子进程执行一些操作系统的命令（bat或者shell脚本），究竟这两者有什么不一样呢？</p>
+            <h3 id="child_process-spawn">child_process.spawn</h3>
+            <hr>
+            <p><code>spawn</code>应该是创建子进程的一个基本的方法。该方法接受三个参数：</p>
+            <ol>
+              <li><code>command</code>，表示要执行命令的字符串。</li>
+              <li><code>args</code>，表示执行命令的命令行参数，如果不提供默认值是一个空数组。</li>
+              <li><code>options</code>，可选配置。</li>
+            </ol>
+            <p>其中<code>options</code>可以配置的属性有：</p>
+            <ol>
+              <li><code>cwd</code>，配置该命令执行的目录。</li>
+              <li><code>stdio</code>，配置子进程跟父进程直接的输入输出方式。</li>
+              <li><code>env</code>，配额子进程中的环境变量。</li>
+              <li><code>detached</code>，配置子进程是否独立的。默认情况下父进程是需要等待子进程结束才能结束，当这个配置为<code>true</code>时，父进程不需要等待子进程结束，子进程会在后台继续执行。（子进程使用了父进程的io则这个配置始终都是默认情况。）</li>
+              <li><code>uid</code>，配置执行子进程的用户id。</li>
+              <li><code>gid</code>，配置执行子进程的用户组id。</li>
+            </ol>
+            <p><code>options</code>的默认值为：</p> <pre><code>{
+  cwd: undefined,
+  env: process.env
+}
+</code></pre>
+            <p>执行该方法后会返回一个<code>ChildProcess</code>实例。</p>
+            <h3 id="childprocess">ChildProcess</h3>
+            <hr>
+            <p>这个类的实例有以下几个事件：</p>
+            <ol>
+              <li><code>error</code>，不能派生子进程、不能杀死子进程或者<code>sendMessage</code>失败等。</li>
+              <li><code>exit</code>，子进程正常退出或者父进程发送消息主动结束子进程。</li>
+              <li><code>close</code>，同<code>exit</code>，不一样的是<code>close</code>会等待使用的<code>stdio</code>全部结束后才会触发（多个子进程可能共享<code>stdio</code>）。</li>
+              <li><code>disconnect</code>，再调用<code>disconnect</code>方法之后触发，触发之后不能再发送消息。</li>
+              <li><code>message</code>，接收到消息的时候触发。</li>
+            </ol>
+            <p>这个对象还有几个关于标准输入输出的流：<code>stdin</code>、<code>stdout</code>、<code>stderr</code>，分别对应输入、输出和错误流，可以监听这些流的<code>data</code>事件捕获子进程的标准输入输出（一般是控制台的输入输出流），如：</p> <pre><code>var spawn = require(&#39;child_process&#39;).spawn,
+ls = spawn(&#39;ls&#39;, [&#39;-lh&#39;, &#39;/usr&#39;]);
+
+ls.stdout.on(&#39;data&#39;, function (data) {
+  console.log(&#39;stdout: &#39; + data);
+});
+</code></pre>
+            <h3 id="child_process-exec">child_process.exec</h3>
+            <hr>
+            <p>看Node上面的文档，容易看出来<code>exec</code>是<code>spawn</code>的简化版本。该方法也接受三个参数：</p>
+            <ol>
+              <li><code>command</code>，要执行的命令的字符串。</li>
+              <li><code>options</code>，可选的配置。</li>
+              <li><code>callback</code>，一个回调函数。当子进程结束的时候会被调用。</li>
+            </ol>
+            <p><code>options</code>跟<code>spawn</code>类似，有<code>cwd</code>、<code>env</code>，其他的配置如下：</p>
+            <ol>
+              <li><code>encoding</code>，输出流的编码，默认是<code>utf8</code>。</li>
+              <li><code>timeout</code>，子进程执行的超时时间，默认是<code>0</code>,表示没有超时时间。</li>
+              <li><code>maxBuffer</code>，输出流的缓冲区大小，默认是<code>200×1024</code>，注意，<strong>当输出的内容超过缓冲区的大小子进程会被杀掉</strong>。</li>
+              <li><code>killSignal</code>，子进程被杀的信号，默认是<code>SIGTERM</code>。</li>
+            </ol>
+            <p>其中回调函数有三个输入参数：<code>error</code>、<code>stdout</code>和<code>error</code>，分别对应错误输出、正常输出和执行的错误对象。由于这个回调函数封装了两个输出的内容和错误对象，有大部分的场景都可以不去使用返回的<code>ChildProcess</code>对象，直接使用这个回调函数即可。</p>
+            <h3 id="-">陷阱</h3>
+            <hr>
+            <p>查看了一些资料，发现这两者之间还有一些区别。</p>
+            <blockquote>
+              <p>大家都知道在linux下, ls命令对应的是一个文件, 而在windows下是做为cmd的内置命令的. 所以像我那样写是会报错.</p>
+              <p>所以想使用内置命令可以直接使用exec或者把spawn改成spawn(&quot;cmd.exe&quot;,[&quot;\s&quot;, &quot;\c&quot;, &quot;dir&quot;]);</p>
+              <p>总结起来就是spawn是调用一个文件! 不要被docs上的child_process.spawn(command, [args], [options])中的command给骗了 </p>
+            </blockquote>
+            <p>总结，在windows下面就是坑！</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/08/25/javascript-with-statement-usage.html" title="Secrets of the JavaScript Ninja 读书笔记之 with语句的应用场景">上一篇</a></li>
+              <li><a href="/posts/2013/08/27/css-conflicting-absolute-positions.html" title="利用Absolute进行自适应布局">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

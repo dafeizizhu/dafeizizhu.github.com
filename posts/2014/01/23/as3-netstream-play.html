@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>用NetStream播放视频，包括二进制数据哦！</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">用NetStream播放视频，包括二进制数据哦！</h2>
+            <p class="blog-post-meta">写于2014年01月23日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>昨天只是简单地将在Flash中播放视频的最基本的方法介绍了一遍。其实我们可以自己去下载视频的数据，然后通过<code>NetStream</code>的<code>appendBytes</code>方法把获取到的数据添加到流里面。这样，我们可以对数据的传输进行更精确的控制。</p>
+            <p><code>play</code>方法最简单的用法就是传入一个本地或者Web URL，后面的数据加载就交给<code>NetStream</code>的内部实现了。我们也可以传入一个<code>null</code>，这时<code>NetStream</code>就启动“数据生成模式”。在这个模式下面，调用<code>appendBytes</code>方法就可以把二进制数据添加到流中。</p>
+            <p>要注意的是，在构造<code>NetStream</code>对象的时候需要在调用<code>NetConnection</code>的<code>connect</code>方法传入一个<code>null</code>。</p>
+            <p>然后我们就可以从网络或者其他任意地方读取二进制数据，调用<code>appendBytes</code>把它们加入到这个流中播放：</p> <pre><code>var MyNC:NetConnection = new NetConnection();
+MyNC.connect(null);
+
+var MyNS:NetStream = new NetStream(MyNC);
+MyVideo.attachNetStream(MyNS);
+MyNS.play(null);
+MyNS.appendBytes(ba);
+</code></pre>
+            <p>注意，在<code>appendBytes</code>执行后续调用之前，字节分析程序可能无法完整地解码对<code>appendBytes</code>的调用。</p>
+            <p>通过这种播放方式，我们可以先把视频加载到内从，校验视频内容（MD5等），然后直接把这些二进制数据加载到流中播放，这样播放的时候就不需要再从网络或者本地文件系统中加载数据了。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/22/as3-netstream.html" title="在Flash中播放视频之NetStream">上一篇</a></li>
+              <li><a href="/posts/2014/01/24/as3-sound-transform.html" title="在Flash中控制声音之SoundTransform">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

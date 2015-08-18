@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>给Flash影片传参数</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">给Flash影片传参数</h2>
+            <p class="blog-post-meta">写于2013年12月02日 关于<a href="/tags/Flash">Flash</a>,<a href="/tags/html">html</a></p>
+            <p>在页面中插入Flash影片有两个标签都可以用，一个是<code>object</code>，一个是<code>embed</code>。无论使用那个标签，我们都需要传入一些参数给Flash影片，今天来看看有什么参数可以设置。</p>
+            <p>首先是必要的参数，<code>width</code>和<code>height</code>这两个属性无论使用哪个标签都必须设置的：</p> <pre><code>&lt;object width=&quot;500&quot; height=&quot;400&quot;&gt;&lt;/object&gt;
+</code></pre>
+            <p>如果使用的是<code>object</code>，则还需要以下几个参数：</p>
+            <ol>
+              <li><code>classid</code>，为浏览器指定ActiveX控件，一般都是<code>D27CDB6E-AE6D-11cf-96B8-444553540000</code>。</li>
+              <li><code>codebase</code>，如果浏览器没有安装指定的控件，则可以通过这个特性的值去下载指定的控件，例如<code>codebase=&quot;downloader.cab#version=1,0,0,0&quot;</code>。</li>
+              <li><code>movie</code>，这个是<code>object</code>内部的一个<code>param</code>标签的<code>name</code>，指定Flash影片的地址：<code>&lt;param name=&quot;movie&quot; value=&quot;path/to/swf&quot; /&gt;</code>。</li>
+            </ol>
+            <p>如果使用的是<code>embed</code>，内部不会有<code>param</code>标签，所有参数都是以特性写在<code>embed</code>标签里面。使用<code>embed</code>标签的时候还需要以下几个参数：</p>
+            <ol>
+              <li><code>src</code>，同以上的<code>movie</code>。</li>
+              <li><code>pluginspage</code>，同以上的<code>codebase</code>。</li>
+            </ol>
+            <p>以下是可选的参数，使用<code>object</code>的时候使用<code>param</code>标签在内部声明值，使用<code>embed</code>则直接以特性写在<code>embed</code>里面：</p>
+            <ol>
+              <li><code>play</code>，表示是否在影片加载完成之后自动播放，默认是<code>true</code>。</li>
+              <li><code>loop</code>，表示影片是否循环播放，默认是<code>true</code>。</li>
+              <li><code>menu</code>，表示是否在上下文菜单显示播放控件。</li>
+              <li><code>quality</code>，声明播放的品质，可选的值有<code>low</code>、<code>autolow</code>、<code>autohigh</code>、<code>medium</code>、<code>high</code>和<code>best</code>。</li>
+              <li><code>scale</code>，声明Flash Player如何处理影片内容和标签大小之间的适应处理，可选的值有：
+                <ol>
+                  <li><code>default</code>，会在标签中显示影片完整的内容，并保持原始的宽高比。</li>
+                  <li><code>noborder</code>，会占满整个标签，并保持原始的宽高比。</li>
+                  <li><code>exactfit</code>，同上，不过不会保持原始的宽高比。</li>
+                  <li><code>noscale</code>，保持影片原始的大小。</li>
+                </ol>
+              </li>
+              <li><code>align</code>，向哪边对齐，默认是居中对齐，可选的值有<code>l</code>、<code>r</code>或者<code>t</code>。</li>
+              <li><code>wmode</code>，声明Flash影片与HTML元素之间的显示关系，可选的值有：
+                <ol>
+                  <li><code>window</code>，由浏览器去决定如何显示。</li>
+                  <li><code>direct</code>，使用直接路径来渲染，可以获得最高的性能。</li>
+                  <li><code>opaque</code>，影片的背景是不透明的，即会把所有在影片底下的元素遮盖起来。</li>
+                  <li><code>transparent</code>，影片的背景是透明的。</li>
+                </ol>
+              </li>
+              <li><code>bgcolor</code>，影片的背景颜色。</li>
+              <li><code>allowFullScreen</code>，是否允许全屏显示，默认是<code>false</code>。</li>
+              <li><code>fullScreenAspectRatio</code>，全屏时设备的方向，可选的值有<code>portrait</code>和<code>landscape</code>。</li>
+              <li><code>flashvars</code>，传给Flash影片的变量，是<code>key=value</code>的格式，多个键值对用<code>&amp;</code>隔开。最多能传64KB的数据。明天继续讨论这个参数。</li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/12/01/hp-repaints-and-reflows.html" title="High Performance JavaScript 读书笔记之 Repaints和Reflow">上一篇</a></li>
+              <li><a href="/posts/2013/12/03/flashvars.html" title="使用flashvars传递参数">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 过滤元素</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 过滤元素</h2>
+            <p class="blog-post-meta">写于2013年11月09日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>一个CSS选择器是由多个部分组成，例如<code>div.class[id]</code>，这里有三个部分：<code>div</code>、<code>.class</code>、<code>[id]</code>。首先，我们会根据<code>div</code>这个选择器，使用<code>getElementsByTagName</code>去获取文档中所有<code>div</code>。然后，我们需要对这个集合进行过滤，过滤出匹配<code>.class</code>和<code>[id]</code>这两个选择器的元素。</p>
+            <p>过滤操作基本上在每一个CSS选择器引擎的实现都会有。通常会根据特性和元素的位置对集合进行过滤：</p>
+            <ol>
+              <li>特性过滤，需要在每一个元素上面调用<code>getAttribute</code>来获取对应的特性，跟特性选择器进行对比（特性的名称或者特性的值）。这里包括类选择器的过滤，因为<code>class</code>也可以作为一个特性。</li>
+              <li>位置过滤，例如<code>nth-child</code>或者<code>first-child</code>等。这些过滤通常会优先使用DOM的<code>children</code>，这个属性是这个DOM元素的所有子孙元素。如果不支持这个属性，则需要遍历每一个DOM元素，访问其<code>childNodes</code>属性，这个属性只会包含这个元素的子元素。使用这两个属性就可以判断元素在集合中的位置是否匹配位置选择器。</li>
+            </ol>
+            <p>这种过滤功能还能提供给用户，例如<code>jQuery.fn.filter</code>或者<code>jQuery.grep</code>，使用这个方法可以使用自定义的过滤逻辑过滤这个集合，提供比CSS选择器更方便、更灵活的过滤功能。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/11/08/jquery-constructor.html" title=" jQuery扫盲之jQuery">上一篇</a></li>
+              <li><a href="/posts/2013/11/10/javascript-set-recurseing-and-merging.html" title="Secrets of the JavaScript Ninja 读书笔记之 递归与合并">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

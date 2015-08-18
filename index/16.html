@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">换行还是不换行之word-wrap</h2>
+            <p class="blog-post-meta">写于2013年07月23日 关于<a href="/tags/css">css</a></p>
+            <p>继续昨天的话题，今天介绍另一个影响文字换行的属性<code>word-wrap</code>。</p>
+            <blockquote>
+              <p>This property specifies whether the UA may arbitrarily break within a word to prevent overflow when an otherwise-unbreakable string is too long to fit within the line box. <strong>It only has an effect when ‘white-space’ allows wrapping.</strong></p>
+            </blockquote>
+            <p><code>word-wrap</code>这个属性声明用户代理（一般就是指浏览器）能否从一个单词中间断开，防止这个单词溢出容器。这里值得注意的是，要<code>word-wrap</code>属性生效，必须让<code>white-space</code>这个属性允许自动换行（即<code>white-space</code>的属性只能是<code>normal</code>、<code>pre-wrap</code>和<code>pre-line</code>）。</p>
+            <p>可选的取值有：</p>
+            <ol>
+              <li><code>normal</code>，默认值，不允许从一个单词中间断开，显示溢出部分。</li>
+              <li><code>break-word</code>，如果一行中没有其他可接受的断点，那么将强行断开文本单词。</li>
+            </ol>
+            <p>这里的“单词”，指的是非CJK（Chinese、Japanese、Korean）中由若干个字母组成的单词。这个单词是有独立意义的，不同单词使用空格或者<code>-</code>分开。所以如果随意把超长的单词从中间断开，可能会导致理解上的误差。例子<a href="http://jsfiddle.net/VKP78/">参考这里</a>。</p>
+            <p>这个属性所有浏览器都支持。IE引入了一个别名叫<code>-ms-word-wrap</code>，在标准的IE8里面已经支持标准的<code>word-wrap</code>，所以也不需要加上这个前缀了。</p>
+            <p>还有一个值得注意的是，在最近的CSS3规范中，<code>word-wrap</code>已经被改名叫<code>overflow-wrap</code>了，在最新的Chrome和Opera中已经支持新名字了哦。在往后的标准实现中，<code>word-wrap</code>只能作为<code>overflow-wrap</code>的一个别名存在，太悲催了。</p>
+            <p>总结一下，在<code>white-space</code>声明支持自动换行的情况下：</p>
+            <ol>
+              <li><code>normal</code>不会中断一个非CJK单词。</li>
+              <li><code>break-wrod</code>会最大限度维持排版规则去中断溢出的非CJK单词。</li>
+            </ol>
+            <p><a href="/posts/2013/07/23/css-word-wrap.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">换行还是不换行之white-space</h2>
+            <p class="blog-post-meta">写于2013年07月22日 关于<a href="/tags/css">css</a></p>
+            <p>今天又给一个换行还是不换行的问题困扰了。决定好好地研究一下块元素中的行内元素是如何控制换行的。主要从几个CSS样式入手，包括<code>white-space</code>、<code>word-break</code>等，最后会综合讨论块元素的其他CSS是如何影响行内元素的换行控制。</p>
+            <p>今天先看看<code>white-space</code>这个CSS属性。</p>
+            <blockquote>
+              <p>The white-space property specifies how white-space inside an element is handled.</p>
+            </blockquote>
+            <p><code>white-space</code>这个属性是用来声明一个元素内部的空白（包括空格还有换行符等）是如何处理的。可选的取值有以下几个：</p>
+            <ol>
+              <li><code>normal</code>，默认值，合并所有空白，当内容接触容器元素边界的时候自动换行。</li>
+              <li><code>nowrap</code>，与<code>normal</code>类似，只是不会自动换行<strong>（强制不换行必须配上这个CSS样式）</strong>。</li>
+              <li><code>pre</code>，保留所有空白，也不会自动换行。</li>
+              <li><code>pre-wrap</code>，保留所有空白，会自动换行。</li>
+              <li><code>pre-line</code>，除了换行符之外的空格合并，会自动换行。</li>
+              <li><code>inherit</code>，继承父元素的值。</li>
+            </ol>
+            <p>对于行内元素来说：</p>
+            <ol>
+              <li>当值是<code>normal</code>、<code>nowrap</code>和<code>pre-line</code>的时候，换行符前后的空白会被删除。</li>
+              <li>当值是<code>pre</code>和<code>pre-wrap</code>的时候，多个空格组成的序列不会在遇到元素边缘的时候被中断。而<code>pre-wrap</code>则会在序列的最后自动换行。</li>
+              <li>当值是<code>normal</code>和<code>nowrap</code>的时候，换行符会被转化成一个空格、一个长度为0的字符串或者压根不显示，具体如何转化需要看浏览器的实现算法。</li>
+              <li>当值是<code>normal</code>、<code>nowrap</code>和<code>pre-line</code>的时候，制表符会被转化成一个空格，多个连续的空格会被归并成一个空格。</li>
+            </ol>
+            <p><a href="/posts/2013/07/22/css-white-space.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTTP协议之简述一个HTTP请求的经过</h2>
+            <p class="blog-post-meta">写于2013年07月21日 关于<a href="/tags/http">http</a></p>
+            <p>之前已经科普过HTTP的请求/响应头还有HTTP状态码，今天简单的看看一个HTTP请求的过程。</p>
+            <p>先来根据W3的HTTP 1.1官方规范来看一些术语：</p>
+            <ol>
+              <li>连接（connection），指的是两个程序为了通讯而建立的一个“虚拟”的通道。</li>
+              <li>客户端（client），指的是发出HTTP请求的一方。</li>
+              <li>服务端（server），指的是接收HTTP请求并返回HTTP响应的一方。</li>
+              <li>代理（proxy），指的是接收HTTP请求，作出一些处理（例如翻译），然后发送HTTP请求到某个特定的服务端的中间件。</li>
+              <li>网关（gateway），与代理类似，不过它更着重于一个“关口”的概念，把接收到的HTTP请求继续传递给其下级子网来进行处理。</li>
+              <li>隧道（tunnel），与代理类似，不过它更着重于一个“透传”的概念，把接收到HTTP请求直接透传到某个特定的服务端中间件。</li>
+              <li>缓存（cache），一个本地存储及其管理系统，程序可以根据特定的机制决定是否在服务端真正地进行处理作为响应还是直接读取本地存储中的内容作为响应。</li>
+            </ol>
+            <p>术语还有很多，详情可以<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec1.html">参考这里</a>。同学们如果发现英文翻译有误的请赶紧拍砖啊。</p>
+            <p>现在来看看一个HTTP请求究竟经历了哪些步骤：</p>
+            <ol>
+              <li>建立连接，客户端会根据服务器的ip地址和端口号与服务器建立socket连接。</li>
+              <li>客户端发送一个HTTP请求，里面的HTTP请求头会包含一些这个请求的信息，例如URI、HTTP方法等。</li>
+              <li>服务器根据请求的内容进行处理，并返回一个HTTP响应。</li>
+              <li>客户端接收HTTP响应，关闭socket连接。</li>
+            </ol>
+            <p>这样，一个最简单的HTTP请求就完成了。现实中的场景可能会比较复杂，例如一个HTTP请求，经过N个中间件（例如代理、网关和隧道），转发了N+1这么多次才到达真正要处理这个请求的服务器。而每一个中间件也有可能把接收到的HTTP请求进行转发，转发到更多的服务器上面进行处理。</p>
+            <p><a href="/posts/2013/07/21/a-http-request.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 JavaScript重载</h2>
+            <p class="blog-post-meta">写于2013年07月20日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天来点轻松的，分享一个之前的读书笔记。我们知道，JavaScript是不支持重载的。后面定义的重名函数，无论参数的个数是否一样，都会把前面已经定义的重名函数给覆盖掉。要想实现类似Java中的重载机制，一般只能把所有的逻辑都写在同一个函数里，类似这样：</p> <pre><code>var ninja = {
+    whatever: function() {
+        switch (arguments.length) {
+        case 0:
+            /* do something */
+            break;
+        case 1:
+            /* do something else */
+            break;
+        case 2:
+            /* do yet something else */
+            break;
+        //and so on ...
+        }
+    }
+}
+</code></pre>
+            <p>根据<code>arguments.length</code>这个属性，可以判断当前调用这个函数的时候传入了多少个参数，根据参数的个数判断应该执行什么逻辑。这种方式虽然简单，但是如果以后扩展的时候需要再增加一个重载的逻辑，就需要增加一个<code>case</code>分支，这样是违背了开放封闭原则的，提高了维护的成本（估计大家也不想看到铺天盖地的<code>case</code>）。</p>
+            <p>为了解决这个问题，我们尝试使用一种新的思路去分析。首先，需要提供自定义的重载机制，例如：</p>
+            <p><a href="/posts/2013/07/20/javascript-overload.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">再谈CSS等高布局</h2>
+            <p class="blog-post-meta">写于2013年07月19日 关于<a href="/tags/css">css</a></p>
+            <p>之前写过一篇CSS等高布局相关的文章，讲的是使用负外边距和内边距的相互抵消做出来的一个“障眼法”。大湿看过之后立马表示有更科学的办法实现，就是CSS3的<code>box-flex</code>。今天再来回顾一下到底还有什么方法实现CSS等高布局。</p>
+            <h3 id="display-box">display: box</h3>
+            <p>通过<code>display: box</code>声明该元素的盒模型是一个弹性的盒模型，与CSS2中的盒模型是不一样的。其内部元素可以通过设置<code>box-flex</code>来声明其空间占的比例是多少。</p>
+            <p>简单看一下声明了<code>display: box</code>之后该元素还能设置CSS属性：</p>
+            <ol>
+              <li><code>box-orient</code>，声明其内部元素的排列方向，可选的值有<code>horizontal</code>、<code>vertical</code>、<code>inline-axis</code>、<code>block-axis</code>、<code>inherit</code>。默认值是<code>inline-axis</code>，所以在<code>diplay: box</code>元素内部的子元素都会表现得像行内元素一般的行为。</li>
+              <li><code>box-direction</code>，声明其内部元素的排列顺序，可选的值有<code>normal</code>、<code>reverse</code>、<code>inherit</code>。通过设置<code>reverse</code>可以把元素的顺序反转过来。</li>
+              <li><code>box-align</code>，声明其内部元素的垂直对齐方式（有点类似<code>vertical-align</code>），可选的值有<code>start</code>、<code>end</code>、<code>center</code>、<code>baseline</code>、<code>stretch</code>。<strong>默认值<code>stretch</code>就是拉伸其子元素让其高度（或者宽度）一致，所以在<code>display: box</code>下使用<code>box-flex</code>就可以做出等高的效果。</strong></li>
+              <li><code>box-pack</code>，声明其内部元素的对齐方式（有点类似<code>text-align</code>），可选的值有<code>start</code>、<code>end</code>、<code>center</code>、<code>justify</code>。</li>
+            </ol>
+            <p><code>box-flex</code>用来声明子元素占父元素内部的空间，其值是一个大于1的整数。当一个弹性盒模型计算其内部元素占用的空间时，优先计算显式声明了<code>width</code>（以默认排列方向为例）的元素，其占用的空间就是<code>width</code>声明的空间。然后根据<code>box-flex</code>这个属性的权重值去设置该子元素的占用的空间。</p>
+            <p>一个简单的例子<a href="http://jsfiddle.net/gt8rN/1/">参考这里</a>。</p>
+            <p>这个方法的优点是代码简洁、功能强大。缺点则是CSS3面临的其中一个严重的缺点：老版本的IE不支持CSS3（甚至IE9也不支持，太惨烈了）。</p>
+            <h3 id="display-table">display: table</h3>
+            <p>看了这个标题，仿佛又回到了那个使用<code>table</code>做布局的石器时代。很多人反对使用<code>table</code>作为布局工具，但是有没有想过究竟为什么不使用<code>table</code>来布局？因为<code>table</code>布局不具有语义。这个不是一个表，是一个布局，所以用<code>table</code>是不合适的。但是反过来看，这里说的<code>table</code>只得是HTML中的<code>table</code>标签。可以通过CSS，使元素能像表格一样布局，而又可以保持元素原来的语义，这样何乐而不为呢？</p>
+            <p><a href="/posts/2013/07/19/css-equal-height-again.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">神奇的负边距</h2>
+            <p class="blog-post-meta">写于2013年07月18日 关于<a href="/tags/css">css</a></p>
+            <p>之前写过一篇<a href="http://dafeizizhu.github.io/2013/07/08/three-column-layout-middle-first/">《经典三列布局之如何让中间的列先显示出来》</a>，里面讲的就是使用浮动、相对定位和负边距来做的一套布局。写那篇文章的时候还没太搞懂负边距是怎么回事，今天简单分析一下对不同元素（正常、浮动、绝对定位等）的负边距是如何起作用的。</p>
+            <p>首先明确几点：</p>
+            <ol>
+              <li>负边距是完全合法的CSS写法，W3允许边距的值是负值。</li>
+              <li>负边距不属于CSS hack。</li>
+              <li>a负边距不会使元素脱离文档流。</li>
+              <li>所有现代浏览器都支持负边距（IE6也部分支持，太棒了！）。</li>
+            </ol>
+            <p>简单看看负边距的工作原理：</p>
+            <ol>
+              <li>在<code>top</code>和<code>left</code>方向上应用负边距，该元素会向指定的方向移动，随后的元素也会跟着一起移动。</li>
+              <li>在<code>bottom</code>和<code>right</code>方向上应用负边距，该元素的位置不会发生任何移动，但是随后的元素会挤压过来，看上去的效果就是该元素占的空间变小了。</li>
+              <li>当该元素没有应用宽度（<code>width: auto</code>也算），为该元素设置<code>left</code>和<code>right</code>方向上的负边距会让元素的宽度边大。</li>
+            </ol>
+            <p>负边距有什么用呢？其中最重要的一个作用我认为是把DOM树中较后出现的元素显示在页面较前的位置。我们知道HTML解析DOM树的时候是根据书写的顺序解析的。而文档的解析顺序是从上到下，从左到右（当然方向是<code>ltr</code>）的，那么正常书写的N列布局肯定是第一列写在最前边，但是可能我们需要中间第n列先解析，这时候就要把第n列的内容书写在前边，通过负边距调整位置，达到理想的效果。</p>
+            <p>现在分析一下之前写过的那篇文章中，左列的CSS究竟是如何达到最后的效果的。现来看看左列的CSS代码。</p> <pre><code>#left {
+    position: relative; // 1
+    left: -100px;       // 2
+</code></pre>
+            <p><a href="/posts/2013/07/18/negative-margin.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">响应式设计入门之viewport</h2>
+            <p class="blog-post-meta">写于2013年07月17日 关于<a href="/tags/css">css</a></p>
+            <p>今天为我的博客加入了一些响应式设计的要素，现在妈妈再也不用担心我的微信中阅读原文之后布局全乱了。说白了就是使用了两个响应式设计相关的技术：<code>viewport</code>和<code>media query</code>而已。今天先写一下为什么需要viewport，viewport这个东西怎么用。</p>
+            <h3 id="-">背景</h3>
+            <p>先看看w3的定义：</p>
+            <blockquote>
+              <p>This specification introduces a way of overriding the size of the viewport provided by the user agent (UA).</p>
+            </blockquote>
+            <p>由于移动终端的分辨率一般比桌面浏览器的分辨率要小，移动终端上的浏览器通常会把页面放入一个虚拟的“视口“中，让页面的内容缩小以适配该移动终端的分辨率，用户可以通过缩放和移动来查看整个页面的全部内容。Safari引入<code>viewport</code>这个<code>meta</code>头，旨在让开发人员控制视口的大小和缩放。</p>
+            <p><strong>注：<code>body</code>元素（如果不是HTML和XHTML的文档则是根元素）中的<code>direction</code>会影响缩放时的原点（<code>ltr</code>是左上角，<code>rtl</code>是右上角）。</strong></p>
+            <h3 id="-">用法</h3>
+            <p>来个最简单的<code>viewport</code>使用例子：</p> <pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1&quot;&gt;
+</code></pre>
+            <p>声明一个<code>meta</code>头，<code>name</code>是<code>viewport</code>，其中的<code>content</code>是一个逗号分隔的键值对列表。可供设置的键值对有：</p>
+            <ol>
+              <li><code>width</code>，视口宽度，数字表示绝对宽度，如<code>width=900</code>，也可以使用字符串常量<code>device-width</code>表示设备的横向分辨率。在iOS的Safari上默认值是980。</li>
+              <li><code>height</code>，视口宽度，与<code>width</code>类似。</li>
+            </ol>
+            <p><a href="/posts/2013/07/17/viewport.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">CSS等高布局</h2>
+            <p class="blog-post-meta">写于2013年07月16日 关于<a href="/tags/css">css</a></p>
+            <p>今天本来想写express的，不过还没看清楚它的文档，以免误人子弟，先放一下。今天来写一个以前遗留的问题，CSS三列布局如何等高。</p>
+            <p>接着上次写的“经典三列布局之如何让中间的列先显示出来“的代码，<a href="http://jsfiddle.net/zBXbp/7/">参考这里</a>：</p>
+            <p>HTML：</p> <pre><code>&lt;div id=&quot;container&quot;&gt;
+    &lt;div id=&quot;middle&quot;&gt;This is middle!&lt;/div&gt;
+    &lt;div id=&quot;left&quot;&gt;This is left!&lt;/div&gt;
+    &lt;div id=&quot;right&quot;&gt;This is right!&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>CSS：</p> <pre><code>#left { width: 100px; background: red;}
+#right { width: 100px; background: blue;}
+#middle { width: 100%; background: green;}
+
+#container { 
+    position: relative;
+    padding: 0 100px;
+    overflow: hidden;
+</code></pre>
+            <p><a href="/posts/2013/07/16/css-equal-hight.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">模拟触发DOM事件之jQuery trigger</h2>
+            <p class="blog-post-meta">写于2013年07月15日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>昨天写了一下<code>document.createEvent</code>这个方法，并描述了如何使用该方法模拟DOM事件。今天看看MDN建议的<code>Event</code>构造函数，以及jQuery是如何处理<code>trigger</code>的。</p>
+            <p><code>Event</code>构造函数接受两个参数：</p>
+            <ol>
+              <li>表示事件类型的字符串，如<code>click</code>、<code>change</code>甚至是自定义的字符串。</li>
+              <li>事件的附加属性，用一个JavaScript对象表示，如<code>{ &quot;a&quot;: &quot;something additional&quot; }</code>。</li>
+            </ol>
+            <p>由于简化了事件附加属性的设置，不需要像<code>document.createEvent</code>那样分开各种事件类型，并且使用不同的<code>init</code>方法。下面给出一个MDN上面的例子：</p> <pre><code>var event = new Event(&#39;build&#39;);
+
+// Listen for the event.
+elem.addEventListener(&#39;build&#39;, function (e) { ... }, false);
+
+// Dispatch the event.
+elem.dispatchEvent(event);
+</code></pre>
+            <p><code>Event</code>构造函数在绝大部分的现代浏览器里面都支持（IE9也支持，可怜的IE8）。如果要兼容老版本的IE浏览器，需要使用昨天的<code>document.createEvent</code>方法。</p>
+            <p>现在来看看jQuery的<code>trigger</code>方法，是如何实现跨浏览器模拟触发DOM事件的。</p>
+            <p>看了源码我震惊了，jQuery完全没有使用上述任何一个API，包括<code>document.createEvent</code>和<code>Event</code>构造函数。jQuery使用的是自定义的事件对象<code>jQuery.Event</code>，里面包括了原生事件里面的所有属性和方法（封装了浏览器的差异），以及一些jQuery的扩展属性。当使用<code>trigger</code>时，jQuery会遍历这个DOM元素的事件冒泡路径，就是这个DOM元素在DOM树里面的完整路径。然后收集在DOM树上所有这个事件的处理程序，根据冒泡的顺序触发对应的事件处理程序。整个过程都没有使用DOM原生的模拟事件。</p>
+            <p><a href="/posts/2013/07/15/event-constructor-and-jquery-trigger.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">模拟触发DOM事件之原生模拟事件</h2>
+            <p class="blog-post-meta">写于2013年07月14日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天讲到一个如何在测试的时候模拟一个DOM事件，例如单击鼠标、输入文字等。当时我第一反应就是使用jQuery的<code>trigger</code>方法触发事件，那哥们竟然说了一个原生的API：<code>document.createEvent</code>。当时我就震惊了，为啥不用jQuery哦亲。今天先简单了解一下这个API的作用，科普科普。</p>
+            <p>先看看MDN上面对<code>document.createEvent</code>的说明是啥：</p>
+            <blockquote>
+              <p>Creates an event of the type specified. The returned object should be first initialized and can then be passed to element.dispatchEvent.</p>
+            </blockquote>
+            <p>这个API是创建一个Event对象，接受一个参数，就是表示事件类型的字符串。该字符串的可能取值为：</p>
+            <ol>
+              <li><code>UIEvent</code>，通用的UI事件，键盘鼠标事件都是继承于这个事件。</li>
+              <li><code>MouseEvent</code>，鼠标事件。</li>
+              <li><code>MutationEvent</code>，通用的突变事件。</li>
+              <li><code>HTMLEvent</code>，通用的HTML事件。</li>
+            </ol>
+            <p>使用该API创建出事件对象之后，需要在触发模拟事件的DOM上调用<code>dispatchEvent</code>方法，触发该模拟事件。MDN的实例代码如下，<a href="http://developer.mozilla.org/samples/domref/dispatchEvent.html">参考这里</a>：</p> <pre><code>function simulateClick() {
+    var evt = document.createEvent(&quot;MouseEvents&quot;);
+    evt.initMouseEvent(&quot;click&quot;, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    var cb = document.getElementById(&quot;checkbox&quot;); 
+    var canceled = !cb.dispatchEvent(evt);
+    if(canceled) {
+        // A handler called preventDefault
+</code></pre>
+            <p><a href="/posts/2013/07/14/simulate-event.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/15.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li class="active"><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/17.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

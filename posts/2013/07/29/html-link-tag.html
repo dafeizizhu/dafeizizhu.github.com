@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML LINK 标签</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML LINK 标签</h2>
+            <p class="blog-post-meta">写于2013年07月29日 关于<a href="/tags/html">html</a></p>
+            <p>我们平常用的最多的<code>link</code>标签就是引入外部的样式文件。大家有没有想过其实<code>link</code>还有别的作用。今天就来看看<code>link</code>究竟还能做些什么东西。</p>
+            <blockquote>
+              <p>The HTML link Element specifies relationships between the current document and other documents. </p>
+            </blockquote>
+            <p>以上是MDN对<code>link</code>标签的解释。其实<code>link</code>标签就是声明文档与文档之间的关系，例如HTML与外部样式文件之间的关系就是<code>stylesheet</code>的关系。这个标签的属性有：</p>
+            <ol>
+              <li><code>charset</code>，声明被链接的文件使用的字符编码。<strong>注意，这个属性在HTML5中已经被HTML文档中的<code>Content-Type</code>头取代。</strong></li>
+              <li><code>href</code>，声明被链接的文档的URI。</li>
+              <li><code>hreflang</code>，声明被链接的文档的语言，在<code>href</code>的值不为空的时候才有效。</li>
+              <li><code>type</code>，声明这个链接的MIME类型。例如平常使用的外部样式表就是<code>text/css</code>。</li>
+              <li><code>rel</code>，声明被链接文档与该文档的关系。如<code>stylesheet</code>，更多的关系请留意下文。</li>
+              <li><code>rev</code>，声明该文档与被链接文档的关系。</li>
+              <li><code>media</code>，声明目标样式与设备的关系。响应式设计中的<code>media query</code>就是基于这个属性来进行媒体查询的。关于媒体查询会在以后的博客中作介绍。</li>
+            </ol>
+            <p>还有几个不是标准的属性，<strong>不是每个浏览器都支持哦</strong>：</p>
+            <ol>
+              <li><code>disabled</code>，声明链接是否可用，例如可以通过设置值为<code>false</code>禁用某个外部样式表。</li>
+              <li><code>target</code>，声明在哪里加载这个外部文档，如<code>a</code>的<code>target</code>属性的取值。</li>
+            </ol>
+            <p>还有几个HTML5专用的属性：</p>
+            <ol>
+              <li><code>crossorigin</code>，声明这个<code>link</code>标签是否需要使用跨域请求（CROS）来获取。取值范围是<code>anonymous</code>（匿名访问）或者<code>use-credentials</code>（需要认证）。如果没有设置这个属性，则会以一般的请求来获取外部文档。</li>
+              <li><code>sizes</code>，声明icon的大小，必须<code>rel</code>为<code>icon</code>才有效。</li>
+            </ol>
+            <p>我们最常用的引入外部样式表可以用下面的一段代码：</p> <pre><code>&lt;link href=&quot;xxx.css&quot; type=&quot;text/css&quot; rel=&quot;stylesheet&quot; media=&quot;screen&quot; /&gt;
+</code></pre>
+            <p>在这个情况下只有<code>href</code>和<code>rel</code>就可以让外部文档作为一个样式文件加入到当前文档中：</p> <pre><code>&lt;link href=&quot;xxx.css&quot; rel=&quot;stylesheet&quot; /&gt;
+</code></pre>
+            <p>最后来关注一下<code>rel</code>（或者<code>rev</code>）能有哪些取值：</p>
+            <ol>
+              <li><code>Alternate</code>，被链接的文档是该文档的替代版本，例如翻译、打印等。</li>
+              <li><code>Stylesheet</code>，被链接的文档是一个外部样式表。</li>
+              <li><code>Start</code>，被链接的文档是文档集合的第一个文档。</li>
+              <li><code>Next</code>，被链接的文档是文档集合的下一个文档。</li>
+              <li><code>Prev</code>，被链接的文档是文档集合的上一个文档。</li>
+              <li><code>Contents</code>，被链接的文档是当前文档的目录。</li>
+              <li><code>Index</code>，被链接的文档是当前文档的索引。</li>
+              <li><code>Glossary</code>，被链接的文档是在文档中使用的词汇的术语表（解释）。</li>
+              <li><code>Copyright</code>，被链接的文档是当前文档的版权信息。</li>
+              <li><code>Chapter</code>，被链接的文档是当前文档的章信息。</li>
+              <li><code>Section</code>，被链接的文档是当前文档的节信息。</li>
+              <li><code>Subsection</code>，被链接的文档是当前文档的小节信息。</li>
+              <li><code>Appendix</code>，被链接的文档是当前文档的附录。</li>
+              <li><code>Help</code>，被链接的文档是当前文档的帮助信息。</li>
+              <li><code>Bookmark</code>，被链接的文档是当前文档的相关文档。</li>
+            </ol>
+            <p>这些属性其中一个重要的作用，就是可以通过以上的这些<code>rel</code>属性的值，可以告诉搜索引擎各个文档之间的关系，方便搜索引擎整理这些文档之间的索引信息。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/28/closure-usage-3.html" title="Secrets of the JavaScript Ninja 读书笔记之 闭包（三）">上一篇</a></li>
+              <li><a href="/posts/2013/07/30/beforeunload-event.html" title="beforeunload事件">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

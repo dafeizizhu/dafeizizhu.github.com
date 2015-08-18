@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>jQuery扫盲之处理class</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之处理class</h2>
+            <p class="blog-post-meta">写于2013年10月14日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>这个class当然是指HTML上面的class了！今天看一些jQuery有关操作DOM的class的一些方法，就是增删改查它们！</p>
+            <h3 id="jquery-fn-addclass">jQuery.fn.addClass</h3>
+            <hr>
+            <blockquote>
+              <p>Adds the specified class(es) to each of the set of matched elements.</p>
+            </blockquote>
+            <p>为DOM加上特定的class，该方法接受一个参数，但是可以传入两种不同的参数：</p>
+            <ol>
+              <li><code>className</code>，要增加的class的名字，可以是多个，用空格分开。</li>
+              <li><code>function(index, currentClass)</code>，一个回调函数，返回一个字符串，增加字符串指定的class。回调函数接受的参数，<code>index</code>是当前jQuery对象的索引，而<code>currentClass</code>则为当前的class，也可以有多个，用空格隔开。</li>
+            </ol>
+            <p>不用担心重复，jQuery已经做了这些工作，所以重复增加相同的class是没有问题的。</p>
+            <h3 id="jquery-fn-removeclass">jQuery.fn.removeClass</h3>
+            <hr>
+            <blockquote>
+              <p>remove a single class, multiple classes, or all classes from each element in the set of matched elements.</p>
+            </blockquote>
+            <p>这个方法接受的参数跟<code>addClass</code>一模一样。有一个要注意的是，如果什么都不传入，则会把元素上的所有class都删掉，如：</p> <pre><code>$(elem).removeClass(); // remove all class
+</code></pre>
+            <p>如果需要替换class，jQuery建议直接使用<code>jQuery.fn.attr</code>方法：</p> <pre><code>$(elem).attr( &quot;class&quot;, &quot;newClass&quot; );
+</code></pre>
+            <h3 id="jquery-fn-hasclass">jQuery.fn.hasClass</h3>
+            <hr>
+            <blockquote>
+              <p>Determine whether any of the matched elements are assigned the given class.</p>
+            </blockquote>
+            <p>判断给定的class是否存在，接受一个参数，就是给定的class的名字，也可以是多个用空格隔开。只要存在这个class，则会返回<code>true</code>，无论是否有其他的class。</p>
+            <h3 id="jquery-fn-toggleclass">jQuery.fn.toggleClass</h3>
+            <hr>
+            <blockquote>
+              <p>Add or remove one or more classes from each element in the set of matched elements, depending on either the class&#39;s presence or the value of the switch argument.</p>
+            </blockquote>
+            <p>这个是最有趣的方法了，它会判断该元素是否有给定的class而决定是增加还是删除这些class。这个方法有四种传输参数的形式：</p>
+            <ol>
+              <li><code>className</code>，一个或者多个class的名字。</li>
+              <li><code>className</code>和<code>switch</code>，其中<code>switch</code>表示这次操作是要增加还是删除class。注意，这个值要是布尔值而不仅仅是表示<code>true</code>或者<code>false</code>的值。</li>
+              <li><code>switch</code>，可选的，即可以不传任何参数调用<code>toggleClass</code>。只传入一个<code>switch</code>表示要toggle所有的class。</li>
+              <li><code>function(index, class, switch)</code>和<code>switch</code>，第一个参数是一个回调函数，返回需要toggle的class的名字。</li>
+            </ol>
+            <nav class="pager">
+              <li><a href="/posts/2013/10/13/javascript-css-selector-engine.html" title="Secrets of the JavaScript Ninja 读书笔记之 简述CSS选择器引擎">上一篇</a></li>
+              <li><a href="/posts/2013/10/15/jquery-attr.html" title="jQuery扫盲之attr">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

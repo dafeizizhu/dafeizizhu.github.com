@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>使用ShareObject中的data</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">使用ShareObject中的data</h2>
+            <p class="blog-post-meta">写于2014年01月14日 关于<a href="/tags/Flash">Flash</a></p>
+            <p>昨天讨论了Flash中的“cookie”，<code>ShareObject</code>的简单使用方式，今天来讨论一下如何读写这个“cookie“中的数据。</p>
+            <p>通常，我们会使用<code>ShareObject</code>的静态方法<code>getLocal</code>获取一个本地的共享对象：</p> <pre><code>var test:SharedObject = SharedObject.getLocal(&quot;test&quot;);
+</code></pre>
+            <p>然后我们可以访问<code>test</code>的<code>data</code>属性，对这个共享对象的数据进行读写操作。注意，这个<code>data</code>本身是只读的，所以以下的代码是无效的：</p> <pre><code>test.data = &quot;someValue&quot;;
+</code></pre>
+            <p>我们可以直接在<code>data</code>上存储一些数据，可以是任何ActionScript或者JavaScript类型的对象（数组、数字、布尔值、对象等）：</p> <pre><code>test.data.number = 1;
+test.data.string = &quot;String&quot;;
+test.data.obj = {&quot;a&quot;: 1, &quot;b&quot;: &quot;string&quot;};
+test.data.arr = [2, &quot;a&quot;];
+test.data.sprite = new Sprite();
+</code></pre>
+            <p>当程序关闭的时候，这些数据会保存到本地文件中，下次只要使用同样名称的共享对象就可以把这些数据读取回来。</p>
+            <p>要删除共享对象的数据，要使用<code>delete</code>运算符来删除：</p> <pre><code>delete test.data.number;
+</code></pre>
+            <p>而不能把这个值设置成<code>null</code>或者<code>undefined</code>，设置成这两个值不会删除这个属性。</p>
+            <nav class="pager">
+              <li><a href="/posts/2014/01/13/flash-share-object.html" title="Flash的“cookie” ShareObject">上一篇</a></li>
+              <li><a href="/posts/2014/01/15/as3-timer.html" title="在Flash中使用计时器">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

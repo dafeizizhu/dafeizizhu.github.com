@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>小麦的二三事 </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 跨浏览器编程策略</h2>
+            <p class="blog-post-meta">写于2013年09月01日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>今天继续分享跨浏览器编码要注意的问题。经过昨天对跨浏览器编程的一些问题的分析，现在投入实战！</p>
+            <h3 id="-">安全修复</h3>
+            <hr>
+            <p>最安全的跨浏览器代码有以下两个条件：</p>
+            <ol>
+              <li>a不能在其他浏览器中引入问题。</li>
+              <li>a不使用浏览器检测或者特性检测。</li>
+            </ol>
+            <p>达到以上条件的最简单的方法就是统一这个API在所有浏览器中的表现。例如IE不支持事件捕获，那jQuery就只支持事件冒泡，而不支持事件捕获，即使在支持事件捕获的浏览器中也是如此表现。但是这样做的其中一个缺点，就是限制了在高级浏览器中对应的功能，如上例中的事件捕获。如何平衡这个问题，取决于代码的下游用户，看他们是否需要这些额外的功能。</p>
+            <h3 id="-">对象检测</h3>
+            <hr>
+            <p>通常最安全的场景是很少的，有比较多的时候我们需要对浏览器的某种对象或者特性作检测，以决定应该如何执行我们的代码。最常见的例子就是事件绑定：</p> <pre><code>function bindEvent(element, type, handle) {
+  if (element.addEventListener) {
+    element.addEventListener(type, handle, false); }
+  else if (element.attachEvent) {
+    element.attachEvent(&quot;on&quot; + type, handle); }
+</code></pre>
+            <p><a href="/posts/2013/09/01/javascript-cross-browser-strategies.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 跨浏览器需要关心的东西</h2>
+            <p class="blog-post-meta">写于2013年08月31日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>又到了周末读书的时间啦！今天带来跨浏览器编码需要关心的几个东西。</p>
+            <h3 id="-bugs">浏览器的Bugs</h3>
+            <hr>
+            <p>其中一个最重要的点是我们需要了解，需要支持的数个浏览器中的bugs还有浏览器之间各种API的区别。完成代码的编写之后，最重要的是需要一套完整的测试用例，以便保证各种需要支持的浏览器上面不会出现问题。更重要的是我们需要持续进行测试，以防止浏览器更新之后的各种异常场景。</p>
+            <h3 id="-bugs">修复浏览器的Bugs</h3>
+            <hr>
+            <p>要保证我们对于浏览器的Bugs的规避方法在浏览器修复对应Bugs之后还是可行的。更可靠的方式是做特性检测，而不是去做浏览器检测（检测会发生该bug的浏览器或者特定版本等）。</p>
+            <p>规避浏览器的bug可能会造成以下两个麻烦：</p>
+            <ol>
+              <li>规避的代码很容易在浏览器本身修复该bug之后失效。</li>
+              <li>由于害怕浏览器修复bug之后的造成的麻烦，我们可能会停止催促浏览器厂商去修改这些bugs。</li>
+            </ol>
+            <p>久而久之，会导致一些bug被当作是正确的使用方式，而真正正确的使用方式则被当作是“ bug”了。</p>
+            <p>而bug跟非标准的API也有区别。有时候我们为了向下兼容，会为低版本的浏览器自定义高版本浏览器对应的非标准API功能。这时候要注意，当浏览器升级之后，这些API的表现是否跟我们增加的API一致，因为这些非标准API什么时候都有可能改变的。相对的，浏览器的bug的修复是可遇见的，通常跟我们的预期是一致的。</p>
+            <h3 id="-">与外部代码共存</h3>
+            <p><a href="/posts/2013/08/31/javascript-cross-browser-concerns.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery源码解析之jQuery.fn.html</h2>
+            <p class="blog-post-meta">写于2013年08月30日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天来看看<code>jQuery.fn.html</code>的源码。jQuery通过一个<code>access</code>方法封装了jQuery风格的<code>getter</code>和<code>setter</code>。今天先不关注<code>access</code>是怎么实现的，具体来看看<code>html</code>内部的代码逻辑。</p>
+            <p>首先来看一下这几个正则：</p> <pre><code>var rxhtmlTag = /&lt;(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^&gt;]*)\/&gt;/gi,
+  rtagName = /&lt;([\w:]+)/,
+  rhtml = /&lt;|&amp;#?\w+;/,
+  rnoInnerhtml = /&lt;(?:script|style|link)/i,
+</code></pre>
+            <ol>
+              <li>第一个正则是匹配一些自关闭的HTML标签。</li>
+              <li>第二个正则匹配字符串中第一个标签的<code>tagName</code>。</li>
+              <li>第三个正则匹配这个字符串是否HTML字符串。</li>
+              <li>第四个正则匹配这个字符串里面有没有包含样式或者是脚本。</li>
+            </ol>
+            <p>先来看<code>getter</code>，这个逻辑非常简单：</p> <pre><code>if ( value === undefined &amp;&amp; elem.nodeType === 1 ) {
+  return elem.innerHTML;
+}
+</code></pre>
+            <p><code>elem</code>是jQuery对象的第一个元素，如果没有传入任何参数并且jQuery对象的一个元素是HTML元素，则直接返回其<code>innerHTML</code>属性。</p>
+            <p><a href="/posts/2013/08/30/jquery-html-source.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">jQuery扫盲之.html</h2>
+            <p class="blog-post-meta">写于2013年08月29日 关于<a href="/tags/JavaScript">JavaScript</a>,<a href="/tags/jQuery">jQuery</a></p>
+            <p>今天工作中遇到了一个小问题：使用<code>.html</code>和<code>.append</code>往一个元素内部添加内容的时候，在IE7、IE8下有两种不同的表现：用<code>.append</code>往元素内部添加特定的HTML字符串，在IE7、8下面是空白的；用<code>.html</code>刷新元素内部的HTML，虽然显示的样式和结构有点异常，但是大部分元素还是正常显示出来了。原因是那段HTML字符串里面有反引号，而且是当反引号成对而且是特定结构的时候才会导致页面空白。到现在还没有查出为什么会有这个问题，今天先来看看<code>.html</code>的使用方法，往后会继续深入<code>.html</code>的源码、<code>append</code>的用法与源码以及两者的区别。</p>
+            <blockquote>
+              <p>Get the HTML contents of the first element in the set of matched elements or set the HTML contents of every matched element.</p>
+            </blockquote>
+            <p><code>.html</code>有两种使用方法，分别对应<code>getter</code>和<code>setter</code>，它们按是否传入参数区分。</p>
+            <h3 id="-html-">.html()</h3>
+            <hr>
+            <p>当没有传入任何参数的时候，<code>.html</code>以<code>getter</code>方式调用，返回匹配元素的内部HTML字符串。注意，<strong>如果该jQuery对象包含的元素个数大于1，调用<code>.html</code>方法只会返回第一个元素的内部HTML字符串</strong>。</p>
+            <p>返回的字符串未必跟HTML中的代码完全一致，包括HTML标签的大小写或者属性上面的引号等等。</p>
+            <h3 id="-html-htmlstring-html-function-index-oldhtml-">.html(HTMLString)或者.html(function(index, oldhtml))</h3>
+            <hr>
+            <p>当传入HTML字符串或者传入一个回调函数的时候，<code>.html</code>以<code>setter</code>方式调用，设置jQuery对象中所有元素内部的HTML。传入字符串的时候，会直接替换元素内部的HTML字符串；传入回调函数时，会使用回调函数返回的字符串替换元素内部的HTML字符串。</p>
+            <p>回调函数接受两个参数，一个是元素的在jQuery对象中的索引，第二个是元素原来的内部HTML字符串。注意，<strong>在调用回调函数之前元素的内部字符串会先被置空</strong>。</p>
+            <p>再替换完元素内部的HTML字符串之后，原来内部元素的一些<code>data</code>还有绑定的事件处理程序都会被删除哦。</p>
+            <p><a href="/posts/2013/08/29/jquery-html.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">background:url(about:blank)的作用</h2>
+            <p class="blog-post-meta">写于2013年08月28日 关于<a href="/tags/css">css</a></p>
+            <p>接着昨天的话题，做那个需求的时候还有一个问题，就是在IE6上，鼠标指针移动到左右遮盖层上并没有变成对应的箭头！明明其他浏览器都是好的，我艹！这时，想起隔壁前辈跟我说要在遮盖层上面加一个<code>background</code>。参考了公司其他网页的类似功能，是这么一个样式：</p> <pre><code>background: url(background.png);
+</code></pre>
+            <p>其中那个图片是一个透明的png图片。由于一些历史原因这里才用了一个透明的png图片，其实比较好的实现方式是：</p> <pre><code>background: url(about:blank);
+</code></pre>
+            <p>例子可以<a href="http://jsfiddle.net/6yS7G/1/show/">参考这里</a>还有<a href="http://jsfiddle.net/g7gvq/1/show/">这里</a>。前者在IE6上只能把鼠标放到<code>border</code>上才会变成手型，而后者则是正常的行为。</p>
+            <p>查了一下资料，发现这个样式可以解决以下的一些问题：</p>
+            <ol>
+              <li>如果给空a标签定义了宽度和高度且使用了<code>absolute</code>，则需要用这个样式“撑开”这个标签。</li>
+              <li>IE6上的<code>position: fixed</code>，使用CSS表达式来实现对应的功能时，浏览器滚动条滚动的时候会有抖动的情况。</li>
+            </ol>
+            <p>以下的内容描述了问题2的解决方案以及原因：</p>
+            <blockquote>
+              <p>解决此问题的技巧就是使用background-attachment:fixed为body或html元素添加一个background-image。这就会强制页面在重画之前先处理CSS。因为是在重画之前处理CSS，它也就会同样在重画之前首先处理你的CSS表达式。这将让你实现完美的平滑的固定位置元素！</p>
+              <p>注：如果是在样式里写position:absolute再用expression()表达式来实现的话，给html一个background:fixed url(about:blank);就能解决抖动的bug，但如果是用js重新计算浮动对像的位置background:fixed url(about:blank);就不能解决抖动问题，因为重新计算浮动对象的位置是基于一个onscroll事件的。</p>
+            </blockquote>
+            <p>总结，当使用了<code>absolute</code>并指定了宽度或者高度（无论是显示设置<code>witdh</code>和<code>height</code>或者使用<code>top</code>、<code>bottom</code>隐式设定自适应大小），在IE6下面最好加上以下的样式保证显示效果正确：</p>
+            <p><a href="/posts/2013/08/28/css-background-about-blank.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">利用Absolute进行自适应布局</h2>
+            <p class="blog-post-meta">写于2013年08月27日 关于<a href="/tags/css">css</a></p>
+            <p>昨天做一个类似于幻灯片左右切换的功能，鼠标移动到容器的左边显示前一张的箭头，移动到右边显示后一张的箭头。最简单的实现方式是在容器上面加两个遮盖层，并在遮盖层上设置<code>cursor</code>样式，例如如下代码片段：</p> <pre><code>&lt;div id=&quot;wrapper&quot;&gt;
+  &lt;div id=&quot;left&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;right&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            <p>CSS：</p> <pre><code>#wrapper {
+  width: 100px;
+  height: 100px;
+  background: red;
+  position: relative;
+}
+
+#wrapper div {
+  width: 33.3333%;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  background: blue;
+</code></pre>
+            <p><a href="/posts/2013/08/27/css-conflicting-absolute-positions.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Node中spawn和exec的区别</h2>
+            <p class="blog-post-meta">写于2013年08月26日 关于<a href="/tags/node">node</a></p>
+            <p>今天试着结合SPM和Grunt来做项目的构建，在Node中使用子进程调用SPM命令的时候，看文档先用了<code>spawn</code>，发现老是抛出一个错误。后来使用<code>exec</code>就没有什么问题。这两个方法都可以在Node中创建一个子进程执行一些操作系统的命令（bat或者shell脚本），究竟这两者有什么不一样呢？</p>
+            <h3 id="child_process-spawn">child_process.spawn</h3>
+            <hr>
+            <p><code>spawn</code>应该是创建子进程的一个基本的方法。该方法接受三个参数：</p>
+            <ol>
+              <li><code>command</code>，表示要执行命令的字符串。</li>
+              <li><code>args</code>，表示执行命令的命令行参数，如果不提供默认值是一个空数组。</li>
+              <li><code>options</code>，可选配置。</li>
+            </ol>
+            <p>其中<code>options</code>可以配置的属性有：</p>
+            <ol>
+              <li><code>cwd</code>，配置该命令执行的目录。</li>
+              <li><code>stdio</code>，配置子进程跟父进程直接的输入输出方式。</li>
+              <li><code>env</code>，配额子进程中的环境变量。</li>
+              <li><code>detached</code>，配置子进程是否独立的。默认情况下父进程是需要等待子进程结束才能结束，当这个配置为<code>true</code>时，父进程不需要等待子进程结束，子进程会在后台继续执行。（子进程使用了父进程的io则这个配置始终都是默认情况。）</li>
+              <li><code>uid</code>，配置执行子进程的用户id。</li>
+              <li><code>gid</code>，配置执行子进程的用户组id。</li>
+            </ol>
+            <p><code>options</code>的默认值为：</p>
+            <p><a href="/posts/2013/08/26/node-child-process-spawn-and-exec.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 with语句的应用场景</h2>
+            <p class="blog-post-meta">写于2013年08月25日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>昨天介绍了<code>with</code>简单的用法，也大概说明了一下为什么N多书都说不要用<code>with</code>的主要原因。排除这些原因，在真实的应用场景中，有没有适合<code>with</code>使用的场景呢？</p>
+            <h3 id="-">使用有命名空间的代码</h3>
+            <p>通常为了解决命名冲突问题，我们会使用命名空间，例如：</p> <pre><code>var obj = ns1.ns2.ns3.foo(ns1.ns2.ns3.bar);
+</code></pre>
+            <p>当命名空间很长的时候，编写类似的代码会非常疲惫。使用<code>with</code>可以使敲入的代码急剧减少：</p> <pre><code>with(ns1.ns2.ns3) { var obj = foo(bar); }
+</code></pre>
+            <p>是不是比第一段代码要清晰和简单很多？这是最普遍使用<code>with</code>的场景。</p>
+            <h3 id="-">测试</h3>
+            <p>测试的时候我们需要把各种断言跟测试套件关联起来。如果在同步测试的场景这是非常简单的事情，在异步测试中可能会有一些问题，如果不额外增加一些信息，断言跟测试套件是不能关联起来的。</p>
+            <p>解决这个问题的其中一个办法是创建一个测试套件对象，然后在对象中进行异步测试，并且在对象中加入测试套件的信息。这样就可以通过闭包在异步断言内部获取到测试套件的信息，把两者关联起来。如以下代码：</p> <pre><code>new Test.Unit.Runner({
+  testSliderBasics: function(){with(this){
+</code></pre>
+            <p><a href="/posts/2013/08/25/javascript-with-statement-usage.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 with语句</h2>
+            <p class="blog-post-meta">写于2013年08月24日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>刚接触JavaScript，其中N本入门的书都说不要使用<code>with</code>。可是大家有没有了解过为什么不能使用<code>with</code>，会造成变量的混淆，还是因为别的什么原因？为了了解其中的缘由，我们需要了解<code>with</code>究竟是什么，会对代码造成怎么样的影响。今天先简单介绍一些<code>with</code>的用法以及一些需要注意的地方。</p>
+            <blockquote>
+              <p>A with statement creates a scope within which the properties of a specified object can be referenced without a prefix. </p>
+            </blockquote>
+            <p>使用<code>with</code>可以创建出一个执行作用域。在这个作用域中，作为<code>with</code>的参数传入的对象的属性可以直接引用，而不需要通过这个对象引用，例如：</p> <pre><code>var o = { &quot;a&quot;: &quot;a&quot; };
+with(o) {
+  alert(a); // &quot;a&quot;
+}
+</code></pre>
+            <h3 id="-with-">在<code>with</code>中引用属性</h3>
+            <p>上面说过，<code>with</code>是创建了一个临时的作用域，使得可以直接访问<code>with</code>参数中变量的属性。所以，在<code>with</code>的作用域中，当属性跟外面的变量冲突的时候，<strong><code>with</code>中的属性优先级比较高</strong>，例如：</p> <pre><code>var use = &quot;other&quot;;
+var katana = {
+  isSharp: true,
+  use: function () {
+    this.isSharp = !this.isSharp;
+  }
+};
+</code></pre>
+            <p><a href="/posts/2013/08/24/javascript-with-statment.html">阅读全文 &gt;</a></p>
+          </div>
+          <div class="blog-post">
+            <h2 class="blog-post-title">HTML Object标签</h2>
+            <p class="blog-post-meta">写于2013年08月23日 关于<a href="/tags/html">html</a></p>
+            <p>今天看一下<code>object</code>这个标签。</p>
+            <blockquote>
+              <p>The HTML object Element (or HTML Embedded Object Element) represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be handled by a plugin.</p>
+            </blockquote>
+            <p><code>object</code>标签用来引用一个外部资源，该资源可以是一个图片、一个被插件使用的资源。最常见的用法是用它来引入一个flash影片，如：</p> <pre><code>&lt;object data=&quot;move.swf&quot; type=&quot;application/x-shockwave-flash&quot;&gt;&lt;/object&gt;
+</code></pre>
+            <h3 id="html4">HTML4</h3>
+            <p>以下几个特性只能在HTML4中使用了：</p>
+            <ol>
+              <li><code>archive</code>，由空格分隔的指向档案文件的 URL 列表。这些档案文件包含了与对象相关的资源。</li>
+              <li><code>classid</code>，定义嵌入 Windows Registry 中或某个 URL 中的类的 ID 值，此属性可用来指定浏览器中包含的对象的位置。</li>
+              <li><code>codebase</code>，定义在何处可找到对象所需的代码，提供一个基准 URL。</li>
+              <li><code>codetype</code>，通过 classid 属性所引用的代码的 MIME 类型。</li>
+              <li><code>declare</code>，可定义此对象仅可被声明，但不能被创建或例示，直到此对象得到应用为止。</li>
+              <li><code>standby</code>，定义当对象正在加载时所显示的文本。</li>
+              <li><code>tabindex</code>，定义在文档中的<code>tab</code>键顺序。</li>
+            </ol>
+            <p>在HTML4里面，这样引用一个flash影片可能更常见：</p>
+            <p><a href="/posts/2013/08/23/html-object.html">阅读全文 &gt;</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="pagination">
+        <li><a href="/index/11.html" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li><a href="/index.html">1</a></li>
+        <li><a href="/index/1.html">2</a></li>
+        <li><a href="/index/2.html">3</a></li>
+        <li><a href="/index/3.html">4</a></li>
+        <li><a href="/index/4.html">5</a></li>
+        <li><a href="/index/5.html">6</a></li>
+        <li><a href="/index/6.html">7</a></li>
+        <li><a href="/index/7.html">8</a></li>
+        <li><a href="/index/8.html">9</a></li>
+        <li><a href="/index/9.html">10</a></li>
+        <li><a href="/index/10.html">11</a></li>
+        <li><a href="/index/11.html">12</a></li>
+        <li class="active"><a href="/index/12.html">13</a></li>
+        <li><a href="/index/13.html">14</a></li>
+        <li><a href="/index/14.html">15</a></li>
+        <li><a href="/index/15.html">16</a></li>
+        <li><a href="/index/16.html">17</a></li>
+        <li><a href="/index/17.html">18</a></li>
+        <li><a href="/index/18.html">19</a></li>
+        <li><a href="/index/13.html" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </nav>
+    </div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>

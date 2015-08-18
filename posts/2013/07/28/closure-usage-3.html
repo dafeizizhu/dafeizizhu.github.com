@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secrets of the JavaScript Ninja 读书笔记之 闭包（三）</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/common/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/blog.css">
+  </head>
+
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav"><a href="/" class="blog-nav-item active">主页</a><a href="/posts" class="blog-nav-item">文章</a><a href="/tags" class="blog-nav-item">标签</a><a href="/projects" class="blog-nav-item">项目</a><a href="/about" class="blog-nav-item">关于</a></nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">小麦的二三事</h1>
+        <p class="lead blog-description">他大舅他二舅，都是他舅</p>
+      </div>
+      <div class="col-sm-8 blog-main">
+        <div class="row">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Secrets of the JavaScript Ninja 读书笔记之 闭包（三）</h2>
+            <p class="blog-post-meta">写于2013年07月28日 关于<a href="/tags/JavaScript">JavaScript</a></p>
+            <p>这次读书笔记的最后一篇。今天主要分享即时执行函数的作用。我们知道，在JavaScript中是没有块作用域的（例如<code>if</code>里面的块），唯一产生作用域的就是函数。常见的制造私有作用域的方法如以下代码所示：</p> <pre><code>(function () {...})();
+</code></pre>
+            <p>书中强调了两个括号有不同的作用。第一组括号其实是声明了运算的优先级，而第二组括号却是一个运算符，用来执行第一组括号中的匿名函数。比较有趣的用法是：</p> <pre><code>document.addEventListener(&quot;click&quot;, (function(){
+  var numClicks = 0;  
+  return function(){
+    alert( ++numClicks );
+  };
+})(), false);
+</code></pre>
+            <p>这里使用了闭包，为事件处理程序增加了一个<code>numClicks</code>的状态。这种写法适用于这个状态只是在这个事件处理程序中使用，可以减少外围作用域中的变量，也可以使代码更加简洁，层次更加清晰。</p>
+            <p>通过给即时执行函数传入参数，可以解决一些重名冲突的问题。例如在即时执行函数中使用<code>$</code>来使用jQuery，而在外部则可以让<code>$</code>指向另外的变量（例如Prototype框架的<code>$</code>）：</p> <pre><code>(function ($, undefined) {...})(jQuery, undefined);
+</code></pre>
+            <p>这种方式也可以解决一些长变量名或者引用层次深的变量的引用问题，也可以帮助JavaScript代码压缩的时候提高压缩比，例如把<code>undefined</code>压缩成<code>a</code>等。</p>
+            <p>书中也讲到了一个循环与闭包的常见问题，例如给一系列的DOM元素绑定事件处理程序（不使用jQuery）。通常我们使用<code>for</code>循环来绑定事件，要注意以下代码：</p> <pre><code>for (var i = 0; i &lt; div.length; i++) (function(n){
+  div[n].addEventListener(&quot;click&quot;, function(){
+    alert(&quot;div #&quot; + n + &quot; was clicked.&quot;);
+  }, false);
+})(i);
+</code></pre>
+            <p>注意以上的写法，没有简单调用<code>addEventListener</code>去绑定事件，而是为每次循环制造了一个闭包来保存迭代子<code>i</code>的值。这样做才能保证在事件处理程序调用的时候能正确引用正确的<code>i</code>的值，否则当事件处理程序调用的时候只能获取到迭代子<code>i</code>最后的状态！</p>
+            <p>最后一个点就是在闭包内部，如果需要暴露到全局的对象，要注意这么写：</p> <pre><code>(function(){
+  var jQuery = window.jQuery = function(){
+    // Initialize
+  };
+  // ...
+})();
+</code></pre>
+            <p>或者</p> <pre><code>var jQuery = (function(){
+  function jQuery(){
+    // Initialize
+  }
+  // ...
+  return jQuery;
+})();
+</code></pre>
+            <p>这样写的好处是，如果外部有恶意用户写出<code>jQuery = null</code>这样的恶意代码，也不影响之前正确使用jQuery的相关功能，因为这样的代码影响的只是全局变量中的jQuery的引用，而不会影响闭包内部逻辑的正确处理，<a href="http://jsfiddle.net/XBy5X/">参考这里</a>。</p>
+            <nav class="pager">
+              <li><a href="/posts/2013/07/27/closure-usage-2.html" title="Secrets of the JavaScript Ninja 读书笔记之 闭包（二）">上一篇</a></li>
+              <li><a href="/posts/2013/07/29/html-link-tag.html" title="HTML LINK 标签">下一篇</a></li>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module">
+          <h4>文章</h4>
+          <ol class="list-unstyled">
+            <li><a href="/posts/2014/02">2014年02月</a></li>
+            <li><a href="/posts/2014/01">2014年01月</a></li>
+            <li><a href="/posts/2013/12">2013年12月</a></li>
+            <li><a href="/posts/2013/11">2013年11月</a></li>
+            <li><a href="/posts/2013/10">2013年10月</a></li>
+            <li><a href="/posts/2013/09">2013年09月</a></li>
+            <li><a href="/posts/2013/08">2013年08月</a></li>
+            <li><a href="/posts/2013/07">2013年07月</a></li>
+            <li><a href="/posts/2013/01">2013年01月</a></li>
+            <li><a href="/posts/2012/12">2012年12月</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>标签</h4>
+          <ol class="list-unstyled">
+            <li><a href="/tags/notes">notes(5)</a></li>
+            <li><a href="/tags/css">css(23)</a></li>
+            <li><a href="/tags/html">html(10)</a></li>
+            <li><a href="/tags/JavaScript">JavaScript(106)</a></li>
+            <li><a href="/tags/前端">前端(9)</a></li>
+            <li><a href="/tags/jQuery">jQuery(29)</a></li>
+            <li><a href="/tags/http">http(4)</a></li>
+            <li><a href="/tags/node">node(3)</a></li>
+            <li><a href="/tags/html5">html5(7)</a></li>
+            <li><a href="/tags/Flash">Flash(30)</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="container"></div>
+    <footer class="blog-footer">
+      <p>Powerby MaiZhiying</p>
+    </footer>
+  </body>
+
+</html>
