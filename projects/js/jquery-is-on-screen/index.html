@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>判断元素是否在视口中</title>
+    <script src='../../common/jquery/1.11.3/jquery.js'></script>
+    <script src='jquery-is-on-screen.js'></script>
+    <style>
+      body {
+        height: 10000px;
+      }
+      #target {
+        position: relative;
+        top: 100px;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="target">我是目标，注意观察标题的变化</div>
+    <script>
+      $(function () {
+        $(window).on('scroll', function (evt) {
+          document.title = $('#target').isOnScreen()
+        })
+      })
+    </script>
+  </body>
+</html>
