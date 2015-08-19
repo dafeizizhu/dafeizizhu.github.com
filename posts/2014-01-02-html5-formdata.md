@@ -23,10 +23,10 @@ tags: [html5]
 
 例如，调用`formData.append("name1", "value1")`会在请求体里面生成类似以下的内容：
 
-    ----ABCDEFG
+    --ABCDEFG
     Content-Disposition: form-data; name="name1"
 	value1
-    ----ABCDEFG
+    --ABCDEFG
 
 边界字符串是由浏览器生成的一个随机的字符串。使用`FormData`，我们可以方便地构造出`multipart/form-data`需要的请求体，还可以通过`XMLHttpRequest`来提交。jQuery也支持`FormData`：
 
