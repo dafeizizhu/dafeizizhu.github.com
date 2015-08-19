@@ -23,13 +23,15 @@ block footer
       if (page - 1 > 0)
         li: a(href='/index/#{page - 1}.html', aria-label='Previous'): span(aria-hidden='true') &laquo;
       else
-        li.disabled: a(href='/index/#{page - 1}.html', aria-label='Previous'): span(aria-hidden='true') &laquo;
-    - var n = 0
-    while n < pages
-      - var href = (n == 0) ? '/index.html' : '/index/' + n + '.html'
-      - var activePage = (n == page) ? 'active' : ''
-      li(class='#{activePage}'): a(href='#{href}') #{(n++) + 1}
+        li.disabled: span(aria-hidden='true') &laquo;
+    each i in paginations
+      if (i == '...')
+        li: span ...
+      else
+        - var href = (i == 1) ? '/index.html' : '/index/' + (i - 1) + '.html'
+        - var activePage = ((i - 1) == page) ? 'active' : ''
+        li(class='#{activePage}'): a(href='#{href}') #{i}
     if (page + 1 < pages)
       li: a(href='/index/#{page + 1}.html', aria-label='Next'): span(aria-hidden='true') &raquo;
     else
-      li.disabled :a(href='/index/#{page + 1}.html', aria-label='Next'): span(aria-hidden='true') &raquo;
+      li.disabled: span(aria-hidden='true') &raquo;

@@ -3,6 +3,39 @@ var jade = require('jade')
 var path = require('path')
 var File = require('vinyl')
 
+var calculatePages = function (page, pages, displayLength) {
+  displayLength = displayLength - 2
+  var indexes = [1]
+  var start = Math.round(page - displayLength / 2)
+  var end = Math.round(page + displayLength / 2)
+  if (start <= 1) {
+    start = 2
+    end = start + displayLength - 1
+    if (end >= pages - 1) {
+      end = pages - 1
+    }
+  }
+  if (end >= pages - 1) {
+    end = pages - 1
+    start = end - displayLength + 1
+    if (start <= 1) {
+      start = 2
+    }
+  }
+  if (start != 2) {
+    indexes.push('...')
+  }
+  for (var i = start; i <= end; i++) {
+    indexes.push(i)
+  }
+  if (end != pages - 1) {
+    indexes.push('...')
+  }
+  indexes.push(pages)
+
+  return indexes
+}
+
 module.exports = function (options) {
   return through.obj(function (file, enc, cb) {
     if (!file.isBuffer()) {
@@ -29,6 +62,7 @@ module.exports = function (options) {
         page: i,
         pages: pages,
         posts: postSlice,
+        paginations: calculatePages(i, pages, 10),
         tagsData: require('../site/data/indexes/tags.json'),
         dateData: require('../site/data/indexes/date.json')
       }))
