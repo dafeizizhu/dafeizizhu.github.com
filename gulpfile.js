@@ -13,6 +13,7 @@ var data2dates = require('./plugins/data2dates')
 var data2tags = require('./plugins/data2tags')
 var project2data = require('./plugins/project2data')
 var data2projectsPage = require('./plugins/data2projects-page')
+var createPost = require('./plugins/create-post')
 
 gulp.task('default', function () {
   console.log('test')
@@ -180,4 +181,11 @@ gulp.task('build-projects', ['build-projects-page'], function (cb) {
 
 gulp.task('build', function (cb) {
   runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', cb)
+})
+
+gulp.task('create-post', function (cb) {
+  gulp.src('templates/post.md')
+    .pipe(createPost())
+    .pipe(gulp.dest('posts'))
+    .on('end', cb)
 })
