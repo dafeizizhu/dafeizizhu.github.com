@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>HTML5音频播放器</title>
+    <script src='../../common/jquery/1.11.3/jquery.js'></script>
+    <script src='jquery-html5-audio-player.js'></script>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      $(function () {
+        $('#container').html5AudioPlayer('./test.mp3', {
+          autoPlay: true
+        })
+      })
+    </script>
+  </body>
+</html>
