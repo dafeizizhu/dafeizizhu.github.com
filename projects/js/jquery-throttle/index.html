@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>函数节流</title>
+    <script src='../../common/jquery/1.11.3/jquery.js'></script>
+    <script src='jquery-throttle.js'></script>
+    <style>
+      #target {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="target">拖动我</div>
+    <script>
+      $(function () {
+        var move = $.throttle(function (x, y) {
+          $('#target').css({
+            top: y + 'px',
+            left: x + 'px'
+          })
+        })
+
+        var dragging = false
+        var offsetTop, offsetLeft
+
+        $('#target').on('mousedown', function (evt) {
+          dragging = true
+          offsetTop = evt.offsetY
+          offsetLeft = evt.offsetX
+        })
+
+        $('#target').on('mouseup', function (evt) {
+          dragging = false
+        })
+
+        $(window).on('mousemove', function (evt) {
+          if (dragging) {
+            move(evt.clientX - offsetLeft, evt.clientY - offsetTop)
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
