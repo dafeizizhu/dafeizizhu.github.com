@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>CSS sticky footer (IE8+)</title>
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        min-height: 100%;
+        position: relative;
+        box-sizing: border-box;
+        padding-bottom: 120px;
+        margin: 0;
+      }
+      .content {
+        height: 500px;
+      }
+      .footer {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 120px;
+        background-color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='content'>This is content</div>
+    <div class='footer'>This is footer</div>
+  </body>
+</html>
