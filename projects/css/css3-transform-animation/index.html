@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>CSS3变换和动画</title>
+    <style>
+      .container {
+        width: 900px;
+        min-height: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 100px 50px;
+        background-color: #f0f0f0;
+        box-shadow: inset 0 0 3px rgba(0,0,0,.35);
+        -webkit-perspective: 800px;
+        -moz-perspective: 800px;
+        perspective: 800px;
+        -webkit-transition: top .5s;
+        position: relative;
+        top: 0;
+      }
+      .m-courseList {
+        width: 128px;
+        height: 100px;
+        margin-left: -64px;
+        -webkit-transition: -webkit-transform 1s;
+        -moz-transition: -moz-transform 1s;
+        transition: transform 1s;
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 50%;
+        list-style: none;
+        padding: 0;
+        top: 50%;
+        margin-top: -50px;
+      }
+      .m-courseList li {
+        width: 128px;
+        height: 96px;
+        background-color: yellow;
+        position: absolute;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <ul class='m-courseList'>
+        <li style='transform: rotateY(0deg) translateZ(130.85125168440815px)'>This is Card 1</li>
+        <li style='transform: rotateY(60deg) translateZ(130.85125168440815px)'>This is Card 2</li>
+        <li style='transform: rotateY(120deg) translateZ(130.85125168440815px)'>This is Card 3</li>
+        <li style='transform: rotateY(180deg) translateZ(130.85125168440815px)'>This is Card 4</li>
+        <li style='transform: rotateY(240deg) translateZ(130.85125168440815px)'>This is Card 5</li>
+        <li style='transform: rotateY(300deg) translateZ(130.85125168440815px)'>This is Card 6</li>
+      </ul>
+    </div>
+    <p>
+      translateZ的计算公式：(卡片的宽度 / 2) / Math.tan(((360 / 卡片的个数) / 2 / 180) * Math.PI)
+    </p>
+  </body>
+</html>
