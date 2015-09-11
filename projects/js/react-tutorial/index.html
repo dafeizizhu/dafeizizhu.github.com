@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>React学习笔记</title>
+    <!--[if lt IE 9]>
+    <script src='../../common/es5-shim/4.1.13/es5-shim.js'></script>
+    <![endif]-->
+    <script src='build/react.js'></script>
+    <script src='build/JSXTransformer.js'></script>
+  </head>
+  <body>
+    <h1>官方例子：</h1>
+    <ul>
+      <li><a href='examples/basic/' target='_blank'>basic</a></li>
+      <li><a href='examples/basic-commonjs/' target='_blank'>basic-commonjs</a></li>
+      <li><a href='examples/basic-jsx/' target='_blank'>basic jsx</a></li>
+      <li><a href='examples/basic-jsx-external/' target='_blank'>basic-jsxexternal</a></li>
+      <li><a href='examples/basic-jsx-harmony/' target='_blank'>basic jsx harmony</a></li>
+      <li><a href='examples/basic-jsx-precompile/' target='_blank'>basic jsx percompile</a></li>
+      <li><a href='examples/jquery-bootstrap/' target='_blank'>jquery bootstrap</a></li>
+      <li><a href='examples/jquery-mobile/' target='_blank'>jquery mobile</a></li>
+      <li><a href='examples/quadratic/' target='_blank'>quadratic</a></li>
+      <li><a href='examples/server-rendering/' target='_blank'>server rendering</a></li>
+      <li><a href='examples/shared/' target='_blank'>shared</a></li>
+      <li><a href='examples/transitions/' target='_blank'>transitions</a></li>
+    </ul>
+    <h1>我的例子：</h1>
+    <div id='example1'></div>
+    <div id='example2'></div>
+    <div id='example3'></div>
+    <div id='example4'></div>
+    <div id='example5'></div>
+    <div id='example6'></div>
+    <script type='text/jsx'>
+      (function () {
+        // example1
+        React.render(
+          <h1>Hello, world!</h1>,
+          document.getElementById('example1')
+        )
+      })();
+
+      (function () {
+        // example2
+        var CommentBox = React.createClass({
+          render: function () {
+            return (
+              <div className='commentBox'>
+                Hello, world! I am a CommentBox.
+              </div>
+            )
+          }
+        })
+        React.render(
+          <CommentBox />,
+          document.getElementById('example2')
+        )
+      })();
+
+      (function () {
+        // example3
+        var CommentList = React.createClass({
+          render: function () {
+            return (
+              <div className='commentList'>
+                Hello, world! I am a CommentList.
+              </div>
+            )
+          }
+        })
+        var CommentForm = React.createClass({
+          render: function () {
+            return (
+              <div className='commentForm'>
+                Hello, world! I am a CommentForm.
+              </div>
+            )
+          }
+        })
+        var CommentBox = React.createClass({
+          render: function () {
+            return (
+              <div className='commentBox'>
+                <h1>Comments</h1>
+                <CommentList />
+                <CommentForm />
+              </div>
+            )
+          }
+        })
+        React.render(
+          <CommentBox />,
+          document.getElementById('example3')
+        )
+      })();
+
+      (function () {
+        // example4
+        var Comment = React.createClass({
+          render: function () {
+            return (
+              <div className='comment'>
+                <h2 className='commentAuthor'>
+                  {this.props.author}
+                </h2>
+                {this.props.children}
+              </div>
+            )
+          }
+        })
+        var CommentList = React.createClass({
+          render: function () {
+            return (
+              <div className='commentList'>
+                <Comment author='Pete Hunt'>This is one comment</Comment>
+                <Comment author='Jordan Walke'>This is *another* comment</Comment>
+              </div>
+            )
+          }
+        })
+        React.render(
+          <CommentList />,
+          document.getElementById('example4')
+        )
+      })();
+
+      (function () {
+        // example5
+        var Comment = React.createClass({
+          render: function () {
+            return (
+              <div className='comment'>
+                <h2 className='commentAuthor'>
+                  {this.props.author}
+                </h2>
+                {this.props.children}
+              </div>
+            )
+          }
+        })
+        var CommentList = React.createClass({
+          render: function () {
+            return (
+              <div className='commentList'>
+                <Comment author='Pete Hunt'>This is one comment</Comment>
+                <Comment author='Jordan Walke'>This is *another* comment</Comment>
+              </div>
+            )
+          }
+        })
+        var CommentForm = React.createClass({
+          render: function () {
+            return (
+              <div className='commentForm'>
+                Hello, world! I am a CommentForm.
+              </div>
+            )
+          }
+        })
+        // example5
+        var data = [
+          {author: 'Pete Hunt', text: 'This is one comment'},
+          {author: 'Jordan Walke', text: 'This is *another* comment'}
+        ]
+
+        var CommentBox = React.createClass({
+          render: function () {
+            return (
+              <div className='commentBox'>
+                <h1>Comments</h1>
+                <CommentList data={this.props.data} />
+                <CommentForm />
+              </div>
+            )
+          }
+        })
+        React.render(
+          <CommentBox data={data} />,
+          document.getElementById('example5')
+        )
+      })();
+
+      (function () {
+        // example6
+        var Comment = React.createClass({
+          render: function () {
+            return (
+              <div className='comment'>
+                <h2 className='commentAuthor'>
+                  {this.props.author}
+                </h2>
+                {this.props.children}
+              </div>
+            )
+          }
+        })
+        var CommentList = React.createClass({
+          render: function () {
+            var commentNodes = this.props.data.map(function (comment) {
+              return (
+                <Comment author={comment.author}>
+                  {comment.text}
+                </Comment>
+              )
+            })
+            return (
+              <div className='commentList'>
+                {commentNodes}
+              </div>
+            )
+          }
+        })
+        var CommentForm = React.createClass({
+          render: function () {
+            return (
+              <div className='commentForm'>
+                Hello, world! I am a CommentForm.
+              </div>
+            )
+          }
+        })
+        // example5
+        var data = [
+          {author: 'Pete Hunt', text: 'This is one comment'},
+          {author: 'Jordan Walke', text: 'This is *another* comment'}
+        ]
+
+        var CommentBox = React.createClass({
+          render: function () {
+            return (
+              <div className='commentBox'>
+                <h1>Comments</h1>
+                <CommentList data={this.props.data} />
+                <CommentForm />
+              </div>
+            )
+          }
+        })
+        React.render(
+          <CommentBox data={data} />,
+          document.getElementById('example6')
+        )
+      })();
+    </script>
+  </body>
+</html>

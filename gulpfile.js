@@ -160,7 +160,7 @@ gulp.task('build-css', function (cb) {
 })
 
 gulp.task('build-projects-data', function (cb) {
-  gulp.src('projects/**/index.html')
+  gulp.src('projects/*/*/index.html')
     .pipe(project2data())
     .pipe(gulp.dest('site/projects/data'))
     .on('end', cb)
