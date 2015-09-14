@@ -10,7 +10,7 @@ tags: [JavaScript,React]
 
 简单写了几个官网上的教程，感觉`jsx`的语法还是可以适应的。其实学习React本身的语法应该是不难的，难的是观念：所有东西均为组件。在React中，应用是又大大小小的组件组成的，小至一个文本，大致一个复杂的图表，都是组件。React本身没有提供数据和视图的双向绑定，只提供了数据到视图的绑定。数据也分成两类，一类是属性，另一类是状态。问题来了，怎么区分一个数据项是属性还是状态呢？
 
-首先我们应该把一个应用所涉及到的数据全部罗列粗来，以这个(React例子)[http://maizhiying.github.io/projects/js/thinking-in-react/index.html]为例，其中的数据项有：
+首先我们应该把一个应用所涉及到的数据全部罗列粗来，以这个[React例子](http://maizhiying.github.io/projects/js/thinking-in-react/index.html)为例，其中的数据项有：
 
 1. 产品列表
 2. 搜索框中用户输入的文字
