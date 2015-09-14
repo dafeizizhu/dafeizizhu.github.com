@@ -12,7 +12,7 @@ module.exports = function (options) {
 
     var fn = jade.compileFile(file.path)
 
-    glob('site/projects/**/*.json', {}, function (err, files) {
+    glob('site/projects/data/**/*.json', {}, function (err, files) {
       var map = {}
       files.forEach(function (file) {
         var data = require('../' + file)
