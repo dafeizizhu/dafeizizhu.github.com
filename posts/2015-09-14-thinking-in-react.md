@@ -3,7 +3,7 @@ layout: post
 title: "React学习笔记之Thinking in React"
 description: ""
 category: 
-tags: [JavaScript,React]
+tags: [JavaScript, React]
 ---
 
 最近看别人的团队博客经常提到React这个框架。这个框架是一个面向视图的框架，所以它能跟市场上那些MV*框架良好的结合在一起。最重要的一点是React Native，能用JavaScript编写iOS的应用，而且使用者大都反馈性能比较好。所以本人也凑热闹学习一下，不然Mac Pro都白买了（o(╯□╰)o）。
