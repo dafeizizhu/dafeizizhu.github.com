@@ -42,7 +42,7 @@ module.exports = function (options) {
     data.dateData = require('../site/data/indexes/date.json')
     data.active = 'posts'
     
-    file.path = data.filePath
+    file.path = path.join(__dirname, data.filePath)
     file.contents = new Buffer(fn(data))
 
     cb(null, file)

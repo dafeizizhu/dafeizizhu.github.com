@@ -65,7 +65,7 @@ gulp.task('build-data', function (cb) {
             months[data.year].push(data.month)
           }
           var post = {
-            link: '/' + path.relative(path.join(__dirname, 'site'), data.filePath),
+            link: '/' + path.relative(path.join(__dirname, '..', 'site'), data.filePath),
             title: data.title,
             summary: data.summaryHtmlText,
             path: file,

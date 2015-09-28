@@ -38,7 +38,7 @@ module.exports = function (options) {
             year: year,
             month: month,
             day: day,
-            filePath: filePath,
+            filePath: path.relative(__dirname, filePath),
             fileName: fileName,
             layout: layout,
             title: title,
