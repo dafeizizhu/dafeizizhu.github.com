@@ -2,6 +2,14 @@ var through = require('through2')
 var marked = require('marked')
 var path = require('path')
 
+var renderer = new marked.Renderer()
+renderer.heading = function (text, level) {
+  while(text.indexOf('#') == 0) {
+    text = text.slice(1)
+  }
+  return '<h' + level + '>' + text.trim() + '</h' + level + '>'
+}
+
 module.exports = function (options) {
   return through.obj(function (file, enc, cb) {
     if (file.isNull()) {
@@ -29,9 +37,13 @@ module.exports = function (options) {
       var markdownText = fileContents.substring(fileContents.lastIndexOf('---') + 3)
       var summaryMarkdownText = markdownText.split('\n').slice(0, 25).join('\n')
 
-      marked(markdownText, function (err, markdownResult) {
+      marked(markdownText, {
+        renderer: renderer
+      }, function (err, markdownResult) {
         var htmlText = markdownResult.toString()
-        marked(summaryMarkdownText, function (err, summaryMarkdownResult) {
+        marked(summaryMarkdownText, {
+          renderer: renderer
+        }, function (err, summaryMarkdownResult) {
           var summaryHtmlText = summaryMarkdownResult.toString()
           file.path = path.join(path.dirname(file.path), path.basename(file.path, '.md')) + '.json'
           file.contents = new Buffer(JSON.stringify({
