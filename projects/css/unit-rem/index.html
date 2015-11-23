@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>REM单位</title>
+    <meta charset='utf-8' />
+    <style>
+      html {
+        font-size: 62.5%;
+      }
+      body {
+        font-size: 1.4rem;
+      }
+      h1 {
+        font-size: 2.4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>I am h1.</h1>
+    <p>I am normal text.</p>
+    <p>
+      <button id="small">Click me to be smaller!</button>
+      <button id="big">Click me to be bigger!</button>
+    </p>
+    <script src='../../common/jquery/1.11.3/jquery.js'></script>
+    <script>
+      $(function () {
+        $('#small').on('click', function () {
+          $('html').css('font-size', '31%')
+        })
+        $('#big').on('click', function () {
+          $('html').css('font-size', '100%')
+        })
+      })
+    </script>
+  </body>
+</html>
