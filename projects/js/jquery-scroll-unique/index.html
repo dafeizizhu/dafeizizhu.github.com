@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>只让子元素滚，不让父元素滚</title>
+    <script src='../../common/jquery/1.11.3/jquery.js'></script>
+    <script src='jquery-scroll-unique.js'></script>
+    <style>
+    body {
+      height: 2000px;
+    }
+    #test {
+      width: 687px;
+      height: 200px;
+      overflow: auto;
+    }
+    </style>
+  </head>
+  <body>
+    <div>我是来占位的</div>
+    <div>我是来占位的</div>
+    <div>我是来占位的</div>
+    <div>我是来占位的</div>
+    <div>我是来占位的</div>
+    <div>我是来占位的</div>
+    <div id='test'>
+      <img src='demo.jpg' />
+    </div>
+    <script>
+      $(function () {
+        $('#test').scrollUnique()
+      })
+    </script>
+  </body>
+</html>
