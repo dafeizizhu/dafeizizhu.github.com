@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>CSS3 3D变换</title>
+    <style>
+      .Qcontainer {
+        height: 400px;
+        width: 300px;
+        position: relative;
+        -webkit-perspective: 800;
+      }
+      .film {
+        width: 100%;
+        height: 100%;
+        -webkit-transform-style: preserve-3d;
+        -webkit-transition: 1s;
+      }
+      .Qcontainer:hover .film {
+        -webkit-transform: rotateY(180deg);
+      }
+      .face {
+        position: absolute;
+        -webkit-backface-visibility: hidden;
+      }
+      .front {
+        background: green;
+        width: 100%;
+        height: 100%;
+      }
+      .back {
+        width: 100%;
+        height: 100%;
+        -webkit-transform: rotateY(180deg);
+        background: #3b3b3b;
+        background: -webkit-linear-gradient(top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
+      }
+
+      /* 降级 */
+      .front {
+        z-index: 5;
+      }
+      .Qcontainer:hover .front {
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='Qcontainer'>
+      <div class='film'>
+        <div class='face front'><h5>Front!</h5></div>
+        <div class='face back'><h5>Back!</h5></div>
+      </div>
+    </div>
+  </body>
+</html>
