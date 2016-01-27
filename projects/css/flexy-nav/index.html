@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>流式导航条</title>
+    <meta charset='utf-8' />
+    <link rel='stylesheet' href='flexy-nav.css' />
+  </head>
+  <body>
+    <nav class='flexy-nav'>
+      <button id='flexy-nav__toogle' class='flexy-nav__toogle'>Toogle Nav</button>
+      <ul id='flexy-nav__items' class='flexy-nav__items'>
+        <li class='flexy-nav__item'><a href='#' class='flexy-nav__link'>Item 1</a></li>
+        <li class='flexy-nav__item'><a href='#' class='flexy-nav__link'>Item 2</a></li>
+        <li class='flexy-nav__item'><a href='#' class='flexy-nav__link'>Item 3</a></li>
+        <li class='flexy-nav__item'><a href='#' class='flexy-nav__link'>Item 4</a></li>
+      </ul>
+      <form action='' class='flexy-nav__form'>
+        <input class='flexy-nav__search' type='text' placeholder='Type search terms and hit enter...' />
+      </form>
+    </nav>
+    <script>
+    (function () {
+      var toogle = document.querySelector('#flexy-nav__toogle')
+      var nav = document.querySelector('#flexy-nav__items')
+      toogle.addEventListener('click', function (e) {
+        e.preventDefault()
+        nav.classList.contains('flexy-nav__items--visible') ?
+          nav.classList.remove('flexy-nav__items--visible') :
+          nav.classList.add('flexy-nav__items--visible')
+      })
+    })()
+    </script>
+  </body>
+</html>
