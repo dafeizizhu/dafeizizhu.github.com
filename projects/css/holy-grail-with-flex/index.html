@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>使用Flex的圣杯布局</title>
+    <meta charset='utf-8' />
+    <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      color: white;
+    }
+    .holy-grail {
+      display: flex;
+      flex-direction: column;
+    }
+    .holy-grail__header,
+    .holy-grail__footer {
+      height: 50px;
+    }
+    .holy-grail__body {
+      flex-direction: column;
+      display: flex;
+      flex: 1;
+    }
+    .holy-grail__content {
+      flex: 1;
+    }
+    .holy-grail__sidebar--first {
+      order: 2;
+    }
+    .holy-grail__sidebar--second {
+      order: 3;
+    }
+    .holy-grail__content {
+      order: 1;
+    }
+    @media all and (min-width: 720px) {
+      .holy-grail__body {
+        flex-direction: row;
+      }
+      .holy-grail__content {
+        flex: 1;
+      }
+      .holy-grail__sidebar--first {
+        order: 1;
+      }
+      .holy-grail__sidebar--second {
+        order: 3;
+      }
+      .holy-grail__content {
+        order: 2;
+      }
+    }
+
+    /* background color */
+    .holy-grail__header {
+      background-color: red;
+    }
+    .holy-grail__content {
+      background-color: green;
+    }
+    .holy-grail__sidebar {
+      background-color: blue;
+    }
+    .holy-grail__footer {
+      background-color: gray;
+    }
+    </style>
+  </head>
+  <body class='holy-grail'>
+    <header class='holy-grail__header'>This is header</header>
+    <main class='holy-grail__body'>
+      <div class='holy-grail__content'>This is content</div>
+      <div class='holy-grail__sidebar holy-grail__sidebar--first'>This is the first sidebar</div>
+      <div class='holy-grail__sidebar holy-grail__sidebar--second'>This is the second sidebar</div>
+    </main>
+    <footer class='holy-grail__footer'>This is footer</footer>
+  </body>
+</html>
