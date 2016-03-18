@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transition Sequence in Steps for a Heading</title>
+    <meta charset='utf-8' />
+    <style>
+    h1 {
+      font-family: Futura, 'Arial Black', Arial, sans-serif;
+      text-align: center;
+    }
+    h1:hover {
+      transition: 4s all steps(3, end);
+      transform: translateX(400px);
+    }
+    </style>
+  </head>
+  <body>
+    <h1>I am the header</h1>
+    <h1>I am the header</h1>
+    <h1>I am the header</h1>
+    <h1>I am the header</h1>
+    <h1>I am the header</h1>
+    <h1>I am the header</h1>
+  </body>
+</html>

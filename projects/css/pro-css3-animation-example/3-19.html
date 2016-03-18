@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Animated image captions</title>
+    <style>
+    figure {
+      float: left;
+    }
+    figure,
+    figure img {
+      width: 500px;
+      height: 333px;
+      overflow: hidden;
+    }
+    figcaption {
+      font-family: Baskerville, 'Baskerville Old Face', Garamond, 'Times New Roman', serif;
+      font-style: italic;
+      background: rgba(0, 0, 0, 0.4);
+      font-size: 2rem;
+      padding: 0.8rem;
+      color: #fff;
+      position: relative;
+      bottom: 400px;
+      transition: 2s all;
+    }
+    figure:hover figcaption {
+      bottom: 340px;
+    }
+    </style>
+  </head>
+  <body>
+    <figure>
+      <img src='devils-tower.jpg' />
+      <figcaption>Devile's Tower, Wyoming, USA</figcaption>
+    </figure>
+    <figure style='left: 550px'>
+      <img src='sunrise-point.jpg' />
+      <figcaption>Bryce National Park, Utah, USA</figcaption>
+    </figure>
+  </body>
+</html>
+

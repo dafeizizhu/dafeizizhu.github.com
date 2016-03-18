@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS3 Gallery</title>
+    <style>
+    body {
+      background: #234;
+    }
+    dl#gallery {
+      position: relative;
+    }
+    dl#gallery dt img {
+      width: 150px;
+      height: 150px;
+      margin: 2.2em;
+    }
+    dl#gallery dd {
+      position: absolute;
+      left: 200px;
+      top: 2.2em;
+      opacity: 0;
+      text-align: center;
+      font-family: Futura, Arial, sans-serif;
+      color: white;
+      transition: .85s opacity linear;
+    }
+    dl#gallery dd img {
+      display: block;
+      margin: auto;
+      padding-bottom: 1.2em;
+    }
+    dl#gallery dt:active + dd {
+      opacity: 1;
+    }
+    </style>
+  </head>
+  <body>
+    <dl id='gallery'>
+      <dt><img src='jatropha-hybrid_thumb.jpg' /></dt>
+      <dd><img src='jatropha-hybrid.jpg' />A closeup photograph of a Jatropha Hybrid</dd>
+      <dt><img src='leaf-veins_thumb.jpg' /></dt>
+      <dd><img src='leaf-veins.jpg' />A closeup photograph of a Leaf Veins</dd>
+      <dt><img src='cascada_thumb.jpg' /></dt>
+      <dd><img src='cascada.jpg' />A closeup photograph of a Cascada</dd>
+    </dl>
+  </body>
+</html>

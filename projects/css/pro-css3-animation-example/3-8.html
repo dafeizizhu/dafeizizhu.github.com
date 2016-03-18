@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS3 Gallery</title>
+    <style>
+    body {
+      background: #234;
+    }
+    dl#gallery {
+      position: relative;
+    }
+    dl#gallery dt img {
+      width: 150px;
+      height: 150px;
+      margin: 2.2em;
+    }
+    dl#gallery dd {
+      position: absolute;
+      left: 200px;
+      top: 2.2em;
+      visibility: hidden;
+    }
+    dl#gallery dt:hover + dd {
+      visibility: visible;
+    }
+    </style>
+  </head>
+  <body>
+    <dl id='gallery'>
+      <dt><img src='jatropha-hybrid_thumb.jpg' /></dt>
+      <dd><img src='jatropha-hybrid.jpg' /></dd>
+      <dt><img src='leaf-veins_thumb.jpg' /></dt>
+      <dd><img src='leaf-veins.jpg' /></dd>
+      <dt><img src='cascada_thumb.jpg' /></dt>
+      <dd><img src='cascada.jpg' /></dd>
+    </dl>
+  </body>
+</html>
