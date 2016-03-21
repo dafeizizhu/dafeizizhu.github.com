@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A Clapperboard Caption</title>
+    <style>
+    figure.clapperboard {
+      position: relative;
+      overflow: hidden;
+    }
+    figure.clapperboard figcaption {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 2rem;
+    }
+    figure.clapperboard,
+    figure.clapperboard figcaption {
+      width: 618px;
+      height: 515px;
+    }
+    figure.clapperboard figcaption {
+      font-family: Futura, Arial, sans-serif;
+      font-weight: 100;
+      font-style: italic;
+      color: white;
+      font-size: 1.2rem;
+      padding: 2rem;
+      padding-top: 8rem;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0);
+      text-shadow: 3px 3px 1px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transform: rotate(90deg);
+      transform-origin: bottom right;
+      transition-property: opacity, transform, background;
+      transition-timing-function: linear, ease, linear;
+      transition-duration: 2s, 9999999s, 0s;
+      transition-delay: 0s, 0s, 0s;
+    }
+    figure.clapperboard:hover figcaption {
+      transform: rotate(0);
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.6);
+      transition-property: opacity, transform, background;
+      transition-timing-function: ease, cubic-bezier(.12, .49, .17, .87), linear;
+      transition-duration: 0s, .9s, 1s;
+      transition-delay: 0s, 0s, 1s;
+    }
+    figure.clapperboard figcaption q {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 2rem;
+    }
+    </style>
+  </head>
+  <body>
+    <figure class='clapperboard'>
+      <img src='apollo-17.jpg' />
+      <figcaption>
+        <q>We leave as we came and , God willing, as we shall return, with peace and hope...</q> - Eugene Cernan, commander of Apollo 18, the last man on the moon.
+      </figcaption>
+    </figure>
+  </body>
+</html>

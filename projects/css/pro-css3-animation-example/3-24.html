@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An animated card fan effect</title>
+    <style>
+    #cardfan,
+    #cardfan img {
+      width: 640px;
+      height: 480px;
+      transition: .6s transform ease-out;
+    }
+    #cardfan {
+      margin: 0 auto;
+    }
+    #cardfan img {
+      border: 32px solid #ffe;
+      box-shadow: 12px 12px 10px rgba(0, 0, 0, 0.2);
+      position: absolute;
+      transform-origin: center 1200px;
+    }
+    #cardfan:hover img:first-child {
+      transform: rotate(24deg);
+    }
+    #cardfan:hover img:last-child {
+      transform: rotate(-24deg);
+    }
+    </style>
+  </head>
+  <body>
+    <div id='cardfan'>
+      <img src='bike.jpg' />
+      <img src='florence.jpg' />
+      <img src='roma.jpg' />
+    </div>
+  </body>
+</html>
