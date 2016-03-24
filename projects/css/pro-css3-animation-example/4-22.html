@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form</title>
+    <style>
+    form {
+      font-size: 1.2rem;
+      font-family: 'Gill Sans', Arial, sans-serif;
+    }
+    label,
+    input {
+      display: block;
+    }
+    label:first-letter {
+      border-bottom: 2px solid #bbb;
+    }
+    input {
+      border: 1px solid #bbb;
+      padding: .4rem;
+      border-radius: .2rem;
+      margin: .5rem 0;
+    }
+    input[type='submit'] {
+      border: none;
+      text-transform: uppercase;
+    }
+    input + span:after {
+      content: attr(title);
+      color: red;
+      margin-left: 0.6rem;
+      opacity: 0;
+      transition-property: opacity;
+      transition-duration: 2s;
+      transition-delay: 2s;
+    }
+    input:invalid + span:after {
+      opacity: 1;
+    }
+    </style>
+  </head>
+  <body>
+    <form>
+      <label for='age'>Age</label>
+      <input type='number' name='age' id='age' size='3' maxlength='2' min='1' max='99' pattern='^([1-9]|[1-9][0-9]){1,2}$' required />
+      <span title='Must be between 1 and 99'></span>
+      <label for='name'>Name</label>
+      <input type='text' name='name' id='name' size='40' maxlength='38' pattern="^[a-zA-Z]'?[- 'a-zA-Z]+$" placeholder='Your full name' required />
+      <span title='Letters, spaces, apostrophes and hyphens only'></span>
+      <label for='email'>Mail address</label>
+      <input type='email' name='email' id='email' size='50' maxlength='256' placeholder='Your contact eMail' required />
+      <span title='Must a complete valid eMail address'></span>
+      <input type='submit' value='submit' />
+    </form>
+  </body>
+</html>

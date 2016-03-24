@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mars</title>
+    <style>
+    div#mars {
+      background: #000;
+      color: #fff;
+      font-family: Futura, Arial, sans-serif;
+      width: 400px;
+      padding: 1.6rem;
+      line-height: 175%;
+      border-radius: 6px;
+    }
+    img {
+      display: block;
+      margin: 0 auto;
+      width: 400px;
+    }
+    div#mars p {
+      margin: 1rem;
+    }
+    input ~ div {
+      overflow: hidden;
+      height: 0;
+      transition: .6s all cubic-bezier(0.735, -0.485, 0.145, 1.625);
+    }
+    </style>
+  </head>
+  <body>
+    <div id='mars'>
+      <input type='checkbox' id='marstoggle' />
+      <div class='toggle'>
+        <img src='mars.jpg' />
+        <p>Trace amounts of methane were discovered in the atmosphere of Mars in 2003...As methane is unstable, its presence indicates an active source on the planet that is continually replenishing the gas, at the rate of approximately 270 tons per year.
+      </div>
+    </div>
+  </body>
+</html>

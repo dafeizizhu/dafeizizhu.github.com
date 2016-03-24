@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A Reveal Button</title>
+    <style>
+    * {
+      box-sizing: border-box;
+      color: #333;
+      font-family: Futura, Arial, sans-serif;
+      vertical-align: middle;
+    }
+    button {
+      font-weight: 600;
+      text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.3);
+      border-radius: 34px;
+      height: 68px;
+      width: 180px;
+      padding: 0 20px;
+      font-size: 18px;
+      background: linear-gradient(to bottom, #1e5799, #7db9e8);
+      border: 1px solid rgba(0, 0, 0, 0.4); 
+      box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.8) inset, 
+        1px 1px 3px rgba(0, 0, 0, 0.2),
+        0px 0px 0px 4px rgba(188, 188, 188, 0.5);
+      text-align: left;
+    }
+    span.hidden,
+    span.right {
+      color: #fff;
+    }
+    span.hidden {
+      background: linear-gradient(to bottom, #222, #000);
+      display: inline-block;
+      width: 0;
+      margin-left: 22px;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 22px 0;
+      border-left: 2px double rgba(0, 0, 0, 0.3);
+    }
+    </style>
+  </head>
+  <body>
+    <button>Sign up<span class='hidden'>For Free</span><span class='right'>&#9654;</span></button>
+  </body>
+</html>
