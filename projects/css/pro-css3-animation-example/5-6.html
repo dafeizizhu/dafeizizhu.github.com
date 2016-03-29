@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Keyframe Animation</title>
+    <style>
+    @keyframes multislide {
+      0% { left: 20px; }
+      20% { right: 200px; }
+      80% { left: 50%; }
+      100% { right: 180px; }
+    }
+    #bluebox {
+      position: relative;
+      background: red;
+      width: 100px;
+      height: 150px;
+      animation-name: multislide;
+      animation-duration: 10.5s;
+      animation-timing-function: ease-in-out;
+      animation-delay: 200ms;
+    }
+    </style>
+  </head>
+  <body>
+    <div id='bluebox'></div>
+  </body>
+</html>
