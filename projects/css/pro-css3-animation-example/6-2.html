@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS3 Slideshow</title>
+    <style>
+    div#slideshow {
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+    figure#imagestrip,
+    div#slideshow {
+      box-sizing: border-box;
+    }
+    div#slideshow,
+    figure#imagestrip img {
+      width: 500px;
+      height: 400px;
+      float: left;
+    }
+    figure#imagestrip {
+      position: absolute;
+      width: 2000px;
+      margin: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <div id='slideshow'>
+      <figure id='imagestrip'>
+        <img src='black-kite.jpg' />
+        <img src='red-kite.jpg' />
+        <img src='pelicans.jpg' />
+        <img src='pariah-kite.jpg' />
+      </figure>
+    </div>
+  </body>
+</html>

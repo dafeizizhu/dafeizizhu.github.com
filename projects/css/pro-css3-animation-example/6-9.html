@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS3 Slideshow</title>
+    <style>
+    @keyframes slider {
+      0% { transform: translateX(0px); }
+      20% { transform: translateX(0px); }
+      25% { transform: translateX(-500px); }
+      45% { transform: translateX(-500px); }
+      50% { transform: translateX(-1000px); }
+      70% { transform: translateX(-1000px); }
+      75% { transform: translateX(-1500px); }
+      95% { transform: translateX(-1500px); }
+      100% { transform: translateX(-2000px); }
+    }
+    @keyframes fader {
+      0% { opacity: 1; }
+      70% { opacity: 1; }
+      90% { opacity: 0; ease-out; }
+      95% { opacity: 0; }
+      100% { opacity: 1; ease-in; }
+    }
+    div#slideshow {
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+    figure#imagestrip,
+    div#slideshow {
+      box-sizing: border-box;
+    }
+    div#slideshow,
+    figure#imagestrip img {
+      width: 500px;
+      height: 400px;
+      float: left;
+    }
+    figure#imagestrip {
+      position: absolute;
+      width: 2500px;
+      margin: 0;
+    }
+    figure#imagestrip {
+      animation: slider 30s infinite, fader 7.5s infinite;
+    }
+    div#slideshow:hover figure#imagestrip {
+      animation-play-state: paused;
+      opacity: 0.5;
+    }
+    div#slideshow:hover:before {
+      content: '||';
+      font-size: 200px;
+      color: rgba(255, 255, 255, .7);
+      position: absolute;
+      left: 160px;
+      top: 80px;
+    }
+    </style>
+  </head>
+  <body>
+    <div id='slideshow'>
+      <figure id='imagestrip'>
+        <img src='black-kite.jpg' />
+        <img src='red-kite.jpg' />
+        <img src='pelicans.jpg' />
+        <img src='pariah-kite.jpg' />
+        <img src='black-kite.jpg' />
+      </figure>
+    </div>
+  </body>
+</html>

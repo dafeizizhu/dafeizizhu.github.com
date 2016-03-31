@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lightbox</title>
+    <style>
+    @keyframes blowup {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+      }
+      30% {
+        width: 640px;
+        height: 0;
+        opacity: 0;
+      }
+      60% {
+        width: 640px;
+        height: 480px;
+        opacity: 0;
+        margin: 20px;
+      }
+      100% {
+        width: 640px;
+        height: 480px;
+        opacity: 1;
+        margin: 20px;
+      }
+    }
+    html {
+      min-height: 100%;
+      position: relative;
+    }
+    body {
+      margin: 0;
+      height: 100%;
+      margin-right: 2em;
+    }
+    dl#gallery {
+      float: left;
+      font-family: Futura, Arial, sans-serif;
+      margin-bottom: 12em;
+    }
+    dl#gallery dt {
+      width: 150px;
+      margin: 2em 2em 0 2em;
+    }
+    dl#gallery dd {
+      margin-left: 0;
+      background: rgba(0, 0, 0, 0);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      display: -webkit-box;
+      -webkit-box-pack: center;
+      -webkit-box-align: center;
+      visibility: hidden;
+    }
+    dl#gallery dd a {
+      background: #fff;
+      display: block;
+      text-decoration: none;
+      position: relative;
+    }
+    dl#gallery dd a img {
+      width: 640px;
+    }
+    dl#gallery dd a span {
+      display: block;
+      background-color: rgba(0, 0, 0, .3);
+      color: white;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px;
+      opacity: 0;
+      transition: 1s opacity ease-in;
+    }
+    dl#gallery dd a:hover span {
+      opacity: 1;
+    }
+    dl#gallery dd:target {
+      visibility: visible;
+      background: rgba(0, 0, 0, .6);
+      transition: 2s background linear;
+    }
+    dl#gallery dd:target a {
+      box-shadow: 0 0 8px 8px rgba(0, 0, 0, .3);
+      transition: 4s all ease-in;
+    }
+    dl#gallery dd:target a img {
+      animation: blowup 3s forwards;
+    }
+    </style>
+  </head>
+  <body id='base'>
+    <dl id='gallery'>
+      <dt><a href='#col1'><img src='coliseum-at-night-small.jpeg' /></a></dt>
+      <dd id='col1'><a href='#'><img src='coliseum-at-night.jpeg' /><span>Coliseum at Night</span></a></dd>
+      <dt><a href='#col2'><img src='coliseum-forum-small.jpeg' /></a></dt>
+      <dd id='col2'><a href='#'><img src='coliseum-forum.jpeg' /><span>Roman Coliseum and Forum</span></a></dt>
+      <dt><a href='#col3'><img src='grand-via-madrid-small.jpeg' /></a></dt>
+      <dd id='col3'><a href='#'><img src='grand-via-madrid.jpeg' /><span>Grand Via, Madrid, Portugal</span></a></dd>
+    </dl>
+  </body>
+</html>

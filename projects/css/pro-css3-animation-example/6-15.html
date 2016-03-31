@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS3 Slideshow</title>
+    <style>
+    @keyframes slider {
+      0% { transform: translateX(0px); }
+      20% { transform: translateX(0px); }
+      25% { transform: translateX(-500px); }
+      45% { transform: translateX(-500px); }
+      50% { transform: translateX(-1000px); }
+      70% { transform: translateX(-1000px); }
+      75% { transform: translateX(-1500px); }
+      95% { transform: translateX(-1500px); }
+      100% { transform: translateX(-2000px); }
+    }
+    div#slideshow {
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+    figure#imagestrip,
+    div#slideshow {
+      box-sizing: border-box;
+    }
+    div#slideshow,
+    figure#imagestrip img {
+      width: 500px;
+      height: 400px;
+      float: left;
+    }
+    figure#imagestrip {
+      position: absolute;
+      width: 2500px;
+      margin: 0;
+    }
+    figure#imagestrip {
+      animation: slider 10s infinite;
+    }
+    figure#imagestrip figure {
+      margin: 0;
+      width: 500px;
+      float: left;
+    }
+    figure#imagestrip figure figcaption {
+      position: absolute;
+      background: rgba(0, 0, 0, .4);
+      color: #fff;
+      width: 500px;
+      padding: 8px;
+      font-size: 18px;
+      top: -42px;
+      transition: 1s top linear;
+      box-sizing: border-box;
+    }
+    figure#imagestrip:hover {
+      animation-play-state: paused;
+    }
+    figure#imagestrip figure:hover figcaption {
+      top: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <div id='slideshow'>
+      <figure id='imagestrip'>
+        <figure>
+          <img src='black-kite.jpg' />
+          <figcaption>Black kite</figcaption>
+        </figure>
+        <figure>
+          <img src='red-kite.jpg' />
+          <figcaption>Red kite</figcaption>
+        </figure>
+        <figure>
+          <img src='pelicans.jpg' />
+          <figcaption>Pelicans</figcaption>
+        </figure>
+        <figure>
+          <img src='pariah-kite.jpg' />
+          <figcaption>Pariah kite</figcaption>
+        </figure>
+        <figure>
+          <img src='black-kite.jpg' />
+          <figcaption>Black kite</figcaption>
+        </figure>
+      </figure>
+    </div>
+  </body>
+</html>
