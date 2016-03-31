@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>一个用React写的Logo</title>
+    <meta charset='utf-8' />
+    <!--[if lt IE 9]>
+    <script src='../../common/es5-shim/4.1.13/es5-shim.js'></script>
+    <![endif]-->
+    <script src='../../common/react/0.13.3/react.js'></script>
+    <script src='../../common/react/0.13.3/JSXTransformer.js'></script>
+    <script src='react-logo.js' type='text/jsx'></script>
+  </head>
+  <body>
+    <div id='example'></div>
+    <script type='text/jsx'>
+    React.render((
+      <div>
+        <Logo count='8' width='200' itemWidth='46' itemColor='#333' />
+        <Logo count='6' width='200' itemWidth='60' itemColor='red' maskColor='green'/>
+        <Logo count='9' width='200' itemWidth='100' itemColor='red' />
+        <Logo count='9' width='400' itemWidth='100' itemColor='green' />
+      </div>
+    ), document.getElementById('example'))
+    </script>
+  </body>
+</html>
