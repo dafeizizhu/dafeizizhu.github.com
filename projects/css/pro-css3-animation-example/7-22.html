@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Filter</title>
+    <style>
+    img {
+      border: 20px solid #fff;
+      box-shadow: 10px 10px 8px rgba(0, 0, 0, .3);
+    }
+    img.bw {
+      -webkit-filter: grayscale(1);
+      transition: 1s all linear;
+    }
+    img.bw:hover {
+      -webkit-filter: grayscale(0);
+    }
+    </style>
+  </head>
+  <body>
+    <img src='lake-louise.jpg' class='bw' />
+  </body>
+</html>

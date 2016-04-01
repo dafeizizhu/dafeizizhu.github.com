@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SVG Snowflakes</title>
+    <style>
+    html {
+      min-height: 100%;
+    }
+    body {
+      height: 100%;
+      background: linear-gradient(#b5d3ff, #30509a);
+    }
+    img.flake {
+      width: 150px;
+      height: 150px;
+      position: relative;
+      animation: snow 8s linear infinite forwards,
+        drift 12s ease-in-out forwards infinite;
+    }
+    </style>
+  </head>
+  <body>
+    <img src='snowflake.svg' class='flake' style='top: -50px' />
+    <img src='snowflake.svg' class='flake' style='left: 200px; width: 60px; height: 60px; top: -120px' />
+    <img src='snowflake.svg' class='flake' style='left: 640px; width: 120px; height: 120px; top: -400px;' />
+  </body>
+</html>

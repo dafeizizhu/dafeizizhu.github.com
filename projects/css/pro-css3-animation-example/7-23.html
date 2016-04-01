@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Filter</title>
+    <style>
+    img {
+      border: 20px solid #fff;
+      box-shadow: 10px 10px 8px rgba(0, 0, 0, .3);
+    }
+    img.bw {
+      -webkit-filter: sepia(1);
+      transition: 1s all linear;
+    }
+    img.bw:hover {
+      -webkit-filter: sepia(0);
+    }
+    </style>
+  </head>
+  <body>
+    <img src='barn.jpg' class='bw' />
+  </body>
+</html>

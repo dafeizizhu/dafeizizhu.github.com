@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blur</title>
+    <style>
+    img {
+      border: 20px solid #fff;
+      box-shadow: 10px 10px 8px rgba(0, 0, 0, .3);
+    }
+    img.old {
+      -webkit-filter: blur(2px);
+      transition: 1s all linear;
+    }
+    img.old:hover {
+      -webkit-filter: blur(0);
+    }
+    </style>
+  </head>
+  <body>
+    <img class='old' src='blur.jpg' />
+  </body>
+</html>
