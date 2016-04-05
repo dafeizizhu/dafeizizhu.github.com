@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Random</title>
+    <style>
+    @keyframes snowflake {
+      100% {
+        transform: translateY(1800px) rotate(1200deg);
+      }
+    }
+    div {
+      background: red;
+      position: absolute;
+      animation-name: snowflake;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+    .small {
+      animation-duration: 40s;
+    }
+    .medium {
+      animation-duration: 20s;
+    }
+    .large {
+      animation-duration: 10s;
+    }
+    </style>
+  </head>
+  <body>
+    <script>
+    var html = []
+    for (i = 0; i < 30; i++) {
+      var randomX = Math.random() * (100 - 1) + 1
+      var randomY = Math.random() * (1200 - 1) + 1
+      var randomZ = Math.random() * (100 - 1) + 1
+      var randomR = Math.random() * (360 - 1) + 1
+      var sizes = ['small', 'medium', 'large']
+      var dim = sizes[Math.round(randomX / 50)]
+      html.push('<div style="left: ' + randomX + '%; top: ' + randomY + 'px; width: ' + randomZ + 'px; height: ' + randomZ + 'px; transform: translateY(0px) rotate(' + randomR + 'deg)" class="' + dim + '"></div>')
+    }
+    document.body.innerHTML = html.join('')
+    </script>
+  </body>
+</html>

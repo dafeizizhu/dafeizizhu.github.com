@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Random</title>
+  </head>
+  <body>
+    <script>
+    var html = []
+    for (i = 0; i < 30; i++) {
+      var randomX = Math.random() * (100 - 1) + 1
+      var randomY = Math.random() * (1200 - 1) + 1
+      var randomZ = Math.random() * (100 - 1) + 1
+      html.push('<div style="left: ' + randomX + '%; top: ' + randomY + 'px; width: ' + randomZ + 'px; height: ' + randomZ + 'px;"></div>')
+    }
+    document.body.innerHTML = html.join('')
+    </script>
+  </body>
+</html>
