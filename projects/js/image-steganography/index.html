@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>图片隐写术</title>
+  </head>
+  <body>
+    <img src='xiaolan.png' />
+    <canvas id='canvas' width='256' height='256'></canvas>
+    <script>
+    (function () {
+      var ctx = document.getElementById('canvas').getContext('2d')
+      var img = new Image()
+      var originalData
+      var processData = function (originalData) {
+        var data = originalData.data
+        for (var i = 0; i < data.length; i++) {
+          if (i % 4 == 0) {
+            if (data[i] % 2 == 0) {
+              data[i] = 0
+            } else {
+              data[i] = 255
+            }
+          } else if (i % 4 == 3) {
+            continue
+          } else {
+            data[i] = 0
+          }
+        }
+        ctx.putImageData(originalData, 0, 0)
+      }
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0)
+        originalData = ctx.getImageData(0, 0, ctx.canvas.height, ctx.canvas.height)
+        processData(originalData)
+      }
+      img.src = 'xiaolan.png'
+    })()
+    </script>
+
+    <hr />
+
+    <img src='mimi.png' />
+    <canvas id='canvas2' width='256' height='256'></canvas>
+    <canvas id='canvas3' width='256' height='256'></canvas>
+    <script>
+    (function () {
+      var textData
+      var ctx2 = document.getElementById('canvas2').getContext('2d')
+      ctx2.font = '30px Microsoft Yahei'
+      ctx2.fillText('我是秘密', 60, 130)
+      textData = ctx2.getImageData(0, 0, ctx2.canvas.width, ctx2.canvas.height).data
+      var ctx3 = document.getElementById('canvas3').getContext('2d')
+      var img = new Image()
+      var originalData
+      var mergeData = function(newData, color) {
+        var oData = originalData.data
+        var bit, offset
+
+        switch(color) {
+          case 'R':
+            bit = 0
+            offset = 3
+            break
+          case 'G':
+            bit = 1
+            offset = 2
+            break
+          case 'B':
+            bit = 2
+            offset = 1
+            break
+        }
+
+        for (var i = 0; i < oData.length; i++) {
+          if (i % 4 == bit) {
+            if (newData[i + offset] == 0 && (oData[i] % 2 == 1)) {
+              if (oData[i] == 255) {
+                oData[i]--
+              } else {
+                oData[i]++
+              }
+            } else if (newData[i + offset] != 0 && (oData[i] % 2 == 0)) {
+              if (oData[i] == 255) {
+                oData[i]--
+              } else {
+                oData[i]++
+              }
+            }
+          }
+        }
+
+        ctx3.putImageData(originalData, 0, 0)
+      }
+      img.onload = function () {
+        ctx3.drawImage(img, 0, 0)
+        originalData = ctx3.getImageData(0, 0, ctx3.canvas.width, ctx3.canvas.height)
+        mergeData(textData, 'R')
+      }
+      img.src = 'mimi.png'
+    })()
+    </script>
+
+    <hr />
+
+    <img src='mimi-with-mimi.png' />
+    <canvas id='canvas4' width='256' height='256'></canvas>
+    <script>
+    (function () {
+      var ctx = document.getElementById('canvas4').getContext('2d')
+      var img = new Image()
+      var originalData
+      var processData = function (originalData) {
+        var data = originalData.data
+        for (var i = 0; i < data.length; i++) {
+          if (i % 4 == 0) {
+            if (data[i] % 2 == 0) {
+              data[i] = 0
+            } else {
+              data[i] = 255
+            }
+          } else if (i % 4 == 3) {
+            continue
+          } else {
+            data[i] = 0
+          }
+        }
+        ctx.putImageData(originalData, 0, 0)
+      }
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0)
+        originalData = ctx.getImageData(0, 0, ctx.canvas.height, ctx.canvas.height)
+        processData(originalData)
+      }
+      img.src = 'mimi-with-mimi.png'
+    })()
+    </script>
+
+  </body>
+</html>
