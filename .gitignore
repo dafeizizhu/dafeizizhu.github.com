@@ -15,3 +15,5 @@ node_modules/*
 site/*
 
 *.swp
+
+**/node_modules/*
