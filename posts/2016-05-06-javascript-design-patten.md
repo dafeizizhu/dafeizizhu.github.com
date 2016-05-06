@@ -1,7 +1,7 @@
 ---
 layout: post
-title: ""
-description: "《JavaScript设计模式与开发实践》读书笔记"
+title: "《JavaScript设计模式与开发实践》读书笔记"
+description: ""
 category: 
 tags: [JavaScript, 读书笔记]
 ---
