@@ -3,7 +3,7 @@ layout: post
 title: "《用户力》读书笔记"
 description: ""
 category: 
-tags: [创业, 读书笔记]
+tags: [运营, 读书笔记]
 ---
 
 ### 第1章 互联网：3个“一”

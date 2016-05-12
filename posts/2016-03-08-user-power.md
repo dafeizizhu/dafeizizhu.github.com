@@ -3,7 +3,7 @@ layout: post
 title: "《用户力》读书笔记"
 description: ""
 category: 
-tags: [读书笔记, 创业]
+tags: [读书笔记, 运营]
 ---
 
 ### 第2章 用户需求：就是一个字“更”
