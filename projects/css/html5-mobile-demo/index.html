@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='description' content='description about this page' />
+    <meta name='keywords' content='keywords about this page' />
+    <meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no' />
+    <title>HTML5 Mobile Page Demo</title>
+    <style>
+    @keyframes slider {
+      0% { transform: translateX(0px); }
+      20% { transform: translateX(0px); }
+      25% { transform: translateX(-100vw); }
+      45% { transform: translateX(-100vw); }
+      50% { transform: translateX(-200vw); }
+      70% { transform: translateX(-200vw); }
+      75% { transform: translateX(-300vw); }
+      95% { transform: translateX(-300vw); }
+      100% { transform: translateX(-400vw); }
+    }
+    @keyframes spread-play {
+      0%, 20% {
+        transform: translate3d(0px, 0, 0);
+      }
+      40%, 70% {
+        transform: translate3d(0px, -19px, 0);
+      }
+      90%, 100% {
+        transform: translate3d(0px, -38px, 0);
+      }
+    }
+    body {
+      background: #f2f2f2;
+      line-height: 1.5;
+      font-size: 16px;
+      color: #000;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      margin: 0;
+      padding: 0;
+    }
+    .wrapper {
+      padding-bottom: 50px;
+    }
+    .inner-container {
+      transition: transform .5s linear;
+    }
+    .index-slider {
+      position: relative;
+      overflow: hidden;
+    }
+    .index-slider .ui-slider {
+      transform: translateZ(0px);
+      visibility: visible;
+      padding-top: 84%;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .index-slider .ui-slider-content {
+      box-sizing: border-box;
+      display: flex;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 65px;
+      animation: slider 10s infinite;
+    }
+    .index-slider .ui-slider-content .item {
+      list-style: none;
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background: #f5f5f5;
+      left: 0;
+      width: 100vw;
+    }
+    .index-slider .ui-slider-content .item span {
+      position: relative;
+      z-index: 2;
+      background-repeat: no-repeat;
+      width: 100vw;
+      height: 100%;
+      display: block;
+      background-size: 100% auto;
+    }
+    .index-entry {
+      position: absolute;
+      bottom: -1px;
+      width: 100%;
+      height: 66px;
+      left: 0;
+      z-index: 9;
+      margin: 0;
+      padding: 0;
+    }
+    .index-entry .list-entry {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      background: #fff;
+      overflow: hidden;
+    }
+    .index-entry .list-entry li {
+      flex: 1;
+      width: 100%;
+      text-align: center;
+      color: #000;
+      font-size: 14px;
+      padding-top: 5px;
+      padding-bottom: 1px;
+      line-height: 24px;
+      position: relative;
+      list-style: none;
+    }
+    .index-entry .entry {
+      width: 32px;
+      height: 32px;
+      position: relative;
+      background-image: url(http://imgcache.qq.com/gc/gamecenterV2/dist/img/game/entry-sprite_39384e.png);
+      background-size: 100% auto;
+    }
+    .index-entry .list-entry li i {
+      color: #f44444;
+      display: block;
+      margin: 0 auto;
+      line-height: 32px;
+    }
+    .index-entry .list-entry li .entry-tag {
+      position: absolute;
+      line-height: 1;
+      background-color: #f74c31;
+      color: #fff;
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 12px;
+      top: 5px;
+      left: 50%;
+      margin-left: 8px;
+      white-space: nowrap;
+      z-index: 9;
+      font-style: normal;
+    }
+    .index-entry .entry-newgame {
+      background-position: 0px 0px;
+    }
+    .index-entry .entry-rank {
+      background-position: 0 -32px;
+    }
+    .index-entry .entry-cate {
+      background-position: 0 -64px;
+    }
+    .index-entry .entry-chess {
+      background-position: 0 -96px;
+    }
+    .index-entry .list-entry li p {
+      color: #6a6a6a;
+      position: absolute;
+      top: 37px;
+      width: 100%;
+      margin: 0;
+    }
+    .ui-nowrap {
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .index-spread {
+      position: relative;
+    }
+    .index-spread .banner {
+      width: 100%;
+      padding-top: 24%;
+      position: relative;
+    }
+    .index-spread .banner .img {
+      width: 100%;
+      height: 100%;
+      background-size: 100% auto;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .index-spread .banner i {
+      font-style: normal;
+      position: absolute;
+      left: 0;
+      top: .1rem;
+    }
+    .ui-tag-l {
+      width: 55px;
+      height: 55px;
+      background-image: url(http://i.gtimg.cn/vipstyle/mobile/client/gamecenter/frozenui/img/tag/tag.png);
+      background-position: 0 0;
+      background-size: 55px auto;
+      display: inline-block;
+    }
+    .ui-tag-l span {
+      position: absolute;
+      color: #fff;
+      font-size: 11px;
+      transform: rotate(-45deg);
+      transform-origin: 0 0;
+      top: 32px;
+      left: -4px;
+      width: 50px;
+      text-align: center;
+    }
+    .ui-box {
+      display: flex;
+    }
+    .ui-center {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .index-spread .info {
+      box-sizing: border-box;
+      padding-left: 35%;
+      padding-right: 72px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #777;
+      height: 100%;
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      line-height: 19px;
+      padding-top: 10px;
+      align-items: baseline;
+    }
+    .ui-label-wrap {
+      display: flex;
+      max-width: 100%;
+      overflow: hidden;
+      justify-content: center;
+      align-items: center;
+    }
+    .ui-label-wrap h3 {
+      margin: 0;
+      font-weight: normal;
+    }
+    .index-spread .info .subinfo-wrap {
+      height: 20px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .index-spread .info .animation-wrap {
+      animation: spread-play 8s linear 1s both infinite;
+    }
+    .index-spread .info .animation-wrap p {
+      margin: 0;
+    }
+    button {
+      -webkit-appearance: none;
+    }
+    .ui-btn {
+      height: 30px;
+      line-height: 30px;
+      padding: 0 11px;
+      min-width: 55px;
+      display: inline-block;
+      position: relative;
+      text-align: center;
+      font-size: 15px;
+      background-color: #fdfdfd;
+      vertical-align: top;
+      color: #5b5b5b;
+      box-sizing: border-box;
+      border-radius: 3px;
+      border: 0;
+      border-width: 1px;
+      outline: none;
+    }
+    .ui-btn-border {
+      background: 0 0;
+      color: #00a5e0;
+      border-color: #00a5e0;
+    }
+    .index-spread .ui-btn {
+      position: absolute;
+      right: 17px;
+      top: 50%;
+      margin-top: -12px;
+      z-index: 5;
+    }
+    .index-spread .ui-btn-border.grey {
+      color: #5b5b5b;
+      border: 1px solid #cacccd;
+    }
+    </style>
+  </head>
+  <body>
+    <div class='wrapper'>
+      <div class='inner-container'>
+        <section class='index-slider'>
+          <div class='ui-slider'>
+            <ul class='ui-slider-content'>
+              <li class='item'>
+                <span style='background-image:url(http://download.wegame.qq.com/gc/banner/7116_full_20160506182425.jpg);'></span>
+              </li>
+              <li class='item'>
+                <span style='background-image:url(http://download.wegame.qq.com/gc/banner/6244_full_20160303194929.jpg);'></span>
+              </li>
+              <li class='item'>
+                <span style='background-image:url(http://download.wegame.qq.com/gc/banner/6242_full_20160303194444.jpg);'></span>
+              </li>
+              <li class='item'>
+                <span style='background-image:url(http://download.wegame.qq.com/gc/banner/7149_full_20160512102203.jpg);'></span>
+              </li>
+              <li class='item'>
+                <span style='background-image:url(http://download.wegame.qq.com/gc/banner/7116_full_20160506182425.jpg);'></span>
+              </li>
+            </ul>
+          </div>
+          <div class='index-entry'>
+            <ul class='list-entry'>
+              <li>
+                <i class='entry entry-newgame'></i>
+                <i class='entry-tag'>1</i>
+                <p class='ui-nowrap'>新游</p>
+              </li>
+              <li>
+                <i class='entry entry-rank'></i>
+                <i class='entry-tag'>1</i>
+                <p class='ui-nowrap'>排行</p>
+              </li>
+              <li>
+                <i class='entry entry-cate'></i>
+                <i class='entry-tag'>1</i>
+                <p class='ui-nowrap'>分类</p>
+              </li>
+              <li>
+                <i class='entry entry-chess'></i>
+                <i class='entry-tag'>1</i>
+                <p class='ui-nowrap'>棋牌</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section class='index-spread'>
+          <div class='banner'>
+            <span class='img' style='background-image:url(http://imgcache.qq.com/club/gamecenter/cms/2016-05-10/1462873213_118_750x180.jpg)'></span>
+            <i class='ui-tag-l'>
+              <span>五月新游</span>
+            </i>
+          </div>
+          <div class='info ui-center ui-box'>
+            <div class='ui-label-wrap'>
+              <h3>征途</h3>
+            </div>
+            <div class='subinfo-wrap'>
+              <div class='animation-wrap'>
+                <div>
+                  <p class='ui-nowrap'>真实地域，万人对抗</p>
+                  <p class='ui-nowrap'>近7日有70.8万次下载</p>
+                </div>
+                <div>
+                  <p class='ui-nowrap'>真实地域，万人对抗</p>
+                  <p class='ui-nowrap'>近7日有70.8万次下载</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class='ui-btn ui-btn-border grey'>
+            <span>下载</span>
+          </button>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

@@ -189,3 +189,8 @@ gulp.task('create-post', function (cb) {
     .pipe(gulp.dest('posts'))
     .on('end', cb)
 })
+
+gulp.task('watch-projects', function (cb) {
+  gulp.watch('projects/**/*', ['build-projects'])
+    .on('end', cb)
+})
