@@ -29,10 +29,17 @@
       position: relative;
     }
     .column .img {
-      height: 300px;
+      padding-top: 100%;
       background: orange;
-      line-height: 300px;
       text-align: center;
+      position: relative;
+    }
+    .column .img span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -0.5em;
+      margin-left: -2em;
     }
     .column .text.top span {
       position: absolute;
@@ -48,17 +55,17 @@
     <div class='wrapper'>
       <div class='column'>
         <div class='text top'><span>我我是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字是上面的文字<span></div>
-        <div class='img'>我是图片</div>
+        <div class='img'><span>我是图片</span></div>
         <div class='text bottom'><span>我我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字是下面的文字</span></div>
       </div>
       <div class='column'>
         <div class='text top'><span>我我是是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字是上面的文字<span></div>
-        <div class='img'>我是图片</div>
+        <div class='img'><span>我是图片</span></div>
         <div class='text bottom'><span>我我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字是下面的文字</span></div>
       </div>
       <div class='column'>
         <div class='text top'><span>我我上面的文字我是上面的文字我是上面的文字我是上面的文字是上面的文字<span></div>
-        <div class='img'>我是图片</div>
+        <div class='img'><span>我是图片</span></div>
         <div class='text bottom'><span>面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字是下面的文字</span></div>
       </div>
     </div>
