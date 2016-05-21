@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>一个Flex布局Demo</title>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <style>
+    html, body, .wrapper {
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      margin: 0;
+    }
+    .wrapper {
+      display: flex;
+    }
+    .column {
+      flex: 1;
+      margin-right: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .column:last-child {
+      margin-right: 0;
+    }
+    .column .text {
+      flex: 1;
+      position: relative;
+    }
+    .column .img {
+      height: 300px;
+      background: orange;
+      line-height: 300px;
+      text-align: center;
+    }
+    .column .text.top span {
+      position: absolute;
+      bottom: 0;
+    }
+    .column .text.bottom span {
+      position: absolute;
+      top: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <div class='wrapper'>
+      <div class='column'>
+        <div class='text top'><span>我我是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字是上面的文字<span></div>
+        <div class='img'>我是图片</div>
+        <div class='text bottom'><span>我我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字是下面的文字</span></div>
+      </div>
+      <div class='column'>
+        <div class='text top'><span>我我是是上面的文字我是上面的文字我是上面的文字我是上面的文字我是上面的文字是上面的文字<span></div>
+        <div class='img'>我是图片</div>
+        <div class='text bottom'><span>我我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字是下面的文字</span></div>
+      </div>
+      <div class='column'>
+        <div class='text top'><span>我我上面的文字我是上面的文字我是上面的文字我是上面的文字是上面的文字<span></div>
+        <div class='img'>我是图片</div>
+        <div class='text bottom'><span>面的文字我是下面的文字我是下面的文字我是下面的文字我是下面的文字是下面的文字</span></div>
+      </div>
+    </div>
+  </body>
+</html>
