@@ -14,6 +14,7 @@ var data2tags = require('./plugins/data2tags')
 var project2data = require('./plugins/project2data')
 var data2projectsPage = require('./plugins/data2projects-page')
 var createPost = require('./plugins/create-post')
+var data2about = require('./plugins/data2about')
 
 gulp.task('default', function () {
   console.log('test')
@@ -179,8 +180,18 @@ gulp.task('build-projects', ['build-projects-page'], function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-about', function (cb) {
+  gulp.src('layouts/about.jade')
+    .pipe(data2about())
+    .pipe(prettify({
+      indent_size: 2
+    }))
+    .pipe(gulp.dest('site/about'))
+    .on('end', cb)
+})
+
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', 'build-about', cb)
 })
 
 gulp.task('create-post', function (cb) {
