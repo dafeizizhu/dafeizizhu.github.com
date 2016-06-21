@@ -3,7 +3,7 @@ layout: post
 title: "多构建版本管理与git cherry-pick"
 description: ""
 category: 
-tags: [前端]
+tags: [Git, 前端]
 ---
 
 开发过程中，难免会遇到这么一个情况：软件A有N个发行版本，每个版本有其独特的配置参数，例如版本Alpha需要一个红色的按钮，而版本Beta需要一个黄色的按钮。我们可以用一个配置文件去管理这些参数：
