@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Js模块加载器</title>
+  </head>
+  <body>
+    <script src='core.js'></script>
+    <script>
+    require(['./app'], function (app) {
+      app.init()
+    })
+    </script>
+  </body>
+</html>
