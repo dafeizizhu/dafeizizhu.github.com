@@ -1,0 +1,43 @@
+<template id='nameTagTemplate'>
+  <style>
+  .outer {
+    border: 2px solid brown;
+    border-radius: 1em;
+    background: red;
+    font-size: 20pt;
+    width: 12em;
+    height: 7em;
+    text-align: center;
+  }
+  .boilerplate {
+    color: white;
+    font-family: sans-serif;
+    padding: 0.5em;
+  }
+  .name {
+    color: black;
+    background: white;
+    font-family: 'Market Felt', cursive;
+    font-size: 45pt;
+    padding-top: 0.2em;
+  }
+  </style>
+  <div class='outer'>
+    <div class='boilerplate'>Hi! My name is</div>
+    <div class='name'><content /></div>
+  </div>
+</template>
+<script>
+(function () {
+  var element = Object.create(HTMLElement.prototype)
+  var template = document.currentScript.ownerDocument.querySelector('#nameTagTemplate').content
+  element.createdCallback = function () {
+    var shadowRoot = this.createShadowRoot()
+    var clone = document.importNode(template, true)
+    shadowRoot.appendChild(clone)
+  }
+  document.registerElement('name-tag', {
+    prototype: element
+  })
+})()
+</script>

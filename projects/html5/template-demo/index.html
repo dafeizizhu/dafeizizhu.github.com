@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML5 Template Demo</title>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <template id='template1'>
+      <h1>我是最简单的模板</h1>
+    </template>
+    <template id='template2'>
+      <style>
+      h1 {
+        color: red;
+      }
+      </style>
+      <h1>我是带样式的模板</h1>
+    </template>
+    <template id='template3'>
+      <script>alert('我是带脚本的模板引进来的')</script>
+      <h1>我是带脚本的模板</h1>
+    </template>
+    <template id='template4'>
+      <style>
+      h1 {
+        color: green;
+      }
+      </style>
+      <h1>我是带同样样式的模板</h1>
+    </template>
+    <div>
+      <button onClick='importTemplateDemo("template1")'>最简单的模板</button>
+      <button onClick='importTemplateDemo("template2")'>带样式的模板</button>
+      <button onClick='importTemplateDemo("template3")'>带脚本的模板</button>
+      <button onClick='importTemplateDemo("template4")'>带重复样式的模板</button>
+    </div>
+    <div id='container'></div>
+
+    <script>
+    function importTemplateDemo(id) {
+      var content = document.querySelector('#' + id).content
+      var container = document.getElementById('container')
+      container.appendChild(document.importNode(content, true))
+    }
+    </script>
+  </body>
+</html>
