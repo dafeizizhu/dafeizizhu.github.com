@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shadow DOM Demo</title>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <div>
+      <h1 id='demo1'>Demo 1</h1>
+      <button id='demo1_bottom'>Hello world!</button>
+      <script>
+      (function () {
+        var host = document.querySelector('#demo1_bottom')
+        var root = host.createShadowRoot()
+        root.textContent = '你好，世界！'
+      })()
+      </script>
+    </div>
+    <div>
+      <h2 id='demo2'>Demo 2</h1>
+      <div id='demo2_nameTag'>麦志英</div>
+      <template id='demo2_nameTagTemplate'>
+        <style>
+        .outer {
+          border: 2px solid brown;
+          border-radius: 1em;
+          background: red;
+          font-size: 20pt;
+          width: 12em;
+          height: 7em;
+          text-align: center;
+        }
+        .boilerplate {
+          color: white;
+          font-family: sans-serif;
+          padding: .5em;
+        }
+        .name {
+          color: black;
+          background: white;
+          font-family: 'Market Felt', cursive;
+          font-size: 45pt;
+          padding-top: .2em;
+        }
+        </style>
+        <div class='outer'>
+          <div class='biolerplate'>
+            Hi! My name is
+          </div>
+          <div class='name'>
+            <content></content>
+          </div>
+        </div>
+      </template>
+      <script>
+      (function () {
+        var shadow = document.querySelector('#demo2_nameTag').createShadowRoot()
+        var template = document.querySelector('#demo2_nameTagTemplate')
+        var clone = document.importNode(template.content, true)
+        shadow.appendChild(clone)
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo3'>Demo 3</h1>
+      <div id='demo3_nameTag'>
+        <div class='first'>Bob</div>
+        <div>B.Love</div>
+        <div class='email'>bob@</div>
+      </div>
+      <template id='demo3_nameTagTemplate'>
+        <div style='background: purple; padding: 1em;'>
+          <div style='color: red;'><content select='.first'></content></div>
+          <div style='color: yellow;'><content select='div'></content></div>
+          <div style='color: blue;'><content select='.email'></content></div>
+        </div>
+      </template>
+      <script>
+      (function () {
+        var shadow = document.querySelector('#demo3_nameTag').createShadowRoot()
+        var template = document.querySelector('#demo3_nameTagTemplate')
+        var clone = document.importNode(template.content, true)
+        shadow.appendChild(clone)
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo4'>Demo 4</h1>
+      <style> h3 { color: green } </style>
+      <div><h3>Normal DOM</h3></div>
+      <div id='demo4_shadow'><h3>Light DOM</h3></div>
+      <script>
+      (function () {
+        var shadow = document.querySelector('#demo4_shadow').createShadowRoot()
+        shadow.innerHTML = '<style> h3 { color: red } </style><h3>Shadow DOM</h3>'
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo5'>Demo 5</h1>
+      <div id='demo5_shadow'>MaiZhiying</div>
+      <script>
+      (function () {
+        var shadow = document.querySelector('#demo5_shadow').createShadowRoot()
+        shadow.innerHTML = '<style> :host { text-transform: uppercase; } </style><content></content>'
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo6'>Demo 6</h1>
+      <div id='demo6_shadow'>MaiZhiying</div>
+      <script>
+      (function () {
+        var shadow = document.querySelector('#demo6_shadow').createShadowRoot()
+        shadow.innerHTML = '<style> :host { color: red } :host:hover { color: green } </style><content></content>'
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo7'>Demo 7</h1>
+      <div id='demo7_shadow1'>Maizhiying1</div>
+      <div id='demo7_shadow2' class='me'>Maizhiying2</div>
+      <script>
+      (function () {
+        var shadow1 = document.querySelector('#demo7_shadow1').createShadowRoot()
+        var shadow2 = document.querySelector('#demo7_shadow2').createShadowRoot()
+        var innerHTML = '<style> :host(.me) { color: red } </style><content></content>'
+        shadow1.innerHTML = shadow2.innerHTML = innerHTML
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo8'>Demo 8</h1>
+      <div id='demo8_shadow'>Light DOM</div>
+      <script>
+      (function () {
+        var container = document.querySelector('#demo8_shadow')
+        var root1 = container.createShadowRoot()
+        var root2 = container.createShadowRoot()
+        root1.innerHTML = '<div>Root 1 FTW</div>'
+        root2.innerHTML = '<div>Root 2 FTW</div>'
+      })()
+      </script>
+    </div>
+    <div>
+      <h1 id='demo9'>Demo 9</h1>
+      <div id='demo9_shadow'>Light DOM</div>
+      <script>
+      (function () {
+        var container = document.querySelector('#demo9_shadow')
+        var root1 = container.createShadowRoot()
+        var root2 = container.createShadowRoot()
+        root1.innerHTML = '<div>Root 1 FTW</div><content></content>'
+        root2.innerHTML = '<div>Root 2 FTW</div><shadow></shadow>'
+      })()
+      </script>
+    </div>
+
+  </body>
+</html>
