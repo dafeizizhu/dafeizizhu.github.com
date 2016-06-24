@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Web Components四部曲之一：Templates"
+title: "Web Components之一：Templates"
 description: ""
 category: 
 tags: [html5]

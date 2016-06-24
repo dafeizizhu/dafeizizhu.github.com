@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Web Components四部曲之一：Shadow DOM"
+title: "Web Components之二：Shadow DOM"
 description: ""
 category: 
 tags: [html5]
