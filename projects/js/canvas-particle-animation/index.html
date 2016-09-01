@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Canvas粒子动画</title>
+    <meta charset='utf-8' />
+    <style>
+    html {
+      height: 100%
+    }
+    body { 
+      margin: 0;
+      height: 100%;
+    }
+    #myCanvas { background: black; }
+    #container {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    #wrapper {
+      overflow: hidden;
+      margin: 0;
+      height: 100%;
+      vertical-align: middle;
+      text-align: center;
+    }
+    #wrapper:after {
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 100%;
+      vertical-align: middle;
+    }
+    </style>
+  </head>
+  <body>
+    <div id='wrapper'>
+      <div id='container'>
+        <canvas id='myCanvas' width='600' height='400'>您的浏览器不支持Canvas。</canvas>
+        <p>
+          <button id='random'>随机动一动</button>
+          <button id='easeInOut'>EaseInOut动一动</button>
+        </p>
+      </div>
+    </div>
+    <script src='index.js'></script>
+  </body>
+</html>
