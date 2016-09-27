@@ -105,7 +105,7 @@ tags: [http, Git, 前端]
 
     /path/to/nginx -s reload
 
-### 使播客支持HTTP/2
+### 使博客支持HTTP/2
 
 要使用HTTP/2首先需要一个证书。证书可以购买，也可以用[Let's Encrypt](https://letsencrypt.org/)免费的证书。这里使用了这个免费的证书。
 
