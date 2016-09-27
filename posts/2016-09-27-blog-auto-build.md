@@ -14,7 +14,7 @@ tags: [http, Git, 前端]
 2. [Let's Encrypt，免费好用的 HTTPS 证书](https://imququ.com/post/letsencrypt-certificate.html)
 3. [使用Github的webhooks进行网站自动化部署](https://aotu.io/notes/2016/01/07/auto-deploy-website-by-webhooks-of-github/)
 
-### 配置Http/2
+### 配置HTTP/2
 
 首先安装依赖库和编译要用到的工具：
 
@@ -187,7 +187,7 @@ tags: [http, Git, 前端]
 
 ### 自动更新博客
 
-现在这个博客的源码是托管在Giithub的，之前的做法是：
+现在这个博客的源码是托管在Github的，之前的做法是：
 
 1. 新建了一个仓库，里面放置构建出来的博客静态文件。
 2. 在源码仓库中更新了内容，手动调用构建脚本，然后把构建出来的内容手动拷贝到目标仓库。
