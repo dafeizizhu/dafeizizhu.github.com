@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video DOM Reference</title>
+  </head>
+  <body>
+    <video 
+      id='my_video' 
+      width='320' 
+      height='176' 
+      controls 
+      preload='auto'
+      src='http://media.w3.org/2010/05/bunny/movie.mp4'>
+    </video>
+    <p>
+      <button id='load'>load()</button>
+      <button id='play'>play()</button>
+      <button id='pause'>pause()</button>
+    </p>
+    <p>
+      <button id='current_time_forward'>currentTime += 10</button>
+      <button id='current_time_backward'>currentTime -= 10</button>
+      <button id='current_time_50'>currentTime = 50</button>
+    </p>
+    <p>
+      <button id='volume_forward'>volume += 0.1</button>
+      <button id='volume_backward'>volume -= 0.1</button>
+      <button id='mute'>muted = true</button>
+      <button id='unmute'>muted = false</button>
+    </p>
+    <p>Please open the console to see events that each opperation trigged</p>
+    <script>
+    var video = document.getElementById('my_video')
+
+    Array.prototype.forEach.call(document.getElementsByTagName('button'), function (button) {
+      switch(button.id) {
+        case 'load':
+          return button.onclick = function () { video.load() }
+        case 'play':
+          return button.onclick = function () { video.play() }
+        case 'pause':
+          return button.onclick = function () { video.pause() }
+        case 'current_time_forward':
+          return button.onclick = function () { video.currentTime += 10 }
+        case 'current_time_backward':
+          return button.onclick = function () { video.currentTime -= 10 }
+        case 'current_time_50':
+          return button.onclick = function () { video.currentTime = 50 }
+        case 'volume_forward':
+          return button.onclick = function () { video.volume = Math.min(1, video.volume + .1) }
+        case 'volume_backward':
+          return button.onclick = function () { video.volume = Math.max(0, video.volume - .1) }
+        case 'mute':
+          return button.onclick = function () { video.muted = true }
+        case 'unmute':
+          return button.onclick = function () { video.muted = false }
+      }
+    })
+
+    var properties = ['buffered', 'currentTime', 'duration', 'ended', 'muted', 'networkState', 'paused', 'played', 'readyState', 'seekable', 'seeking', 'volume']
+
+    var snapshots = []
+
+    var eventNames = ['canplay', 'canplaythrough', 'durationchange', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'seeked', 'seeking', 'timeupdate', 'volumechange', 'waiting']
+    
+    eventNames.forEach(function (eventName) {
+      video.addEventListener(eventName, function (evt) {
+        console.log(eventName, 'trigged')
+        var snapshot = getSnapshot()
+        if (snapshots.length) {
+          diff(snapshots[snapshots.length - 1], snapshot)
+        }
+        snapshots.push(snapshot)
+      })
+    })
+
+    function diff(a, b) {
+      Object.keys(a).forEach(function (key) {
+        if (a[key] != b[key]) {
+          console.log(key, 'is changed, prev', a[key], 'current', b[key])
+        }
+      })
+    }
+
+    function timeRangeToString(timeRange) {
+      var result = []
+      for (var i = 0; i < timeRange.length; i++) {
+        result.push('[' + timeRange.start(i) + ', ' + timeRange.end(i) + ']')
+      }
+      return result.join('')
+    }
+
+    function getSnapshot() {
+      var snapshot = {}
+      properties.forEach(function (property) {
+        switch(property) {
+          case 'buffered':
+          case 'seekable':
+          case 'played':
+            snapshot[property] = timeRangeToString(video[property])
+            break
+          case 'readyState':
+            snapshot[property] = READY_STATE[video[property]]
+            break
+          case 'networkState':
+            snapshot[property] = NETWORK_STATE[video[property]]
+            break;
+          default:
+            snapshot[property] = video[property]
+            break
+        }
+      })
+      return snapshot
+    }
+
+    var READY_STATE = [
+      'HAVE_NOTHING',
+      'HAVE_MEATADATA',
+      'HAVE_CURRENT_DATA',
+      'HAVE_FUTURE_DATA',
+      'HAVE_ENOUGH_DATA'
+    ]
+
+    var NETWORK_STATE = [
+      'NETWORK_EMPTY',
+      'NETWORK_IDLE',
+      'NETWORK_LOADING',
+      'NETWORK_NO_SOURCE'
+    ]
+
+    snapshots.push(getSnapshot())
+    </script>
+  </body>
+</html>
