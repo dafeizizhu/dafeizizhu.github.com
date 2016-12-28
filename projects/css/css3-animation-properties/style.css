@@ -1,0 +1,258 @@
+.demo {
+  border-bottom: 1px dashed;
+  padding: 10px; }
+  .demo:after {
+    content: '';
+    clear: both;
+    display: block; }
+
+#demo1 .slider {
+  width: 500px;
+  height: 300px;
+  position: relative; }
+  #demo1 .slider:hover .slider__item {
+    animation-play-state: paused; }
+  #demo1 .slider__item {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    animation: ani 6s infinite linear both;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 36px; }
+    #demo1 .slider__item:nth-child(1) {
+      animation-delay: 0s;
+      background-color: #6190e8; }
+    #demo1 .slider__item:nth-child(2) {
+      animation-delay: 2s;
+      background-color: #2ebaae; }
+    #demo1 .slider__item:nth-child(3) {
+      animation-delay: 4s;
+      background-color: #3d5a92; }
+
+@keyframes ani {
+  0%, 33.33% {
+    opacity: 1;
+    visibility: visible; }
+  33.34%, 100% {
+    opacity: 0;
+    visibility: hidden; } }
+#demo2 .list__item {
+  width: 50px;
+  height: 50px;
+  background: #6180e9;
+  margin-right: 10px;
+  float: left;
+  animation: listAni 1s ease both; }
+  #demo2 .list__item:nth-child(1) {
+    animation-delay: 0s; }
+  #demo2 .list__item:nth-child(2) {
+    animation-delay: 0.2s; }
+  #demo2 .list__item:nth-child(3) {
+    animation-delay: 0.4s; }
+  #demo2 .list__item:nth-child(4) {
+    animation-delay: 0.6s; }
+  #demo2 .list__item:nth-child(5) {
+    animation-delay: 0.8s; }
+
+@keyframes listAni {
+  0% {
+    transform: scale(0); }
+  100% {
+    transform: scale(1); } }
+#demo3 .list__item {
+  width: 50px;
+  height: 50px;
+  background: #6180e9;
+  margin-right: 10px;
+  float: left;
+  animation: listAni 0.5s ease both alternate infinite; }
+  #demo3 .list__item:nth-child(1) {
+    animation-delay: -0.1s; }
+  #demo3 .list__item:nth-child(2) {
+    animation-delay: -0.2s; }
+  #demo3 .list__item:nth-child(3) {
+    animation-delay: -0.3s; }
+  #demo3 .list__item:nth-child(4) {
+    animation-delay: -0.4s; }
+  #demo3 .list__item:nth-child(5) {
+    animation-delay: -0.5s; }
+
+#demo4 .list {
+  overflow: hidden;
+  margin-bottom: 10px; }
+  #demo4 .list__item {
+    width: 50px;
+    height: 50px;
+    background: #6180e9;
+    margin-right: 10px;
+    float: left;
+    animation: listAni 0.5s linear both alternate infinite;
+    animation-play-state: paused; }
+#demo4 .list--first .list__item:nth-child(1) {
+  animation-delay: -0.1s; }
+#demo4 .list--first .list__item:nth-child(2) {
+  animation-delay: -0.2s; }
+#demo4 .list--first .list__item:nth-child(3) {
+  animation-delay: -0.3s; }
+#demo4 .list--first .list__item:nth-child(4) {
+  animation-delay: -0.4s; }
+#demo4 .list--first .list__item:nth-child(5) {
+  animation-delay: -0.5s; }
+#demo4 .list--second .list__item:nth-child(1) {
+  animation-delay: -0.3s; }
+#demo4 .list--second .list__item:nth-child(2) {
+  animation-delay: -0.4s; }
+#demo4 .list--second .list__item:nth-child(3) {
+  animation-delay: -0.5s; }
+#demo4 .list--second .list__item:nth-child(4) {
+  animation-delay: -0.6s; }
+#demo4 .list--second .list__item:nth-child(5) {
+  animation-delay: -0.7s; }
+#demo4 .list--third .list__item:nth-child(1) {
+  animation-delay: -0.5s; }
+#demo4 .list--third .list__item:nth-child(2) {
+  animation-delay: -0.6s; }
+#demo4 .list--third .list__item:nth-child(3) {
+  animation-delay: -0.7s; }
+#demo4 .list--third .list__item:nth-child(4) {
+  animation-delay: -0.8s; }
+#demo4 .list--third .list__item:nth-child(5) {
+  animation-delay: -0.9s; }
+
+#demo5 .ani-area__item {
+  width: 50px;
+  height: 50px;
+  background: #6180e9;
+  margin-right: 10px;
+  float: left;
+  animation: ani 1s ease; }
+  #demo5 .ani-area__item--forwards {
+    animation-fill-mode: forwards; }
+  #demo5 .ani-area__item--none {
+    animation-fill-mode: none; }
+
+@keyframes ani {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 0.5; } }
+#demo6 .ani-area__item {
+  width: 100px;
+  height: 50px;
+  color: #fff;
+  line-height: 50px;
+  text-align: center;
+  background: #6180e9;
+  margin-right: 10px;
+  float: left;
+  animation: ani 1s 1s ease; }
+  #demo6 .ani-area__item--backwards {
+    animation-fill-mode: backwards; }
+  #demo6 .ani-area__item--none {
+    animation-fill-mode: none; }
+
+#demo7 .btn {
+  display: block;
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  color: #6180e9;
+  border: 1px solid #6180e9;
+  float: left; }
+#demo7 .ani {
+  width: 50px;
+  height: 50px;
+  background: #6180e9;
+  margin-right: 10px;
+  float: left; }
+#demo7 .on .ani--opacity {
+  animation: aniOpacity 1s ease forwards; }
+#demo7 .on .ani--scale {
+  animation: aniScale 1s ease forwards; }
+#demo7 .on .ani--translate {
+  animation: aniTranslate 1s ease forwards; }
+#demo7 .off .ani--opacity {
+  animation: aniOpacity 1s ease forwards reverse; }
+#demo7 .off .ani--scale {
+  animation: aniScale 1s ease forwards reverse; }
+#demo7 .off .ani--translate {
+  animation: aniTranslate 1s ease forwards reverse; }
+
+@keyframes aniOpacity {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+@keyframes aniScale {
+  0% {
+    transform: scale(0); }
+  100% {
+    transform: scale(1); } }
+@keyframes aniTranslate {
+  0% {
+    transform: translateY(300px); }
+  100% {
+    transform: translateY(0); } }
+#demo8 .page-wrap {
+  position: relative;
+  width: 302px;
+  height: 504px;
+  overflow: hidden;
+  background: #eee; }
+#demo8 .page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0; }
+  #demo8 .page--first {
+    background: #ddd; }
+  #demo8 .page--second {
+    background: #2ebaae; }
+  #demo8 .page--third {
+    background: #3d5a92; }
+  #demo8 .page.active {
+    z-index: 1; }
+#demo8 .ani {
+  width: 100px;
+  height: 50px;
+  color: #fff;
+  background: #6190e8;
+  margin: 110px;
+  float: left; }
+  #demo8 .ani--first {
+    animation: ani1 2s ease both;
+    animation-play-state: paused; }
+  #demo8 .ani--second {
+    animation: ani2 2s ease both;
+    animation-play-state: paused; }
+  #demo8 .ani--third {
+    animation: ani3 2s ease both;
+    animation-play-state: paused; }
+#demo8 .active .ani {
+  animation-play-state: running; }
+
+@keyframes ani1 {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+@keyframes ani2 {
+  0% {
+    transform: scale(0); }
+  100% {
+    transform: scale(1); } }
+@keyframes ani3 {
+  0% {
+    transform: translateY(100px); }
+  100% {
+    transform: translateY(0); } }
+
+/*# sourceMappingURL=style.css.map */

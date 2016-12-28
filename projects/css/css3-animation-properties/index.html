@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS3 Animation Properties</title>
+    <meta charset='utf-8' />
+    <link rel='stylesheet' href='./style.css' />
+    <script src='../../common/jquery/1.11.3/jquery.js'></script>
+  </head>
+  <body>
+    <div class='demo' id='demo1'>
+      <div class='slider'>
+        <div class='slider__item'>Slider1</div>
+        <div class='slider__item'>Slider2</div>
+        <div class='slider__item'>Slider3</div>
+      </div>
+    </div>
+    <div class='demo' id='demo2'>
+      <div class='list'>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+      </div>
+    </div>
+    <div class='demo' id='demo3'>
+      <div class='list'>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+      </div>
+    </div>
+    <div class='demo' id='demo4'>
+      <div class='list list--first'>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+      </div>
+      <div class='list list--second'>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+      </div>
+      <div class='list list--third'>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+        <div class='list__item'></div>
+      </div>
+    </div>
+    <div class='demo' id='demo5'>
+      <div class='ani-area'>
+        <div class='ani-area__item ani-area__item--forwards'></div>
+        <div class='ani-area__item ani-area__item--none'></div>
+      </div>
+    </div>
+    <div class='demo' id='demo6'>
+      <div class='ani-area'>
+        <div class='ani-area__item ani-area__item--backwards'>1s后出现</div>
+        <div class='ani-area__item ani-area__item--none'>1s后出现</div>
+      </div>
+    </div>
+    <div class='demo' id='demo7'>
+      <div class='ani-wrap on J_wrap'>
+        <div class='ani ani--opacity'></div>
+        <div class='ani ani--scale'></div>
+        <div class='ani ani--translate'></div>
+      </div>
+      <a href='javascript:;' class='btn J_btn'>退场</a>
+    </div>
+    <div class='demo' id='demo8'>
+      <div class='page-wrap J_wrapper'>
+        <div class='page page--first active'>
+          <div class='ani ani--first'></div>
+        </div>
+        <div class='page page--second'>
+          <div class='ani ani--second'></div>
+        </div>
+        <div class='page page--third'>
+          <div class='ani ani--third'></div>
+        </div>
+      </div>
+    </div>
+    <script>
+    $(function () {
+      var $btn = $('#demo7 .btn')
+      var $wrap = $('#demo7 .J_wrap')
+      $btn.on('click', function (e) {
+        $wrap.removeClass('on')
+        $wrap.innerWidth($wrap.innerWidth)
+        $wrap.addClass('off')
+      })
+    });
+    $(function () {
+      var $page = $('#demo8 .J_wrapper .page');
+      $page.on('click', function (e) {
+        $(this).next().addClass('active');
+      })
+    });
+    </script>
+  </body>
+</html>
