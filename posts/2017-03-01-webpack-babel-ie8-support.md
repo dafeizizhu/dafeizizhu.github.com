@@ -24,7 +24,7 @@ tags: [前端]
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-          presets: ['es2015']
+          presets: ['es2015-loose']
         }
       }, {
         test: /\.css$/,
@@ -327,3 +327,20 @@ tags: [前端]
 ### 总结
 
 虽然Webpack2已经不支持IE8，说明需要支持IE8的时代也差不多要过去了。通过这次兼容性的研究，也了解了很多关于Babel构建后的代码，例如`class`，Babel Polyfill的代码，例如`Object.defineProperty`的模拟等等，最后也成功在IE8上面把Demo跑起来了，不错！
+
+附上对应的依赖版本信息：
+
+    "devDependencies": {
+      "babel-core": "^6.21.0",
+      "babel-loader": "^6.2.10",
+      "babel-polyfill": "^6.20.0",
+      "babel-preset-es2015": "^6.18.0",
+      "babel-preset-es2015-loose": "^8.0.0",
+      "css-loader": "^0.26.1",
+      "es3ify-loader": "^0.2.0",
+      "html-webpack-plugin": "^2.26.0",
+      "style-loader": "^0.13.1",
+      "url-loader": "^0.5.7",
+      "webpack": "^1.14.0",
+      "webpack-merge": "^2.4.0"
+    }
