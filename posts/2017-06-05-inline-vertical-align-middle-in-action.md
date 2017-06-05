@@ -39,7 +39,7 @@ tags: [css]
 
 效果如下：
 
-<a class="jsbin-embed" href="https://jsbin.com/napitarabi/1/embed?output">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.0.2"></script>
+<a class="jsbin-embed" href="http://jsbin.com/napitarabi/1/embed?output">JS Bin on jsbin.com</a>
 
 首先，我们可以看到按钮跟按钮之间有一段缝隙，这是因为我们的HTML代码里面，`div`里面的每一个`span`都用回车分开了，这样可以提高代码的可读性。这些回车就会在每个`span`之间生成一个空隙。有两个办法可以去掉这些缝隙：
 
@@ -56,7 +56,7 @@ tags: [css]
 
 效果如下：
 
-<a class="jsbin-embed" href="https://jsbin.com/vafeyohupu/1/embed?output">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.0.2"></script>
+<a class="jsbin-embed" href="http://jsbin.com/vafeyohupu/1/embed?output">JS Bin on jsbin.com</a>
 
 最后我们要想办法让这些按钮居中对齐：
 
@@ -79,7 +79,7 @@ tags: [css]
 
 效果如下：
 
-<a class="jsbin-embed" href="https://jsbin.com/buhigovica/1/embed?output">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.0.2"></script>
+<a class="jsbin-embed" href="http://jsbin.com/buhigovica/1/embed?output">JS Bin on jsbin.com</a>
 
 咦，虽然位置是往下了，但是为什么还是不像居中呀？
 
@@ -91,7 +91,7 @@ tags: [css]
 
 效果如下：
 
-<a class="jsbin-embed" href="https://jsbin.com/qiqekujoke/1/embed?output">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.0.2"></script>
+<a class="jsbin-embed" href="http://jsbin.com/qiqekujoke/1/embed?output">JS Bin on jsbin.com</a>
 
 这次的效果基本是好了。假如在`div`内再增加一文本字段：
 
@@ -108,7 +108,7 @@ tags: [css]
 
 效果如下：
 
-<a class="jsbin-embed" href="https://jsbin.com/qazaduhaqo/1/embed?output">JS Bin on jsbin.com</a><script src="https://static.jsbin.com/js/embed.min.js?4.0.2"></script>
+<a class="jsbin-embed" href="http://jsbin.com/qazaduhaqo/1/embed?output">JS Bin on jsbin.com</a>
 
 可以看到，由于同时设置了`span`以及`span`内部元素的`vertical-align`，`div`内部的元素都是居中对齐了，而且基线十分平整，nice！
 
