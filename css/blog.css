@@ -164,3 +164,17 @@ h6, .h6 {
 .blog-footer p:last-child {
   margin-bottom: 0;
 }
+
+/*
+ * customize
+ */
+
+.blog-post h3 {
+  margin-top: 40px;
+}
+
+.blog-post h3:before {
+  content: '·';
+  padding: 0 5px;
+  font-weight: bolder;
+}
