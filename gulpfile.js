@@ -118,7 +118,7 @@ gulp.task('build-data', function (cb) {
     })
 })
 
-gulp.task('build-posts', ['build-data'],  function (cb) {
+gulp.task('build-posts', ['build-data'], function (cb) {
   gulp.src('site/data/*.json')
     .pipe(data2post())
     .pipe(prettify({
@@ -190,8 +190,14 @@ gulp.task('build-about', function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-images', function (cb) {
+  gulp.src('images/**/*')
+    .pipe(gulp.dest('site/images'))
+    .on('end', cb)
+})
+
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', 'build-about', cb)
+  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', 'build-about', 'build-images', cb)
 })
 
 gulp.task('create-post', function (cb) {

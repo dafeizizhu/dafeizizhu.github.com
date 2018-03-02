@@ -178,3 +178,11 @@ h6, .h6 {
   padding: 0 5px;
   font-weight: bolder;
 }
+
+img {
+  max-width: 100%;
+}
+
+pre {
+  word-break: normal;
+}
