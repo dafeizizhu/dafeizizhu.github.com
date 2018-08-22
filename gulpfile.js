@@ -1,10 +1,10 @@
 var gulp = require('gulp')
-var data = require('gulp-data')
 var runSequence = require('run-sequence')
 var rimraf = require('rimraf')
 var prettify = require('gulp-prettify')
 var fs = require('fs')
 var path = require('path')
+var workboxBuild = require('workbox-build')
 
 var markdown2data = require('./plugins/markdown2data')
 var data2post = require('./plugins/data2post')
@@ -45,7 +45,7 @@ gulp.task('build-data', function (cb) {
     .pipe(markdown2data())
     .pipe(gulp.dest('site/data'))
     .on('end', function () {
-      fs.readdir('site/data', function (err, files) {
+      fs.readdir('site/data', function (_, files) {
         var dateMap = {}
         var postList = []
         var years = []
@@ -196,8 +196,31 @@ gulp.task('build-images', function (cb) {
     .on('end', cb)
 })
 
+gulp.task('build-sw', function (cb) {
+  return workboxBuild.generateSW({
+    globDirectory: 'site',
+    globPatterns: [
+      '**/*.{js,css,png,jpg}'
+    ],
+    swDest: 'site/sw.js'
+  })
+})
+
 gulp.task('build', function (cb) {
-  runSequence('clean', 'build-favicon', 'build-common-css', 'build-css', 'build-posts', 'build-home', 'build-indexes-dates', 'build-indexes-tags', 'build-projects', 'build-about', 'build-images', cb)
+  runSequence(
+    'clean',
+    'build-favicon',
+    'build-common-css',
+    'build-css',
+    'build-posts',
+    'build-home',
+    'build-indexes-dates',
+    'build-indexes-tags',
+    'build-projects',
+    'build-about',
+    'build-images',
+    'build-sw',
+    cb)
 })
 
 gulp.task('create-post', function (cb) {
