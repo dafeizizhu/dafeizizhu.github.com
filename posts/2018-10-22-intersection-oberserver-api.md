@@ -3,7 +3,7 @@ layout: post
 title: "使用Intersection Observer API实现无限滚动"
 description: ""
 category: 
-tags: [js]
+tags: [JavaScript]
 ---
 
 ### 引用

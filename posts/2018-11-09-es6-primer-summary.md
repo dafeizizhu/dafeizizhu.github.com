@@ -3,7 +3,7 @@ layout: post
 title: "《ES6标准入门（第3版）》读书笔记"
 description: ""
 category: 
-tags: [javascript, 读书笔记]
+tags: [JavaScript, 读书笔记]
 ---
 
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
