@@ -95,28 +95,28 @@ tags: [算法, JavaScript]
     // merge是一致的
 
     function mergeSort (arr){
-			var n = arr.length
+      var n = arr.length
       // 步长 
-			var s = 2
-			var i
-			var result = arr
-			while (s <= n) {
-				var temp = []
-				i = 0
+      var s = 2
+      var i
+      var result = arr
+      while (s <= n) {
+        var temp = []
+        i = 0
         // 按照步长分割数组，然后合并
-				while (i + s <= n) {
-					temp = temp.concat(merge(result.slice(i, i + s / 2), result.slice(i + s / 2, i + s)))
-					i += s
-				}
+        while (i + s <= n) {
+          temp = temp.concat(merge(result.slice(i, i + s / 2), result.slice(i + s / 2, i + s)))
+          i += s
+        }
         // 合并余下的部分
-				temp = temp.concat(result.slice(i, i + s / 2), result.slice(i + s / 2, n))
+        temp = temp.concat(result.slice(i, i + s / 2), result.slice(i + s / 2, n))
         // 步长加倍
-				s *= 2
-				result = temp
-			}
+        s *= 2
+        result = temp
+      }
       // 整个数组再合并一遍
-			return merge(result.slice(0, s / 2), result.slice(s / 2, n))
-		}
+      return merge(result.slice(0, s / 2), result.slice(s / 2, n))
+    }
 
 例子：
 
